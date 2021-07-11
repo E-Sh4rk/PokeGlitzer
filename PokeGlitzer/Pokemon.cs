@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
-    class Pokemon
+    public class Pokemon
     {
         RangeObservableCollection<byte> data;
         int index;
@@ -152,6 +152,22 @@ namespace PokeGlitzer
             isDecoded = !isDecoded;
             // Checksum and views
             UpdateChecksumAndViewData(pkmn, dataArr, isDecoded, updateData, updateDecodedData);
+        }
+
+        // ===== PUBLIC FUNCTIONS =====
+        
+        public void FixChecksum()
+        {
+            if (!view.ChecksumValid)
+            {
+                uint checksum = ComputeChecksum(Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray()));
+                byte[] res = BitConverter.GetBytes(checksum);
+                int offset = Utils.OffsetOf<PokemonStruct>("checksum");
+                Utils.UpdateCollectionRange(data, res, index + offset);
+                Utils.UpdateCollectionRange(view.Data, res, offset);
+                Utils.UpdateCollectionRange(view.DecodedData, res, offset);
+                view.ChecksumValid = true;
+            }
         }
     }
 }

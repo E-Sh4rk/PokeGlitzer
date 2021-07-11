@@ -17,10 +17,10 @@ namespace PokeGlitzer
             InitializeComponent();
             DataContext = new PokemonViewModel();
         }
-        public PokemonViewWindow(PokemonView view)
+        public PokemonViewWindow(Pokemon pkmn)
         {
             InitializeComponent();
-            DataContext = new PokemonViewModel(view);
+            DataContext = new PokemonViewModel(pkmn);
 
 #if DEBUG
             this.AttachDevTools();
@@ -34,6 +34,7 @@ namespace PokeGlitzer
     }
     public class PokemonViewModel : INotifyPropertyChanged
     {
+        Pokemon? pkmn;
         PokemonView view;
 
         public PokemonViewModel()
@@ -42,9 +43,10 @@ namespace PokeGlitzer
             displayData = view.Data;
             decoded = false;
         }
-        public PokemonViewModel(PokemonView view)
+        public PokemonViewModel(Pokemon pkmn)
         {
-            this.view = view;
+            this.pkmn = pkmn;
+            view = pkmn.View;
             displayData = view.Data;
             decoded = false;
         }
@@ -77,6 +79,7 @@ namespace PokeGlitzer
         }
 
         public void RestoreInitial() => Utils.UpdateCollectionRange(view.Data, new byte[80]);
+        public void FixChecksum() => pkmn?.FixChecksum();
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

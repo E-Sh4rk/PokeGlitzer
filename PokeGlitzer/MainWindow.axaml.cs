@@ -36,7 +36,7 @@ namespace PokeGlitzer
             data = new RangeObservableCollection<byte>(new byte[80]);
             pkmn = new Pokemon(data, 0);
         }
-        public void OpenPokemonData() => new PokemonViewWindow(pkmn.View).Show();
+        public void OpenPokemonData() => new PokemonViewWindow(pkmn).Show();
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

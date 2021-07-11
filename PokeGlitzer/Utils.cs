@@ -64,5 +64,10 @@ namespace PokeGlitzer
 
             return arr;
         }
+
+        public static int OffsetOf<T>(string field)
+        {
+            return Marshal.OffsetOf<T>(field).ToInt32();
+        }
     }
 }

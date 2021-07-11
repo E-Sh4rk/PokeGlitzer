@@ -18,6 +18,7 @@ namespace PokeGlitzer.Converters
         {
             if (targetType != typeof(string)) throw new NotImplementedException();
             if (!(value is byte)) throw new NotImplementedException();
+
             return ((byte)value).ToString("X").PadLeft(2, '0');
         }
 
@@ -25,20 +26,10 @@ namespace PokeGlitzer.Converters
         {
             if (targetType != typeof(byte)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
-            /*StringBuilder normalized = new StringBuilder();
-            foreach (char c in ((string)value).ToUpperInvariant())
-            {
-                if (c >= 'A' && c <= 'F' ||
-                    c >= '0' && c <= '9')
-                {
-                    normalized.Append(c);
-                }
-            }
-            if (normalized.Length > 2) normalized.Remove(0, normalized.Length - 2);
-            else if (normalized.Length == 0) normalized.Append('0');
-            return byte.Parse(normalized.ToString(), NumberStyles.HexNumber);*/
+
             string v = (string)value;
-            if (v.Length != 2) { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
+            if (v.Length != 2 || !Utils.HasOnlyHexDigits(v))
+                return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError);
             try { return byte.Parse(v, NumberStyles.HexNumber); }
             catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
@@ -110,26 +101,6 @@ namespace PokeGlitzer.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
-        }
-    }
-
-    // ========== HEX EDITOR ==========
-    public class HexEditorConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (targetType != typeof(string)) throw new NotImplementedException();
-            if (!(value is RangeObservableCollection<byte>)) throw new NotImplementedException();
-            // TODO
-            return "TEST";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (targetType != typeof(RangeObservableCollection<byte>)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
-            if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
-            // TODO
-            return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError);
         }
     }
 }

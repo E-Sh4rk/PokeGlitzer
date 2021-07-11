@@ -52,8 +52,6 @@
       <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="350" Text="{Binding View.SubstructureAtPos3, Converter={StaticResource s2t}}"/>
       <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="400" Text="{Binding View.SubstructureAtPos4, Converter={StaticResource s2t}}"/>
 
-
-
       <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="5" Canvas.Top="15" Text="{Binding DisplayData[0], Converter={StaticResource bsc}}" />
       <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="55" Canvas.Top="15" Text="{Binding DisplayData[1], Converter={StaticResource bsc}}" />
       <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="105" Canvas.Top="15" Text="{Binding DisplayData[2], Converter={StaticResource bsc}}" />

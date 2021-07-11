@@ -11,6 +11,17 @@ namespace PokeGlitzer
 {
     static class Utils
     {
+        public static bool HasOnlyHexDigits(string str)
+        {
+            foreach (char c in str)
+            {
+                if (c >= 'A' && c <= 'F' || c >= '0' && c <= '9')
+                    continue;
+                return false;
+            }
+            return true;
+        }
+
         public static void UpdateCollectionRange(RangeObservableCollection<byte> col, IEnumerable<byte> newData, int start = 0)
         {
             /*for (int i = 0; i < newData.Length; i++)

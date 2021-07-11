@@ -37,6 +37,7 @@ namespace PokeGlitzer
             pkmn = new Pokemon(data, 0);
         }
         public void OpenPokemonData() => new PokemonViewWindow(pkmn).Show();
+        public void OpenPokemonRaw() => new HexEditor(pkmn).Show();
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

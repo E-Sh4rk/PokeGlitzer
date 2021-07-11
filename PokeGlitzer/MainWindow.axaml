@@ -15,7 +15,8 @@
   </Window.Resources>
   
   <StackPanel Orientation="Vertical">
-    <Button Command="{Binding OpenPokemonData}">Open Pokemon Data!</Button>
+    <Button Command="{Binding OpenPokemonData}">Open Pokemon Data Editor!</Button>
+    <Button Command="{Binding OpenPokemonRaw}">Open Pokemon Raw Editor!</Button>
   </StackPanel>
   
 </Window>

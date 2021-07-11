@@ -2,6 +2,7 @@
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer.Converters
 {
+    // ========== DATA EDITOR ==========
     public class ByteStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -108,6 +110,26 @@ namespace PokeGlitzer.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+        }
+    }
+
+    // ========== HEX EDITOR ==========
+    public class HexEditorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType != typeof(string)) throw new NotImplementedException();
+            if (!(value is RangeObservableCollection<byte>)) throw new NotImplementedException();
+            // TODO
+            return "TEST";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType != typeof(RangeObservableCollection<byte>)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+            if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+            // TODO
+            return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError);
         }
     }
 }

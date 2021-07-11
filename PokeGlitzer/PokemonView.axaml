@@ -1,0 +1,153 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PokeGlitzer.Converters"
+        mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="550"
+        SizeToContent="WidthAndHeight"
+        CanResize="False"
+        x:Class="PokeGlitzer.PokemonViewWindow"
+        Title="PokeGlitzer">
+
+  <Window.Resources>
+    <local:ByteStringConverter x:Key="bsc"/>
+    <local:SubstructureToColor x:Key="s2c"/>
+    <local:SubstructureToText x:Key="s2t"/>
+    <local:BoolToColor x:Key="b2c"/>
+  </Window.Resources>
+  
+  <StackPanel Orientation="Vertical">
+    <Canvas Width="400" Height="500" Margin="5">
+      <Rectangle Opacity="100" Fill="OrangeRed" Height="50" Width="200" Canvas.Left="0" Canvas.Top="0"/>
+      <Rectangle Opacity="100" Fill="Orange" Height="50" Width="200" Canvas.Left="200" Canvas.Top="0"/>
+      <Rectangle Opacity="100" Fill="Green" Height="50" Width="400" Canvas.Left="0" Canvas.Top="50"/>
+      <Rectangle Opacity="100" Fill="Green" Height="50" Width="100" Canvas.Left="0" Canvas.Top="100"/>
+      <Rectangle Opacity="100" Fill="CadetBlue" Height="50" Width="50" Canvas.Left="100" Canvas.Top="100"/>
+      <Rectangle Opacity="100" Fill="DarkCyan" Height="50" Width="50" Canvas.Left="150" Canvas.Top="100"/>
+      <Rectangle Opacity="100" Fill="DarkOliveGreen" Height="50" Width="200" Canvas.Left="200" Canvas.Top="100"/>
+      <Rectangle Opacity="100" Fill="DarkOliveGreen" Height="50" Width="150" Canvas.Left="0" Canvas.Top="150"/>
+      <Rectangle Opacity="100" Fill="Gray" Height="50" Width="50" Canvas.Left="150" Canvas.Top="150"/>
+      <Rectangle Opacity="100" Fill="Brown" Height="50" Width="100" Canvas.Left="200" Canvas.Top="150"/>
+      <Rectangle Opacity="100" Fill="LightGray" Height="50" Width="100" Canvas.Left="300" Canvas.Top="150"/>
+
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="200"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="250"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="250"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="300"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="350"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="400"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos4, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="400"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos4, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="450"/>
+
+      <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="0">Pokemon ID (PID)</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="0">Original Trainer ID</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="50">Nickname</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="100" Canvas.Top="100">Lang</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="150" Canvas.Top="100">Egg</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="100">Original Trainer Name</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="150" Canvas.Top="150">Marking</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="150" FontWeight="Bold" Foreground="{Binding View.ChecksumValid, Converter={StaticResource b2c}}">Checksum</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="300" Canvas.Top="150">Unused</TextBlock>
+      <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="200" Text="{Binding View.SubstructureAtPos1, Converter={StaticResource s2t}}"/>
+      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="250" Text="{Binding View.SubstructureAtPos2, Converter={StaticResource s2t}}"/>
+      <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="350" Text="{Binding View.SubstructureAtPos3, Converter={StaticResource s2t}}"/>
+      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="400" Text="{Binding View.SubstructureAtPos4, Converter={StaticResource s2t}}"/>
+      
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="15" Text="{Binding DisplayData[0], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="15" Text="{Binding DisplayData[1], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="15" Text="{Binding DisplayData[2], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="15" Text="{Binding DisplayData[3], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="15" Text="{Binding DisplayData[4], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="15" Text="{Binding DisplayData[5], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="15" Text="{Binding DisplayData[6], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="15" Text="{Binding DisplayData[7], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="65" Text="{Binding DisplayData[8], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="65" Text="{Binding DisplayData[9], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="65" Text="{Binding DisplayData[10], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="65" Text="{Binding DisplayData[11], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="65" Text="{Binding DisplayData[12], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="65" Text="{Binding DisplayData[13], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="65" Text="{Binding DisplayData[14], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="65" Text="{Binding DisplayData[15], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="115" Text="{Binding DisplayData[16], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="115" Text="{Binding DisplayData[17], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="115" Text="{Binding DisplayData[18], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="115" Text="{Binding DisplayData[19], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="115" Text="{Binding DisplayData[20], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="115" Text="{Binding DisplayData[21], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="115" Text="{Binding DisplayData[22], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="115" Text="{Binding DisplayData[23], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="165" Text="{Binding DisplayData[24], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="165" Text="{Binding DisplayData[25], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="165" Text="{Binding DisplayData[26], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="165" Text="{Binding DisplayData[27], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="165" Text="{Binding DisplayData[28], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="165" Text="{Binding DisplayData[29], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="165" Text="{Binding DisplayData[30], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="165" Text="{Binding DisplayData[31], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="215" Text="{Binding DisplayData[32], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="215" Text="{Binding DisplayData[33], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="215" Text="{Binding DisplayData[34], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="215" Text="{Binding DisplayData[35], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="215" Text="{Binding DisplayData[36], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="215" Text="{Binding DisplayData[37], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="215" Text="{Binding DisplayData[38], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="215" Text="{Binding DisplayData[39], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="265" Text="{Binding DisplayData[40], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="265" Text="{Binding DisplayData[41], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="265" Text="{Binding DisplayData[42], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="265" Text="{Binding DisplayData[43], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="265" Text="{Binding DisplayData[44], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="265" Text="{Binding DisplayData[45], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="265" Text="{Binding DisplayData[46], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="265" Text="{Binding DisplayData[47], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="315" Text="{Binding DisplayData[48], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="315" Text="{Binding DisplayData[49], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="315" Text="{Binding DisplayData[50], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="315" Text="{Binding DisplayData[51], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="315" Text="{Binding DisplayData[52], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="315" Text="{Binding DisplayData[53], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="315" Text="{Binding DisplayData[54], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="315" Text="{Binding DisplayData[55], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="365" Text="{Binding DisplayData[56], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="365" Text="{Binding DisplayData[57], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="365" Text="{Binding DisplayData[58], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="365" Text="{Binding DisplayData[59], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="365" Text="{Binding DisplayData[60], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="365" Text="{Binding DisplayData[61], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="365" Text="{Binding DisplayData[62], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="365" Text="{Binding DisplayData[63], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="415" Text="{Binding DisplayData[64], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="415" Text="{Binding DisplayData[65], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="415" Text="{Binding DisplayData[66], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="415" Text="{Binding DisplayData[67], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="415" Text="{Binding DisplayData[68], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="415" Text="{Binding DisplayData[69], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="415" Text="{Binding DisplayData[70], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="415" Text="{Binding DisplayData[71], Converter={StaticResource bsc}}" />
+
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="5" Canvas.Top="465" Text="{Binding DisplayData[72], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="55" Canvas.Top="465" Text="{Binding DisplayData[73], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="105" Canvas.Top="465" Text="{Binding DisplayData[74], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="155" Canvas.Top="465" Text="{Binding DisplayData[75], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="205" Canvas.Top="465" Text="{Binding DisplayData[76], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="255" Canvas.Top="465" Text="{Binding DisplayData[77], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="305" Canvas.Top="465" Text="{Binding DisplayData[78], Converter={StaticResource bsc}}" />
+      <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="2" TextAlignment="Center" Canvas.Left="355" Canvas.Top="465" Text="{Binding DisplayData[79], Converter={StaticResource bsc}}" />
+    </Canvas>
+    <StackPanel Orientation="Horizontal" Width="400" Spacing="35" Margin="5">
+      <CheckBox IsChecked="{Binding Decoded}">Decode Data</CheckBox>
+      <Button>Fix checksum</Button>
+      <Button Command="{Binding RestoreInitial}">Restore initial</Button>
+    </StackPanel>
+  </StackPanel>
+  
+</Window>

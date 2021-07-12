@@ -136,7 +136,7 @@ namespace PokeGlitzer
             if (isDecoded && updateDecodedData) Utils.UpdateCollectionRange(view.DecodedData, dataArr);
             if (!isDecoded && updateData) Utils.UpdateCollectionRange(view.Data, dataArr);
         }
-        int[] GetSubstructuresOrder(PokemonStruct pkmn)
+        int[] SubstructuresOrder(PokemonStruct pkmn)
         {
             return subOrders[pkmn.PID % 24];
         }
@@ -150,7 +150,7 @@ namespace PokeGlitzer
         }
         byte[] GetSubstructure(PokemonStruct pkmn, int sub)
         {
-            int offset = OffsetOfSubstructure(GetSubstructuresOrder(pkmn), sub);
+            int offset = OffsetOfSubstructure(SubstructuresOrder(pkmn), sub);
             byte[] res = new byte[PokemonStruct.SUBSTRUCTURE_SIZE];
             Array.Copy(pkmn.data, offset, res, 0, PokemonStruct.SUBSTRUCTURE_SIZE);
             return res;
@@ -212,9 +212,37 @@ namespace PokeGlitzer
             Substructure2 sub2 = Utils.ByteToType<Substructure2>(GetSubstructure(pkmn, 2));
             Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(pkmn, 3));
             // Modifying data
-            // TODO
+            pkmn.PID = interpreted.PID;
+            pkmn.OTID = interpreted.OTID;
+            switch (interpreted.egg)
+            {
+                case EggType.Egg:
+                    sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
+                    pkmn.isEgg = (byte)((pkmn.isEgg | PokemonStruct.IS_EGG_MASK) & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    break;
+                case EggType.BadEgg:
+                    sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
+                    pkmn.isEgg = (byte)(pkmn.isEgg | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
+                    break;
+                case EggType.NotAnEgg:
+                    sub3.ivEggAbility = sub3.ivEggAbility & ~Substructure3.EGG_MASK;
+                    pkmn.isEgg = (byte)(pkmn.isEgg & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    break;
+                default:
+                    break;
+            }
             // Joining and updating substructures
-            // TODO
+            byte[] b0 = Utils.TypeToByte(sub0);
+            byte[] b1 = Utils.TypeToByte(sub1);
+            byte[] b2 = Utils.TypeToByte(sub2);
+            byte[] b3 = Utils.TypeToByte(sub3);
+            byte[] subs = new byte[PokemonStruct.SUBSTRUCTURE_SIZE*4];
+            int[] order = SubstructuresOrder(pkmn);
+            Array.Copy(b0, 0, subs, OffsetOfSubstructure(order, 0), PokemonStruct.SUBSTRUCTURE_SIZE);
+            Array.Copy(b1, 0, subs, OffsetOfSubstructure(order, 1), PokemonStruct.SUBSTRUCTURE_SIZE);
+            Array.Copy(b2, 0, subs, OffsetOfSubstructure(order, 2), PokemonStruct.SUBSTRUCTURE_SIZE);
+            Array.Copy(b3, 0, subs, OffsetOfSubstructure(order, 3), PokemonStruct.SUBSTRUCTURE_SIZE);
+            pkmn.data = subs;
             // Fixing checksum if it was valid initially
             if (view.ChecksumValid) pkmn.checksum = ComputeChecksum(pkmn);
             UpdateView(Utils.TypeToByte(pkmn), true, true, true, false);

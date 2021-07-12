@@ -13,7 +13,7 @@ namespace PokeGlitzer
     {
         public static bool HasOnlyHexDigits(string str)
         {
-            foreach (char c in str)
+            foreach (char c in str.ToUpperInvariant())
             {
                 if (c >= 'A' && c <= 'F' || c >= '0' && c <= '9')
                     continue;

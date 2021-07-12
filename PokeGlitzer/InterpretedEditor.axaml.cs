@@ -34,11 +34,13 @@ namespace PokeGlitzer
         public InterpretedEditorModel()
         {
             view = new PokemonView(80);
+            RefreshControls();
         }
         public InterpretedEditorModel(Pokemon pkmn)
         {
             view = pkmn.View;
             view.PropertyChanged += ViewInterpretedChanged;
+            RefreshControls();
         }
 
         void ViewInterpretedChanged(object? sender, PropertyChangedEventArgs args)
@@ -50,11 +52,16 @@ namespace PokeGlitzer
 
         public void RefreshControls()
         {
-            // TODO
+            if (view.Intepreted == null) return;
+            InterpretedData d = view.Intepreted!;
+            PID = d.PID;
+            OTID = d.OTID;
+            Egg = d.egg;
         }
         public void Save()
         {
-            // TODO
+            InterpretedData d = new InterpretedData(PID, OTID, Egg);
+            view.Intepreted = d;
         }
 
         uint pid;

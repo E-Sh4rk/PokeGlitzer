@@ -29,16 +29,15 @@ namespace PokeGlitzer
     }
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        // TODO: Investigate the memory leak when opening/closing multiple editors
         RangeObservableCollection<byte> data;
-        Pokemon pkmn;
         public MainWindowViewModel()
         {
-            data = new RangeObservableCollection<byte>(new byte[80]);
-            pkmn = new Pokemon(data, 0);
+            data = Utils.ByteCollectionOfSize(80);
         }
-        public void OpenPokemonInterpreted() => new InterpretedEditor(pkmn).Show();
-        public void OpenPokemonData() => new PokemonViewWindow(pkmn).Show();
-        public void OpenPokemonRaw() => new HexEditor(pkmn).Show();
+        public void OpenPokemonInterpreted() => new InterpretedEditor(data, 0).Show();
+        public void OpenPokemonData() => new PokemonViewWindow(data, 0).Show();
+        public void OpenPokemonRaw() => new HexEditor(data, 0).Show();
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

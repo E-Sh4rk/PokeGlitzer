@@ -12,14 +12,17 @@ namespace PokeGlitzer
 {
     public partial class PokemonViewWindow : Window
     {
+        Pokemon pkmn;
         public PokemonViewWindow()
         {
             InitializeComponent();
-            DataContext = new PokemonViewModel();
+            pkmn = new Pokemon(Utils.ByteCollectionOfSize(80), 0);
+            DataContext = new PokemonViewModel(pkmn);
         }
-        public PokemonViewWindow(Pokemon pkmn)
+        public PokemonViewWindow(RangeObservableCollection<byte> data, int offset)
         {
             InitializeComponent();
+            pkmn = new Pokemon(data, offset);
             DataContext = new PokemonViewModel(pkmn);
 
 #if DEBUG
@@ -31,18 +34,18 @@ namespace PokeGlitzer
         {
             AvaloniaXamlLoader.Load(this);
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            pkmn.Dispose();
+            base.OnClosed(e);
+        }
     }
     public class PokemonViewModel : INotifyPropertyChanged
     {
-        Pokemon? pkmn;
+        Pokemon pkmn;
         PokemonView view;
 
-        public PokemonViewModel()
-        {
-            view = new PokemonView(80);
-            displayData = view.Data;
-            decoded = false;
-        }
         public PokemonViewModel(Pokemon pkmn)
         {
             this.pkmn = pkmn;
@@ -79,7 +82,7 @@ namespace PokeGlitzer
         }
 
         public void RestoreInitial() => Utils.UpdateCollectionRange(view.Data, new byte[80]);
-        public void FixChecksum() => pkmn?.FixChecksum();
+        public void FixChecksum() => pkmn.FixChecksum();
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

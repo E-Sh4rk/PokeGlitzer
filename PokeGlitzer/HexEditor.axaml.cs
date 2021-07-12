@@ -10,14 +10,17 @@ namespace PokeGlitzer
 {
     public partial class HexEditor : Window
     {
+        Pokemon pkmn;
         public HexEditor()
         {
             InitializeComponent();
-            DataContext = new HexEditorModel();
+            pkmn = new Pokemon(Utils.ByteCollectionOfSize(80), 0);
+            DataContext = new HexEditorModel(pkmn);
         }
-        public HexEditor(Pokemon pkmn)
+        public HexEditor(RangeObservableCollection<byte> data, int offset)
         {
             InitializeComponent();
+            pkmn = new Pokemon(data, offset);
             DataContext = new HexEditorModel(pkmn);
 #if DEBUG
             this.AttachDevTools();
@@ -28,15 +31,17 @@ namespace PokeGlitzer
         {
             AvaloniaXamlLoader.Load(this);
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            pkmn.Dispose();
+            base.OnClosed(e);
+        }
     }
     public class HexEditorModel : INotifyPropertyChanged
     {
         PokemonView view;
 
-        public HexEditorModel()
-        {
-            view = new PokemonView(80);
-        }
         public HexEditorModel(Pokemon pkmn)
         {
             view = pkmn.View;

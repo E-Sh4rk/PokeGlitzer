@@ -1,21 +1,26 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace PokeGlitzer
 {
     public partial class InterpretedEditor : Window
     {
+        Pokemon pkmn;
         public InterpretedEditor()
         {
             InitializeComponent();
-            DataContext = new InterpretedEditorModel();
+            pkmn = new Pokemon(Utils.ByteCollectionOfSize(80), 0);
+            DataContext = new InterpretedEditorModel(pkmn);
         }
 
-        public InterpretedEditor(Pokemon pkmn)
+        public InterpretedEditor(RangeObservableCollection<byte> data, int offset)
         {
             InitializeComponent();
+            pkmn = new Pokemon(data, offset);
             DataContext = new InterpretedEditorModel(pkmn);
 #if DEBUG
             this.AttachDevTools();
@@ -26,16 +31,17 @@ namespace PokeGlitzer
         {
             AvaloniaXamlLoader.Load(this);
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            pkmn.Dispose();
+            base.OnClosed(e);
+        }
     }
     public class InterpretedEditorModel : INotifyPropertyChanged
     {
         PokemonView view;
 
-        public InterpretedEditorModel()
-        {
-            view = new PokemonView(80);
-            RefreshControls();
-        }
         public InterpretedEditorModel(Pokemon pkmn)
         {
             view = pkmn.View;
@@ -45,7 +51,6 @@ namespace PokeGlitzer
 
         void ViewInterpretedChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (sender == this) return;
             if (args.PropertyName != nameof(PokemonView.Intepreted)) return;
             RefreshControls();
         }

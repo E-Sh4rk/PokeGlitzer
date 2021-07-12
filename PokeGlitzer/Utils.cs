@@ -11,6 +11,10 @@ namespace PokeGlitzer
 {
     static class Utils
     {
+        public static RangeObservableCollection<byte> ByteCollectionOfSize(int size)
+        {
+            return new RangeObservableCollection<byte>(new byte[size]);
+        }
         public static bool HasOnlyHexDigits(string str)
         {
             foreach (char c in str.ToUpperInvariant())

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
-    public class Pokemon
+    public class Pokemon : IDisposable
     {
         RangeObservableCollection<byte> data;
         int index;
@@ -62,8 +62,6 @@ namespace PokeGlitzer
 
         void ViewDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            if (sender == this) return;
-
             switch (args.Action)
             {
                 case NotifyCollectionChangedAction.Replace:
@@ -80,15 +78,12 @@ namespace PokeGlitzer
 
         void ViewDecodedDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            if (sender == this) return;
-
             UpdateView(view.DecodedData.ToArray(), true, true, false, true);
             Utils.UpdateCollectionRange(data, view.Data, index);
         }
 
         void ViewInterpretedChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (sender == this) return;
             if (args.PropertyName != nameof(PokemonView.Intepreted)) return;
 
             UpdateViewFromInterpreted();
@@ -97,8 +92,6 @@ namespace PokeGlitzer
 
         void SourceDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            if (sender == this) return;
-
             bool needUpdate;
             switch (args.Action)
             {
@@ -262,6 +255,11 @@ namespace PokeGlitzer
                 Utils.UpdateCollectionRange(view.DecodedData, res, offset);
                 view.ChecksumValid = true;
             }
+        }
+
+        public void Dispose()
+        {
+            data.CollectionChanged -= SourceDataChanged;
         }
     }
 }

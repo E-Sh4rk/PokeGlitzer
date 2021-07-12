@@ -89,9 +89,9 @@ namespace PokeGlitzer
     public enum EggType
     {
         Invalid = 0,
-        NotAnEgg,
-        Egg,
-        BadEgg
+        NotAnEgg = 1,
+        Egg = 2,
+        BadEgg = 3
     }
 
 }

@@ -13,12 +13,12 @@ namespace PokeGlitzer
         public HexEditor()
         {
             InitializeComponent();
-            DataContext = new PokemonView(80);
+            DataContext = new HexEditorModel();
         }
         public HexEditor(Pokemon pkmn)
         {
             InitializeComponent();
-            DataContext = new PokemonHexEditorModel(pkmn);
+            DataContext = new HexEditorModel(pkmn);
 #if DEBUG
             this.AttachDevTools();
 #endif
@@ -29,15 +29,15 @@ namespace PokeGlitzer
             AvaloniaXamlLoader.Load(this);
         }
     }
-    public class PokemonHexEditorModel : INotifyPropertyChanged
+    public class HexEditorModel : INotifyPropertyChanged
     {
         PokemonView view;
 
-        public PokemonHexEditorModel()
+        public HexEditorModel()
         {
             view = new PokemonView(80);
         }
-        public PokemonHexEditorModel(Pokemon pkmn)
+        public HexEditorModel(Pokemon pkmn)
         {
             view = pkmn.View;
             view.Data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));

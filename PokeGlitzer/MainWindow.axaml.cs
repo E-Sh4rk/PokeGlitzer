@@ -36,6 +36,7 @@ namespace PokeGlitzer
             data = new RangeObservableCollection<byte>(new byte[80]);
             pkmn = new Pokemon(data, 0);
         }
+        public void OpenPokemonInterpreted() => new InterpretedEditor(pkmn).Show();
         public void OpenPokemonData() => new PokemonViewWindow(pkmn).Show();
         public void OpenPokemonRaw() => new HexEditor(pkmn).Show();
 

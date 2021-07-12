@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PokeGlitzer.Converters"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500" Width="400" Height="500"
+        SizeToContent="WidthAndHeight" CanResize="False"
+        x:Class="PokeGlitzer.InterpretedEditor"
+        Title="Pokemon Interpreted Data Editor">
+
+  <Window.Resources>
+    <local:NumberToStringConverter x:Key="n2s"/>
+    <local:EggTypeToIndex x:Key="egg2i"/>
+  </Window.Resources>
+
+  <StackPanel Orientation="Vertical" Margin="10">
+    <Grid ColumnDefinitions="75,175,75,175" RowDefinitions="Auto,Auto">
+      <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">PID</TextBlock>
+      <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding PID, Converter={StaticResource n2s}, ConverterParameter=X}" />
+      
+      <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">OTID</TextBlock>
+      <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding OTID, Converter={StaticResource n2s}, ConverterParameter=X}" />
+      
+      <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Egg type</TextBlock>
+      <ComboBox Grid.Row="1" Grid.Column="1" Margin="10,5" HorizontalAlignment="Stretch"
+                SelectedIndex="{Binding Egg, Converter={StaticResource egg2i}}">
+        <ComboBoxItem>-</ComboBoxItem>
+        <ComboBoxItem>Not an egg</ComboBoxItem>
+        <ComboBoxItem>Egg</ComboBoxItem>
+        <ComboBoxItem>Bad egg</ComboBoxItem>
+      </ComboBox>
+    </Grid>
+    <Separator Height="25"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+      <Button HorizontalContentAlignment="Center" Content="Reset" Width="100" Command="{Binding RefreshControls}" />
+      <Button HorizontalContentAlignment="Center" Content="Save" Width="100" Command="{Binding Save}" />
+    </StackPanel>
+  </StackPanel>
+  
+  
+</Window>

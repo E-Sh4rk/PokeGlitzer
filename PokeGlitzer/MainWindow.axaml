@@ -6,17 +6,11 @@
         mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="550"
         x:Class="PokeGlitzer.MainWindow"
         Title="PokeGlitzer">
-
-  <Window.Resources>
-    <local:ByteStringConverter x:Key="bsc"/>
-    <local:SubstructureToColor x:Key="s2c"/>
-    <local:SubstructureToText x:Key="s2t"/>
-    <local:BoolToColor x:Key="b2c"/>
-  </Window.Resources>
   
   <StackPanel Orientation="Vertical">
+    <Button Command="{Binding OpenPokemonInterpreted}">Open Pokemon Interpreted Data Editor!</Button>
     <Button Command="{Binding OpenPokemonData}">Open Pokemon Data Editor!</Button>
-    <Button Command="{Binding OpenPokemonRaw}">Open Pokemon Raw Editor!</Button>
+    <Button Command="{Binding OpenPokemonRaw}">Open Pokemon Raw Data Editor!</Button>
   </StackPanel>
   
 </Window>

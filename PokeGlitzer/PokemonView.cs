@@ -23,41 +23,51 @@ namespace PokeGlitzer
         public RangeObservableCollection<byte> Data { get => data; }
         public RangeObservableCollection<byte> DecodedData { get => decodedData; }
 
+        InterpretedData? interpreted;
+        public InterpretedData? Intepreted {
+            get => interpreted;
+            set
+            {
+                interpreted = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Intepreted)));
+            }
+        }
+
         int subp1 = 1; int subp2 = 2; int subp3 = 3; int subp4 = 4;
-        public int SubstructureAtPos1
+        public int SubstructureAtPos0
         {
             get => subp1;
             set
             {
                 subp1 = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubstructureAtPos1)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubstructureAtPos0)));
             }
         }
-        public int SubstructureAtPos2
+        public int SubstructureAtPos1
         {
             get => subp2;
             set
             {
                 subp2 = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubstructureAtPos2)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubstructureAtPos1)));
             }
         }
-        public int SubstructureAtPos3
+        public int SubstructureAtPos2
         {
             get => subp3;
             set
             {
                 subp3 = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubstructureAtPos3)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubstructureAtPos2)));
             }
         }
-        public int SubstructureAtPos4
+        public int SubstructureAtPos3
         {
             get => subp4;
             set
             {
                 subp4 = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubstructureAtPos4)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubstructureAtPos3)));
             }
         }
 
@@ -74,4 +84,14 @@ namespace PokeGlitzer
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }
+
+    public record InterpretedData(uint PID, uint OTID, EggType egg);
+    public enum EggType
+    {
+        Invalid = 0,
+        NotAnEgg,
+        Egg,
+        BadEgg
+    }
+
 }

@@ -29,14 +29,14 @@
       <Rectangle Opacity="100" Fill="Brown" Height="50" Width="100" Canvas.Left="200" Canvas.Top="150"/>
       <Rectangle Opacity="100" Fill="LightGray" Height="50" Width="100" Canvas.Left="300" Canvas.Top="150"/>
 
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="200"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="250"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="250"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="300"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="350"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="400"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos4, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="400"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos4, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="450"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="200"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="250"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="250"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="300"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="350"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="400"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="400"/>
+      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="450"/>
 
       <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="0">Pokemon ID (PID)</TextBlock>
       <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="0">Original Trainer ID</TextBlock>
@@ -47,10 +47,10 @@
       <TextBlock FontSize="12" Canvas.Left="150" Canvas.Top="150">Marking</TextBlock>
       <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="150" FontWeight="Bold" Foreground="{Binding View.ChecksumValid, Converter={StaticResource b2c}}">Checksum</TextBlock>
       <TextBlock FontSize="12" Canvas.Left="300" Canvas.Top="150">Unused</TextBlock>
-      <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="200" Text="{Binding View.SubstructureAtPos1, Converter={StaticResource s2t}}"/>
-      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="250" Text="{Binding View.SubstructureAtPos2, Converter={StaticResource s2t}}"/>
-      <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="350" Text="{Binding View.SubstructureAtPos3, Converter={StaticResource s2t}}"/>
-      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="400" Text="{Binding View.SubstructureAtPos4, Converter={StaticResource s2t}}"/>
+      <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="200" Text="{Binding View.SubstructureAtPos0, Converter={StaticResource s2t}}"/>
+      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="250" Text="{Binding View.SubstructureAtPos1, Converter={StaticResource s2t}}"/>
+      <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="350" Text="{Binding View.SubstructureAtPos2, Converter={StaticResource s2t}}"/>
+      <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="400" Text="{Binding View.SubstructureAtPos3, Converter={StaticResource s2t}}"/>
 
       <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="5" Canvas.Top="15" Text="{Binding DisplayData[0], Converter={StaticResource bsc}}" />
       <TextBox MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="55" Canvas.Top="15" Text="{Binding DisplayData[1], Converter={StaticResource bsc}}" />

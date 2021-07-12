@@ -68,11 +68,9 @@ namespace PokeGlitzer
         public static byte[] TypeToByte<T>(T structure)
         {
             byte[] arr = new byte[Marshal.SizeOf(typeof(T))];
-
             GCHandle handle = GCHandle.Alloc(arr, GCHandleType.Pinned);
             Marshal.StructureToPtr(structure!, handle.AddrOfPinnedObject(), false);
             handle.Free();
-
             return arr;
         }
 

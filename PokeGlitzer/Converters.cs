@@ -42,13 +42,13 @@ namespace PokeGlitzer.Converters
             if (!(value is int)) throw new NotImplementedException();
             switch (value)
             {
-                case 1:
+                case 0:
                     return Brushes.Orchid;
-                case 2:
+                case 1:
                     return Brushes.SlateBlue;
-                case 3:
+                case 2:
                     return Brushes.DarkOrchid;
-                case 4:
+                case 3:
                     return Brushes.DarkSlateBlue;
                 default:
                     return Brushes.Black;
@@ -69,13 +69,13 @@ namespace PokeGlitzer.Converters
             if (!(value is int)) throw new NotImplementedException();
             switch (value)
             {
-                case 1:
+                case 0:
                     return "Growth (Substructure 1)";
-                case 2:
+                case 1:
                     return "Attacks (Substructure 2)";
-                case 3:
+                case 2:
                     return "EVs & Condition (Substructure 3)";
-                case 4:
+                case 3:
                     return "Miscellaneous (Substructure 4)";
                 default:
                     return "Invalid";

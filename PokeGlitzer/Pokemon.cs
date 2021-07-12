@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace PokeGlitzer
             data.CollectionChanged += SourceDataChanged;
             view.Data.CollectionChanged += ViewDataChanged;
             view.DecodedData.CollectionChanged += ViewDecodedDataChanged;
+            view.PropertyChanged += ViewInterpretedChanged;
         }
 
         PokemonView view;
@@ -73,14 +75,23 @@ namespace PokeGlitzer
                 default:
                     throw new NotImplementedException();
             }
-            UpdateView(view.Data.ToArray(), false, false, true);
+            UpdateView(view.Data.ToArray(), false, false, true, true);
         }
 
         void ViewDecodedDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
             if (sender == this) return;
 
-            UpdateView(view.DecodedData.ToArray(), true, true, false);
+            UpdateView(view.DecodedData.ToArray(), true, true, false, true);
+            Utils.UpdateCollectionRange(data, view.Data, index);
+        }
+
+        void ViewInterpretedChanged(object? sender, PropertyChangedEventArgs args)
+        {
+            if (sender == this) return;
+            if (args.PropertyName != nameof(PokemonView.Intepreted)) return;
+
+            UpdateViewFromInterpreted();
             Utils.UpdateCollectionRange(data, view.Data, index);
         }
 
@@ -110,7 +121,7 @@ namespace PokeGlitzer
         void UpdateViewFromSource()
         {
             byte[] dataArr = Utils.ExtractCollectionRange(data, index, size);
-            UpdateView(dataArr, false, true, true);
+            UpdateView(dataArr, false, true, true, true);
         }
         ushort ComputeChecksum(PokemonStruct pkmn) // pkmn data must be decoded
         {
@@ -125,18 +136,36 @@ namespace PokeGlitzer
             if (isDecoded && updateDecodedData) Utils.UpdateCollectionRange(view.DecodedData, dataArr);
             if (!isDecoded && updateData) Utils.UpdateCollectionRange(view.Data, dataArr);
         }
-        void UpdateView(byte[] dataArr, bool isDecoded, bool updateData, bool updateDecodedData)
+        int[] GetSubstructuresOrder(PokemonStruct pkmn)
+        {
+            return subOrders[pkmn.PID % 24];
+        }
+        int OffsetOfSubstructure(int[] order, int sub)
+        {
+            for (int i = 0; i < order.Length; i++)
+            {
+                if (order[i] == sub) return i*PokemonStruct.SUBSTRUCTURE_SIZE;
+            }
+            throw new ArgumentOutOfRangeException();
+        }
+        byte[] GetSubstructure(PokemonStruct pkmn, int sub)
+        {
+            int offset = OffsetOfSubstructure(GetSubstructuresOrder(pkmn), sub);
+            byte[] res = new byte[PokemonStruct.SUBSTRUCTURE_SIZE];
+            Array.Copy(pkmn.data, offset, res, 0, PokemonStruct.SUBSTRUCTURE_SIZE);
+            return res;
+        }
+        void UpdateView(byte[] dataArr, bool isDecoded, bool updateData, bool updateDecodedData, bool updateInterpreted)
         {
             PokemonStruct pkmn = Utils.ByteToType<PokemonStruct>(dataArr);
-            // Checksum and views
+            // Checksum and data
             UpdateChecksumAndViewData(pkmn, dataArr, isDecoded, updateData, updateDecodedData);
             // Compute substructures position order
-            uint m = pkmn.PID % 24;
-            int[] order = subOrders[m];
-            view.SubstructureAtPos1 = order[0] + 1;
-            view.SubstructureAtPos2 = order[1] + 1;
-            view.SubstructureAtPos3 = order[2] + 1;
-            view.SubstructureAtPos4 = order[3] + 1;
+            int[] order = subOrders[pkmn.PID % 24];
+            view.SubstructureAtPos0 = order[0];
+            view.SubstructureAtPos1 = order[1];
+            view.SubstructureAtPos2 = order[2];
+            view.SubstructureAtPos3 = order[3];
             // XOR data
             uint key = pkmn.PID ^ pkmn.OTID;
             for (int i = 0; i < pkmn.data.Length; i += 4)
@@ -150,8 +179,45 @@ namespace PokeGlitzer
             }
             dataArr = Utils.TypeToByte(pkmn);
             isDecoded = !isDecoded;
-            // Checksum and views
+            // Checksum and data
             UpdateChecksumAndViewData(pkmn, dataArr, isDecoded, updateData, updateDecodedData);
+            // Interpreted data
+            if (updateInterpreted)
+            {
+                // Retrieving substructures
+                PokemonStruct decoded = Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray());
+                Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(decoded, 3));
+                // Extracting interpreted data
+                EggType eggType = EggType.Invalid;
+                bool eggData = (sub3.ivEggAbility & Substructure3.EGG_MASK) != 0;
+                bool egg = (decoded.isEgg & PokemonStruct.IS_EGG_MASK) != 0;
+                bool badEgg = (decoded.isEgg & PokemonStruct.IS_BAD_EGG_MASK) != 0;
+                if (eggData == egg)
+                {
+                    if (!egg && !badEgg) eggType = EggType.NotAnEgg;
+                    else if (egg & badEgg) eggType = EggType.BadEgg;
+                    else if (egg) eggType = EggType.Egg;
+                }
+                // Update interpreted data
+                view.Intepreted = new InterpretedData(pkmn.PID, pkmn.OTID, eggType);
+            }
+        }
+        void UpdateViewFromInterpreted()
+        {
+            InterpretedData interpreted = view.Intepreted!;
+            PokemonStruct pkmn = Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray());
+            // Retrieving substructures
+            Substructure0 sub0 = Utils.ByteToType<Substructure0>(GetSubstructure(pkmn, 0));
+            Substructure1 sub1 = Utils.ByteToType<Substructure1>(GetSubstructure(pkmn, 1));
+            Substructure2 sub2 = Utils.ByteToType<Substructure2>(GetSubstructure(pkmn, 2));
+            Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(pkmn, 3));
+            // Modifying data
+            // TODO
+            // Joining and updating substructures
+            // TODO
+            // Fixing checksum if it was valid initially
+            if (view.ChecksumValid) pkmn.checksum = ComputeChecksum(pkmn);
+            UpdateView(Utils.TypeToByte(pkmn), true, true, true, false);
         }
 
         // ===== PUBLIC FUNCTIONS =====
@@ -160,7 +226,7 @@ namespace PokeGlitzer
         {
             if (!view.ChecksumValid)
             {
-                uint checksum = ComputeChecksum(Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray()));
+                ushort checksum = ComputeChecksum(Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray()));
                 byte[] res = BitConverter.GetBytes(checksum);
                 int offset = Utils.OffsetOf<PokemonStruct>("checksum");
                 Utils.UpdateCollectionRange(data, res, index + offset);

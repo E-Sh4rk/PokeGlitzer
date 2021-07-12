@@ -17,6 +17,10 @@ namespace PokeGlitzer
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace();
+                .LogToTrace()
+                .With(new Win32PlatformOptions
+                {
+                    AllowEglInitialization = false
+                });
     }
 }

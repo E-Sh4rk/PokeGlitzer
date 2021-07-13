@@ -24,12 +24,12 @@ namespace PokeGlitzer
         public RangeObservableCollection<byte> DecodedData { get => decodedData; }
 
         InterpretedData? interpreted;
-        public InterpretedData? Intepreted {
+        public InterpretedData? Interpreted {
             get => interpreted;
             set
             {
                 interpreted = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Intepreted)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Interpreted)));
             }
         }
 

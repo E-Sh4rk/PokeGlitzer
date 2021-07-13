@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -30,13 +31,31 @@ namespace PokeGlitzer
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         RangeObservableCollection<byte> data;
+        const int BOX_PKMN_SIZE = 80;
+        const int BOX_SIZE = 30;
         public MainWindowViewModel()
         {
-            data = Utils.ByteCollectionOfSize(80);
+            data = Utils.ByteCollectionOfSize(BOX_PKMN_SIZE * BOX_SIZE);
+            Pokemon?[] box1 = new Pokemon[BOX_SIZE];
+            for (int i = 0; i < box1.Length; i++) box1[i] = new Pokemon(data, BOX_PKMN_SIZE * i);
+            currentBox = new RangeObservableCollection<Pokemon?>(box1);
         }
-        public void OpenPokemonInterpreted() => new InterpretedEditor(data, 0).Show();
-        public void OpenPokemonData() => new PokemonViewWindow(data, 0).Show();
-        public void OpenPokemonRaw() => new HexEditor(data, 0).Show();
+
+        RangeObservableCollection<Pokemon?> currentBox;
+        public RangeObservableCollection<Pokemon?> CurrentBox { get => currentBox; }
+
+        public void OpenInterpretedEditor(Pokemon arg)
+        {
+            new InterpretedEditor(data, arg.DataOffset).Show();
+        }
+        public void OpenDataEditor(Pokemon arg)
+        {
+            new PokemonViewWindow(data, arg.DataOffset).Show();
+        }
+        public void OpenRawEditor(Pokemon arg)
+        {
+            new HexEditor(data, arg.DataOffset).Show();
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

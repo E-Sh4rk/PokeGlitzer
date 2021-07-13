@@ -31,6 +31,8 @@ namespace PokeGlitzer
 
         PokemonView view;
         public PokemonView View { get => view; }
+        public int DataOffset { get => index; }
+        public int DataSize { get => size; }
 
         int[][] subOrders = new int[][]
         {
@@ -84,7 +86,7 @@ namespace PokeGlitzer
 
         void ViewInterpretedChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName != nameof(PokemonView.Intepreted)) return;
+            if (args.PropertyName != nameof(PokemonView.Interpreted)) return;
 
             UpdateViewFromInterpreted();
             Utils.UpdateCollectionRange(data, view.Data, index);
@@ -192,12 +194,12 @@ namespace PokeGlitzer
                     else if (egg) eggType = EggType.Egg;
                 }
                 // Update interpreted data
-                view.Intepreted = new InterpretedData(pkmn.PID, pkmn.OTID, eggType);
+                view.Interpreted = new InterpretedData(pkmn.PID, pkmn.OTID, eggType);
             }
         }
         void UpdateViewFromInterpreted()
         {
-            InterpretedData interpreted = view.Intepreted!;
+            InterpretedData interpreted = view.Interpreted!;
             PokemonStruct pkmn = Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray());
             // Retrieving substructures
             Substructure0 sub0 = Utils.ByteToType<Substructure0>(GetSubstructure(pkmn, 0));

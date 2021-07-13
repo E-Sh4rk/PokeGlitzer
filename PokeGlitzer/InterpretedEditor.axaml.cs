@@ -53,14 +53,14 @@ namespace PokeGlitzer
 
         void ViewInterpretedChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName != nameof(PokemonView.Intepreted)) return;
+            if (args.PropertyName != nameof(PokemonView.Interpreted)) return;
             RefreshControls();
         }
 
         public void RefreshControls()
         {
-            if (view.Intepreted == null) return;
-            InterpretedData d = view.Intepreted!;
+            if (view.Interpreted == null) return;
+            InterpretedData d = view.Interpreted!;
             PID = d.PID;
             OTID = d.OTID;
             Egg = d.egg;
@@ -68,7 +68,7 @@ namespace PokeGlitzer
         public void Save()
         {
             InterpretedData d = new InterpretedData(PID, OTID, Egg);
-            view.Intepreted = d;
+            view.Interpreted = d;
         }
 
         uint pid;

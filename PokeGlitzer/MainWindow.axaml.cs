@@ -29,7 +29,6 @@ namespace PokeGlitzer
     }
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        // TODO: Investigate the memory leak when opening/closing multiple editors
         RangeObservableCollection<byte> data;
         public MainWindowViewModel()
         {

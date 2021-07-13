@@ -81,7 +81,7 @@ namespace PokeGlitzer
             get => view;
         }
 
-        public void RestoreInitial() => Utils.UpdateCollectionRange(view.Data, new byte[80]);
+        public void RestoreInitial() => Utils.UpdateCollectionRange(view.Data, new byte[view.Data.Count]);
         public void FixChecksum() => pkmn.FixChecksum();
 
         public event PropertyChangedEventHandler? PropertyChanged;

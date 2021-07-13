@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Text;
 
@@ -45,7 +46,9 @@ namespace PokeGlitzer
         public HexEditorModel(Pokemon pkmn)
         {
             view = pkmn.View;
-            view.Data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));
+            //view.Data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));
+            Avalonia.Utilities.WeakEventHandlerManager.Subscribe<ObservableCollection<byte>, NotifyCollectionChangedEventArgs, HexEditorModel>(view.Data,
+                nameof(ObservableCollection<byte>.CollectionChanged), (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text))));
         }
 
         public string Text

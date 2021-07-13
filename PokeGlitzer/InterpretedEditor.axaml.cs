@@ -45,7 +45,9 @@ namespace PokeGlitzer
         public InterpretedEditorModel(Pokemon pkmn)
         {
             view = pkmn.View;
-            view.PropertyChanged += ViewInterpretedChanged;
+            //view.PropertyChanged += ViewInterpretedChanged;
+            Avalonia.Utilities.WeakEventHandlerManager.Subscribe<PokemonView, PropertyChangedEventArgs, InterpretedEditorModel>(view,
+                nameof(PokemonView.PropertyChanged), ViewInterpretedChanged);
             RefreshControls();
         }
 

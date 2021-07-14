@@ -11,9 +11,9 @@ namespace PokeGlitzer
 {
     static class Utils
     {
-        public static RangeObservableCollection<byte> ByteCollectionOfSize(int size)
+        public static RangeObservableCollection<T> ByteCollectionOfSize<T>(int size)
         {
-            return new RangeObservableCollection<byte>(new byte[size]);
+            return new RangeObservableCollection<T>(new T[size]);
         }
         public static bool HasOnlyHexDigits(string str)
         {
@@ -26,17 +26,17 @@ namespace PokeGlitzer
             return true;
         }
 
-        public static void UpdateCollectionRange(RangeObservableCollection<byte> col, IEnumerable<byte> newData, int start = 0)
+        public static void UpdateCollectionRange<T>(RangeObservableCollection<T> col, IEnumerable<T> newData, int start = 0)
         {
             /*for (int i = 0; i < newData.Length; i++)
                 col[i + start] = newData[i];*/
             col.ReplaceRange(start, newData.Count(), newData);
         }
-        public static byte[] ExtractCollectionRange(RangeObservableCollection<byte> col, int start, int length)
+        public static T[] ExtractCollectionRange<T>(RangeObservableCollection<T> col, int start, int length)
         {
             int i = -1;
-            byte[] dataArr = new byte[length];
-            foreach (byte b in col)
+            T[] dataArr = new T[length];
+            foreach (T b in col)
             {
                 i++;
                 if (i >= start)

@@ -41,18 +41,37 @@ namespace PokeGlitzer
         public MainWindowViewModel(MainWindow mw)
         {
             this.mw = mw;
-            data = Utils.ByteCollectionOfSize(BOX_PKMN_SIZE * BOX_SIZE * BOX_NUMBER);
-            Pokemon?[] box1 = new Pokemon[BOX_SIZE];
-            for (int i = 0; i < box1.Length; i++) box1[i] = new Pokemon(data, BOX_PKMN_SIZE * i);
-            currentBox = new RangeObservableCollection<Pokemon?>(box1);
+            data = Utils.ByteCollectionOfSize<byte>(BOX_PKMN_SIZE * BOX_SIZE * BOX_NUMBER);
+            currentBox = Utils.ByteCollectionOfSize<Pokemon?>(BOX_SIZE);
+            LoadBox(0);
+        }
+
+        void LoadBox(int nb)
+        {
+            int offset = BOX_PKMN_SIZE * BOX_SIZE * nb;
+            for (int i = 0; i < CurrentBox.Count; i++)
+            {
+                if (CurrentBox[i] != null)
+                    CurrentBox[i]!.Dispose();
+            }
+            Pokemon?[] pkmns = new Pokemon?[BOX_SIZE];
+            for (int i = 0; i < pkmns.Length; i++)
+                pkmns[i] = new Pokemon(data, BOX_PKMN_SIZE * i + offset);
+            Utils.UpdateCollectionRange(CurrentBox, pkmns);
+            CurrentBoxNumber = nb+1;
         }
 
         RangeObservableCollection<Pokemon?> currentBox;
+        int currentBoxNumber;
+        public int CurrentBoxNumber {
+            get => currentBoxNumber + 1;
+            set { currentBoxNumber = value - 1; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxNumber))); }
+        }
         public RangeObservableCollection<Pokemon?> CurrentBox { get => currentBox; }
         public Save? CurrentSave
         {
             get => save;
-            set { save = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Save))); }
+            set { save = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentSave))); }
         }
 
         public void OpenInterpretedEditor(Pokemon arg)
@@ -89,6 +108,14 @@ namespace PokeGlitzer
         public void Save()
         {
             // TODO
+        }
+        public void NextBox()
+        {
+            LoadBox((currentBoxNumber+1) % BOX_NUMBER);
+        }
+        public void PrevBox()
+        {
+            LoadBox((currentBoxNumber+BOX_NUMBER-1) % BOX_NUMBER);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

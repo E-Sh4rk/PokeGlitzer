@@ -47,6 +47,11 @@
     </Menu>
 
     <StackPanel Orientation="Vertical">
+      <DockPanel Width="300" LastChildFill="True">
+        <Button Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
+        <Button Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat=BOX {0}}" />
+      </DockPanel>
       <Grid ColumnDefinitions="50,50,50,50,50,50" RowDefinitions="50,50,50,50,50">
         <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding CurrentBox[0]}"/>
         <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding CurrentBox[1]}"/>

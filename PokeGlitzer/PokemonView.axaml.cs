@@ -61,8 +61,8 @@ namespace PokeGlitzer
             set
             {
                 decoded = value;
-                DisplayData = decoded ? view.DecodedData : view.Data;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Decoded)));
+                DisplayData = decoded ? view.DecodedData : view.Data;
             }
         }
 

@@ -31,44 +31,59 @@
       </Canvas>
     </DataTemplate>
   </Window.DataTemplates>
-  
-  <StackPanel Orientation="Vertical">
-    <Grid ColumnDefinitions="50,50,50,50,50,50" RowDefinitions="50,50,50,50,50">
-      <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding CurrentBox[0]}"/>
-      <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding CurrentBox[1]}"/>
-      <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding CurrentBox[2]}"/>
-      <ContentControl Grid.Row="0" Grid.Column="3" Content="{Binding CurrentBox[3]}"/>
-      <ContentControl Grid.Row="0" Grid.Column="4" Content="{Binding CurrentBox[4]}"/>
-      <ContentControl Grid.Row="0" Grid.Column="5" Content="{Binding CurrentBox[5]}"/>
 
-      <ContentControl Grid.Row="1" Grid.Column="0" Content="{Binding CurrentBox[6]}"/>
-      <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding CurrentBox[7]}"/>
-      <ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding CurrentBox[8]}"/>
-      <ContentControl Grid.Row="1" Grid.Column="3" Content="{Binding CurrentBox[9]}"/>
-      <ContentControl Grid.Row="1" Grid.Column="4" Content="{Binding CurrentBox[10]}"/>
-      <ContentControl Grid.Row="1" Grid.Column="5" Content="{Binding CurrentBox[11]}"/>
+  <DockPanel Width="300" Height="300" LastChildFill="True">
+    <Menu DockPanel.Dock="Top">
+      <MenuItem Header="_File">
+        <MenuItem Header="_Open..." Command="{Binding Open}"/>
+        <MenuItem Header="_Save" Command="{Binding Save}" IsEnabled="{Binding CurrentSave, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <Separator/>
+        <MenuItem Header="_Exit" Command="{Binding Exit}"/>
+      </MenuItem>
+      <!--<MenuItem Header="_Edit">
+        <MenuItem Header="Copy"/>
+        <MenuItem Header="Paste"/>
+      </MenuItem>-->
+    </Menu>
 
-      <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding CurrentBox[12]}"/>
-      <ContentControl Grid.Row="2" Grid.Column="1" Content="{Binding CurrentBox[13]}"/>
-      <ContentControl Grid.Row="2" Grid.Column="2" Content="{Binding CurrentBox[14]}"/>
-      <ContentControl Grid.Row="2" Grid.Column="3" Content="{Binding CurrentBox[15]}"/>
-      <ContentControl Grid.Row="2" Grid.Column="4" Content="{Binding CurrentBox[16]}"/>
-      <ContentControl Grid.Row="2" Grid.Column="5" Content="{Binding CurrentBox[17]}"/>
+    <StackPanel Orientation="Vertical">
+      <Grid ColumnDefinitions="50,50,50,50,50,50" RowDefinitions="50,50,50,50,50">
+        <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding CurrentBox[0]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding CurrentBox[1]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding CurrentBox[2]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="3" Content="{Binding CurrentBox[3]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="4" Content="{Binding CurrentBox[4]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="5" Content="{Binding CurrentBox[5]}"/>
 
-      <ContentControl Grid.Row="3" Grid.Column="0" Content="{Binding CurrentBox[18]}"/>
-      <ContentControl Grid.Row="3" Grid.Column="1" Content="{Binding CurrentBox[19]}"/>
-      <ContentControl Grid.Row="3" Grid.Column="2" Content="{Binding CurrentBox[20]}"/>
-      <ContentControl Grid.Row="3" Grid.Column="3" Content="{Binding CurrentBox[21]}"/>
-      <ContentControl Grid.Row="3" Grid.Column="4" Content="{Binding CurrentBox[22]}"/>
-      <ContentControl Grid.Row="3" Grid.Column="5" Content="{Binding CurrentBox[23]}"/>
+        <ContentControl Grid.Row="1" Grid.Column="0" Content="{Binding CurrentBox[6]}"/>
+        <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding CurrentBox[7]}"/>
+        <ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding CurrentBox[8]}"/>
+        <ContentControl Grid.Row="1" Grid.Column="3" Content="{Binding CurrentBox[9]}"/>
+        <ContentControl Grid.Row="1" Grid.Column="4" Content="{Binding CurrentBox[10]}"/>
+        <ContentControl Grid.Row="1" Grid.Column="5" Content="{Binding CurrentBox[11]}"/>
 
-      <ContentControl Grid.Row="4" Grid.Column="0" Content="{Binding CurrentBox[24]}"/>
-      <ContentControl Grid.Row="4" Grid.Column="1" Content="{Binding CurrentBox[25]}"/>
-      <ContentControl Grid.Row="4" Grid.Column="2" Content="{Binding CurrentBox[26]}"/>
-      <ContentControl Grid.Row="4" Grid.Column="3" Content="{Binding CurrentBox[27]}"/>
-      <ContentControl Grid.Row="4" Grid.Column="4" Content="{Binding CurrentBox[28]}"/>
-      <ContentControl Grid.Row="4" Grid.Column="5" Content="{Binding CurrentBox[29]}"/>
-    </Grid>
-  </StackPanel>
+        <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding CurrentBox[12]}"/>
+        <ContentControl Grid.Row="2" Grid.Column="1" Content="{Binding CurrentBox[13]}"/>
+        <ContentControl Grid.Row="2" Grid.Column="2" Content="{Binding CurrentBox[14]}"/>
+        <ContentControl Grid.Row="2" Grid.Column="3" Content="{Binding CurrentBox[15]}"/>
+        <ContentControl Grid.Row="2" Grid.Column="4" Content="{Binding CurrentBox[16]}"/>
+        <ContentControl Grid.Row="2" Grid.Column="5" Content="{Binding CurrentBox[17]}"/>
+
+        <ContentControl Grid.Row="3" Grid.Column="0" Content="{Binding CurrentBox[18]}"/>
+        <ContentControl Grid.Row="3" Grid.Column="1" Content="{Binding CurrentBox[19]}"/>
+        <ContentControl Grid.Row="3" Grid.Column="2" Content="{Binding CurrentBox[20]}"/>
+        <ContentControl Grid.Row="3" Grid.Column="3" Content="{Binding CurrentBox[21]}"/>
+        <ContentControl Grid.Row="3" Grid.Column="4" Content="{Binding CurrentBox[22]}"/>
+        <ContentControl Grid.Row="3" Grid.Column="5" Content="{Binding CurrentBox[23]}"/>
+
+        <ContentControl Grid.Row="4" Grid.Column="0" Content="{Binding CurrentBox[24]}"/>
+        <ContentControl Grid.Row="4" Grid.Column="1" Content="{Binding CurrentBox[25]}"/>
+        <ContentControl Grid.Row="4" Grid.Column="2" Content="{Binding CurrentBox[26]}"/>
+        <ContentControl Grid.Row="4" Grid.Column="3" Content="{Binding CurrentBox[27]}"/>
+        <ContentControl Grid.Row="4" Grid.Column="4" Content="{Binding CurrentBox[28]}"/>
+        <ContentControl Grid.Row="4" Grid.Column="5" Content="{Binding CurrentBox[29]}"/>
+      </Grid>
+    </StackPanel>
+  </DockPanel>
   
 </Window>

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PokeGlitzer
 {
-    public partial class HexEditor : Window
+    public partial class HexEditor : Window, IEditorWindow
     {
         Pokemon pkmn;
         public HexEditor()
@@ -27,6 +27,7 @@ namespace PokeGlitzer
             this.AttachDevTools();
 #endif
         }
+        public Pokemon Pokemon => pkmn;
 
         private void InitializeComponent()
         {

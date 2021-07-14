@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
+    public record DataLocation(int offset, int size);
     public class Pokemon : IDisposable
     {
         RangeObservableCollection<byte> data;
@@ -31,8 +32,7 @@ namespace PokeGlitzer
 
         PokemonView view;
         public PokemonView View { get => view; }
-        public int DataOffset { get => index; }
-        public int DataSize { get => size; }
+        public DataLocation DataLocation { get => new DataLocation(index, size); }
 
         int[][] subOrders = new int[][]
         {

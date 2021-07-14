@@ -10,7 +10,7 @@ using System.Text;
 
 namespace PokeGlitzer
 {
-    public partial class PokemonViewWindow : Window
+    public partial class PokemonViewWindow : Window, IEditorWindow
     {
         Pokemon pkmn;
         public PokemonViewWindow()
@@ -29,6 +29,7 @@ namespace PokeGlitzer
             this.AttachDevTools();
 #endif
         }
+        public Pokemon Pokemon => pkmn;
 
         private void InitializeComponent()
         {

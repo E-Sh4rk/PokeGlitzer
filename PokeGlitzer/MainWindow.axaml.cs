@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -63,6 +64,7 @@ namespace PokeGlitzer
 
         RangeObservableCollection<Pokemon?> currentBox;
         int currentBoxNumber;
+        DataLocation? selection;
         public int CurrentBoxNumber {
             get => currentBoxNumber + 1;
             set { currentBoxNumber = value - 1; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxNumber))); }
@@ -73,19 +75,34 @@ namespace PokeGlitzer
             get => save;
             set { save = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentSave))); }
         }
+        public DataLocation? Selection
+        {
+            get => selection;
+            set { selection = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selection))); }
+        }
 
+        List<IEditorWindow> openedEditors = new List<IEditorWindow>();
         public void OpenInterpretedEditor(Pokemon arg)
         {
-            new InterpretedEditor(data, arg.DataOffset).Show();
+            ShowWindow(new InterpretedEditor(data, arg.DataLocation.offset));
         }
         public void OpenDataEditor(Pokemon arg)
         {
-            new PokemonViewWindow(data, arg.DataOffset).Show();
+            ShowWindow(new PokemonViewWindow(data, arg.DataLocation.offset));
         }
         public void OpenRawEditor(Pokemon arg)
         {
-            new HexEditor(data, arg.DataOffset).Show();
+            ShowWindow(new HexEditor(data, arg.DataLocation.offset));
         }
+        public void ShowWindow(IEditorWindow w)
+        {
+            openedEditors.Add(w);
+            w.Closed += (_, _) => { openedEditors.Remove(w); GC.Collect(); };
+            w.Activated += (_, _) => { Selection = w.Pokemon.DataLocation; };
+            w.Deactivated += (_, _) => { Selection = null; };
+            w.Show(mw);
+        }
+
         public void Exit()
         {
             mw.Close();

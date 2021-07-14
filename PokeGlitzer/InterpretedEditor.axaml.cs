@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace PokeGlitzer
 {
-    public partial class InterpretedEditor : Window
+    public partial class InterpretedEditor : Window, IEditorWindow
     {
         Pokemon pkmn;
         public InterpretedEditor()
@@ -26,6 +26,7 @@ namespace PokeGlitzer
             this.AttachDevTools();
 #endif
         }
+        public Pokemon Pokemon => pkmn;
 
         private void InitializeComponent()
         {

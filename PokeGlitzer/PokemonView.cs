@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -93,6 +96,18 @@ namespace PokeGlitzer
         NotAnEgg = 2,
         Egg = 3,
         BadEgg = 4
+    }
+
+    public interface IEditorWindow
+    {
+        public Pokemon Pokemon { get; }
+        public bool IsActive { get; }
+        public void Show(Window parent);
+        public void Close();
+        public void Focus();
+        public event EventHandler Closed;
+        public event EventHandler Activated;
+        public event EventHandler Deactivated;
     }
 
 }

@@ -28,7 +28,8 @@
       <ComboBox Grid.Row="1" Grid.Column="3" Margin="10,5" HorizontalAlignment="Stretch"
                 SelectedIndex="{Binding Egg, Converter={StaticResource egg2i}}">
         <ComboBoxItem>-</ComboBoxItem>
-        <ComboBoxItem>Not an egg</ComboBoxItem>
+        <ComboBoxItem>Empty slot</ComboBoxItem>
+        <ComboBoxItem>Has species</ComboBoxItem>
         <ComboBoxItem>Egg</ComboBoxItem>
         <ComboBoxItem>Bad egg</ComboBoxItem>
       </ComboBox>

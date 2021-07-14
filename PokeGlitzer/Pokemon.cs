@@ -185,14 +185,19 @@ namespace PokeGlitzer
                 Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(decoded, 3));
                 // Extracting interpreted data
                 EggType eggType = EggType.Invalid;
+                bool hasSpecies = (decoded.isEgg & PokemonStruct.HAS_SPECIES_MASK) != 0;
                 bool eggData = (sub3.ivEggAbility & Substructure3.EGG_MASK) != 0;
                 bool egg = (decoded.isEgg & PokemonStruct.IS_EGG_MASK) != 0;
                 bool badEgg = (decoded.isEgg & PokemonStruct.IS_BAD_EGG_MASK) != 0;
                 if (eggData == egg)
                 {
-                    if (!egg && !badEgg) eggType = EggType.NotAnEgg;
-                    else if (egg & badEgg) eggType = EggType.BadEgg;
-                    else if (egg) eggType = EggType.Egg;
+                    if (hasSpecies)
+                    {
+                        if (!egg && !badEgg) eggType = EggType.HasSpecies;
+                        else if (egg & badEgg) eggType = EggType.BadEgg;
+                        else if (egg) eggType = EggType.Egg;
+                    }
+                    else if (!egg && !badEgg) eggType = EggType.None;
                 }
                 // Update interpreted data
                 view.Interpreted = new InterpretedData(pkmn.PID, pkmn.OTID, sub0.species, eggType);
@@ -215,15 +220,19 @@ namespace PokeGlitzer
             {
                 case EggType.Egg:
                     sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
-                    pkmn.isEgg = (byte)((pkmn.isEgg | PokemonStruct.IS_EGG_MASK) & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.isEgg = (byte)((pkmn.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK) & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.BadEgg:
                     sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
-                    pkmn.isEgg = (byte)(pkmn.isEgg | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.isEgg = (byte)(pkmn.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
                     break;
-                case EggType.NotAnEgg:
+                case EggType.HasSpecies:
                     sub3.ivEggAbility = sub3.ivEggAbility & ~Substructure3.EGG_MASK;
-                    pkmn.isEgg = (byte)(pkmn.isEgg & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.isEgg = (byte)((pkmn.isEgg | PokemonStruct.HAS_SPECIES_MASK) & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    break;
+                case EggType.None:
+                    sub3.ivEggAbility = sub3.ivEggAbility & ~Substructure3.EGG_MASK;
+                    pkmn.isEgg = (byte)(pkmn.isEgg & ~PokemonStruct.HAS_SPECIES_MASK & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 default:
                     break;

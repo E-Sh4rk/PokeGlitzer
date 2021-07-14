@@ -90,7 +90,7 @@ namespace PokeGlitzer
     {
         Invalid = 0,
         None = 1,
-        HasSpecies = 2,
+        NotAnEgg = 2,
         Egg = 3,
         BadEgg = 4
     }

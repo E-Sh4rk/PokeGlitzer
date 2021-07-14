@@ -29,7 +29,7 @@
                 SelectedIndex="{Binding Egg, Converter={StaticResource egg2i}}">
         <ComboBoxItem>-</ComboBoxItem>
         <ComboBoxItem>Empty slot</ComboBoxItem>
-        <ComboBoxItem>Has species</ComboBoxItem>
+        <ComboBoxItem>Not an egg</ComboBoxItem>
         <ComboBoxItem>Egg</ComboBoxItem>
         <ComboBoxItem>Bad egg</ComboBoxItem>
       </ComboBox>

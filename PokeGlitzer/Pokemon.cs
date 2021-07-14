@@ -193,7 +193,7 @@ namespace PokeGlitzer
                 {
                     if (hasSpecies)
                     {
-                        if (!egg && !badEgg) eggType = EggType.HasSpecies;
+                        if (!egg && !badEgg) eggType = EggType.NotAnEgg;
                         else if (egg & badEgg) eggType = EggType.BadEgg;
                         else if (egg) eggType = EggType.Egg;
                     }
@@ -226,7 +226,7 @@ namespace PokeGlitzer
                     sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
                     pkmn.isEgg = (byte)(pkmn.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
                     break;
-                case EggType.HasSpecies:
+                case EggType.NotAnEgg:
                     sub3.ivEggAbility = sub3.ivEggAbility & ~Substructure3.EGG_MASK;
                     pkmn.isEgg = (byte)((pkmn.isEgg | PokemonStruct.HAS_SPECIES_MASK) & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;

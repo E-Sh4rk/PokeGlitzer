@@ -107,7 +107,13 @@ namespace PokeGlitzer
         }
         public void Save()
         {
-            // TODO
+            if (CurrentSave != null)
+            {
+                PCData pcd = CurrentSave.RetrievePCData();
+                pcd.pokemonList = Utils.ExtractCollectionRange(data, 0, data.Count);
+                CurrentSave.SetPCData(pcd);
+                CurrentSave.SaveToFile();
+            }
         }
         public void NextBox()
         {

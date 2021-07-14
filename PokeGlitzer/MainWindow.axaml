@@ -11,8 +11,8 @@
 
   <Window.DataTemplates>
     <DataTemplate DataType="{x:Type local:Pokemon}">
-      <Grid ColumnDefinitions="Auto,Auto" RowDefinitions="Auto,Auto">
-        <Grid.ContextMenu>
+      <Canvas Width="50" Height="50">
+        <Canvas.ContextMenu>
           <ContextMenu>
             <MenuItem Header="_Open Interpreted Data Editor" Command="{Binding $parent[Window].DataContext.OpenInterpretedEditor}" CommandParameter="{Binding .}" />
             <MenuItem Header="_Open Hex Data Editor (Assisted)" Command="{Binding $parent[Window].DataContext.OpenDataEditor}" CommandParameter="{Binding .}" >
@@ -24,12 +24,10 @@
             </MenuItem>
             <MenuItem Header="_Open Hex Data Editor" Command="{Binding $parent[Window].DataContext.OpenRawEditor}" CommandParameter="{Binding .}" />
           </ContextMenu>
-        </Grid.ContextMenu>
-        <TextBlock Grid.Row="0" Grid.Column="0">PID:</TextBlock>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding View.Interpreted.PID}"/>
-        <TextBlock Grid.Row="1" Grid.Column="0">OTID:</TextBlock>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding View.Interpreted.OTID}"/>
-      </Grid>
+        </Canvas.ContextMenu>
+        <TextBlock Canvas.Left="0" Canvas.Top="0" Text="{Binding View.Interpreted.species, StringFormat={}{0:x}}"/>
+        <!-- TODO: Image -->
+      </Canvas>
     </DataTemplate>
   </Window.DataTemplates>
   

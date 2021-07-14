@@ -181,6 +181,7 @@ namespace PokeGlitzer
             {
                 // Retrieving substructures
                 PokemonStruct decoded = Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray());
+                Substructure0 sub0 = Utils.ByteToType<Substructure0>(GetSubstructure(decoded, 0));
                 Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(decoded, 3));
                 // Extracting interpreted data
                 EggType eggType = EggType.Invalid;
@@ -194,7 +195,7 @@ namespace PokeGlitzer
                     else if (egg) eggType = EggType.Egg;
                 }
                 // Update interpreted data
-                view.Interpreted = new InterpretedData(pkmn.PID, pkmn.OTID, eggType);
+                view.Interpreted = new InterpretedData(pkmn.PID, pkmn.OTID, sub0.species, eggType);
             }
         }
         void UpdateViewFromInterpreted()
@@ -209,6 +210,7 @@ namespace PokeGlitzer
             // Modifying data
             pkmn.PID = interpreted.PID;
             pkmn.OTID = interpreted.OTID;
+            sub0.species = interpreted.species;
             switch (interpreted.egg)
             {
                 case EggType.Egg:

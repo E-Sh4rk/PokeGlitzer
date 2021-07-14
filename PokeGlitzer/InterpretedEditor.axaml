@@ -20,9 +20,12 @@
       
       <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">OTID</TextBlock>
       <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding OTID, Converter={StaticResource n2s}, ConverterParameter=X}" />
-      
-      <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Egg type</TextBlock>
-      <ComboBox Grid.Row="1" Grid.Column="1" Margin="10,5" HorizontalAlignment="Stretch"
+
+      <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Species</TextBlock>
+      <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Species, Converter={StaticResource n2s}, ConverterParameter=X}" />
+
+      <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Egg type</TextBlock>
+      <ComboBox Grid.Row="1" Grid.Column="3" Margin="10,5" HorizontalAlignment="Stretch"
                 SelectedIndex="{Binding Egg, Converter={StaticResource egg2i}}">
         <ComboBoxItem>-</ComboBoxItem>
         <ComboBoxItem>Not an egg</ComboBoxItem>

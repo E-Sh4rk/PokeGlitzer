@@ -17,4 +17,12 @@
       <DependentUpon>PokemonView.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Images\egg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\unknown-gen5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

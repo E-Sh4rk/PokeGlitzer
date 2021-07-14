@@ -85,7 +85,7 @@ namespace PokeGlitzer
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 
-    public record InterpretedData(uint PID, uint OTID, EggType egg);
+    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg);
     public enum EggType
     {
         Invalid = 0,

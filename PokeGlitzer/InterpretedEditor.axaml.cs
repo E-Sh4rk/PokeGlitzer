@@ -63,11 +63,12 @@ namespace PokeGlitzer
             InterpretedData d = view.Interpreted!;
             PID = d.PID;
             OTID = d.OTID;
+            Species = d.species;
             Egg = d.egg;
         }
         public void Save()
         {
-            InterpretedData d = new InterpretedData(PID, OTID, Egg);
+            InterpretedData d = new InterpretedData(PID, OTID, Species, Egg);
             view.Interpreted = d;
         }
 
@@ -89,6 +90,16 @@ namespace PokeGlitzer
             {
                 otid = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTID)));
+            }
+        }
+        ushort species;
+        public ushort Species
+        {
+            get => species;
+            set
+            {
+                species = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Species)));
             }
         }
         EggType egg;

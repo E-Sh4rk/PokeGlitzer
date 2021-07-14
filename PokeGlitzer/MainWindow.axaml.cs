@@ -11,6 +11,8 @@ using System.Text;
 
 namespace PokeGlitzer
 {
+    // TODO: When an edition window is focused, highlight in yellow the corresponding pokemon on the main window
+    // TODO: And the opposite way: when a pokemin is selected on the main window, focus on the corresponding editor (double click = open new editor)
     public partial class MainWindow : Window
     {
         public MainWindow()

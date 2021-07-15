@@ -53,29 +53,11 @@ namespace PokeGlitzer
         static Bitmap[]? special = null;
         static Bitmap[]? species = null;
         static Bitmap[]? shiny_species = null;
-        public static Bitmap None
-        {
-            get { if (none == null) Initialize(); return none!; }
-        }
-        public static Bitmap[] Species
-        {
-            get { if (species == null) Initialize(); return species!; }
-        }
-        public static Bitmap[] ShinySpecies
-        {
-            get { if (shiny_species == null) Initialize(); return shiny_species!; }
-        }
-        public static Bitmap Egg
-        {
-            get { if (special == null) Initialize(); return special![2]; }
-        }
-        public static Bitmap Unknown
-        {
-            get { if (special == null) Initialize(); return special![1]; }
-        }
-        public static Bitmap Error
-        {
-            get { if (special == null) Initialize(); return special![0]; }
-        }
+        public static Bitmap None { get => none!; }
+        public static Bitmap[] Species { get => species!; }
+        public static Bitmap[] ShinySpecies { get => shiny_species!; }
+        public static Bitmap Egg { get => special![2]; }
+        public static Bitmap Unknown { get => special![1]; }
+        public static Bitmap Error { get => special![0]; }
     }
 }

@@ -11,7 +11,19 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
-    public record DataLocation(int offset, int size);
+    public record DataLocation(int offset, int size)
+    {
+        public static bool Intersect(DataLocation dl1, DataLocation dl2)
+        {
+            int l1 = dl1.offset; int r1 = l1 + dl1.size;
+            int l2 = dl2.offset; int r2 = l2 + dl2.size;
+            return Math.Max(l1, l2) < Math.Min(r1, r2);
+        }
+        public bool Intersect(DataLocation dl2)
+        {
+            return Intersect(this, dl2);
+        }
+    }
     public class Pokemon : IDisposable
     {
         RangeObservableCollection<byte> data;
@@ -98,11 +110,7 @@ namespace PokeGlitzer
             switch (args.Action)
             {
                 case NotifyCollectionChangedAction.Replace:
-                    int l1 = args.OldStartingIndex;
-                    int u1 = args.OldStartingIndex + args.NewItems!.Count;
-                    int l2 = index;
-                    int u2 = index + size;
-                    needUpdate = Math.Max(l1, l2) < Math.Min(u1, u2);
+                    needUpdate = DataLocation.Intersect(new DataLocation(args.OldStartingIndex, args.NewItems!.Count));
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     needUpdate = true;

@@ -12,8 +12,7 @@ using System.Text;
 
 namespace PokeGlitzer
 {
-    // TODO: When an edition window is focused, highlight in yellow the corresponding pokemon on the main window
-    // TODO: And the opposite way: when a pokemin is selected on the main window, focus on the corresponding editor (double click = open new editor)
+    // TODO: Wheb a pokemon is clicked on the main window, focus on the corresponding editor (or open a new one)
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -31,6 +30,7 @@ namespace PokeGlitzer
             AvaloniaXamlLoader.Load(this);
         }
     }
+    public record PokemonExt(Pokemon pkmn, bool selected);
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         MainWindow mw;
@@ -43,7 +43,7 @@ namespace PokeGlitzer
         {
             this.mw = mw;
             data = Utils.ByteCollectionOfSize<byte>(BOX_PKMN_SIZE * BOX_SIZE * BOX_NUMBER);
-            currentBox = Utils.ByteCollectionOfSize<Pokemon?>(BOX_SIZE);
+            currentBox = Utils.ByteCollectionOfSize<PokemonExt?>(BOX_SIZE);
             LoadBox(0);
         }
 
@@ -53,23 +53,33 @@ namespace PokeGlitzer
             for (int i = 0; i < CurrentBox.Count; i++)
             {
                 if (CurrentBox[i] != null)
-                    CurrentBox[i]!.Dispose();
+                    CurrentBox[i]!.pkmn.Dispose();
             }
-            Pokemon?[] pkmns = new Pokemon?[BOX_SIZE];
+            PokemonExt?[] pkmns = new PokemonExt?[BOX_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
-                pkmns[i] = new Pokemon(data, BOX_PKMN_SIZE * i + offset);
+            {
+                Pokemon pkmn = new Pokemon(data, BOX_PKMN_SIZE * i + offset);
+                pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
+            }
+                
             Utils.UpdateCollectionRange(CurrentBox, pkmns);
             CurrentBoxNumber = nb+1;
         }
+        bool IsSelected(Pokemon pkmn)
+        {
+            if (Selection == null) return false;
+            if (pkmn.DataLocation.Intersect(Selection)) return true;
+            return false;
+        }
 
-        RangeObservableCollection<Pokemon?> currentBox;
+        RangeObservableCollection<PokemonExt?> currentBox;
         int currentBoxNumber;
         DataLocation? selection;
         public int CurrentBoxNumber {
             get => currentBoxNumber + 1;
             set { currentBoxNumber = value - 1; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxNumber))); }
         }
-        public RangeObservableCollection<Pokemon?> CurrentBox { get => currentBox; }
+        public RangeObservableCollection<PokemonExt?> CurrentBox { get => currentBox; }
         public Save? CurrentSave
         {
             get => save;
@@ -78,7 +88,19 @@ namespace PokeGlitzer
         public DataLocation? Selection
         {
             get => selection;
-            set { selection = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selection))); }
+            set
+            {
+                selection = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Selection)));
+                for (int i = 0; i < CurrentBox.Count; i++)
+                {
+                    if (CurrentBox[i] == null) continue;
+                    PokemonExt pkmn = CurrentBox[i]!;
+                    bool selected = IsSelected(pkmn.pkmn);
+                    if (selected != pkmn.selected)
+                        CurrentBox[i] = new PokemonExt(pkmn.pkmn, selected);
+                }
+            }
         }
 
         List<IEditorWindow> openedEditors = new List<IEditorWindow>();

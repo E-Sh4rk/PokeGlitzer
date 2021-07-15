@@ -143,4 +143,21 @@ namespace PokeGlitzer.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (EggType)value; }
     }
+
+    // ========== MAIN WINDOW ==========
+    public class SelectionToColor : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if ((bool)value)
+                return Brushes.Yellow;
+            else
+                return Brushes.LightGray;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+        }
+    }
+
 }

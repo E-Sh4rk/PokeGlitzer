@@ -17,26 +17,26 @@
   
   <StackPanel Orientation="Vertical">
     <Canvas Width="400" Height="500" Margin="5">
-      <Rectangle Opacity="100" Fill="OrangeRed" Height="50" Width="200" Canvas.Left="0" Canvas.Top="0"/>
-      <Rectangle Opacity="100" Fill="Orange" Height="50" Width="200" Canvas.Left="200" Canvas.Top="0"/>
-      <Rectangle Opacity="100" Fill="Green" Height="50" Width="400" Canvas.Left="0" Canvas.Top="50"/>
-      <Rectangle Opacity="100" Fill="Green" Height="50" Width="100" Canvas.Left="0" Canvas.Top="100"/>
-      <Rectangle Opacity="100" Fill="CadetBlue" Height="50" Width="50" Canvas.Left="100" Canvas.Top="100"/>
-      <Rectangle Opacity="100" Fill="DarkCyan" Height="50" Width="50" Canvas.Left="150" Canvas.Top="100"/>
-      <Rectangle Opacity="100" Fill="DarkOliveGreen" Height="50" Width="200" Canvas.Left="200" Canvas.Top="100"/>
-      <Rectangle Opacity="100" Fill="DarkOliveGreen" Height="50" Width="150" Canvas.Left="0" Canvas.Top="150"/>
-      <Rectangle Opacity="100" Fill="Gray" Height="50" Width="50" Canvas.Left="150" Canvas.Top="150"/>
-      <Rectangle Opacity="100" Fill="Brown" Height="50" Width="100" Canvas.Left="200" Canvas.Top="150"/>
-      <Rectangle Opacity="100" Fill="LightGray" Height="50" Width="100" Canvas.Left="300" Canvas.Top="150"/>
+      <Rectangle Opacity="125" Fill="OrangeRed" Height="50" Width="200" Canvas.Left="0" Canvas.Top="0"/>
+      <Rectangle Opacity="125" Fill="Orange" Height="50" Width="200" Canvas.Left="200" Canvas.Top="0"/>
+      <Rectangle Opacity="125" Fill="Green" Height="50" Width="400" Canvas.Left="0" Canvas.Top="50"/>
+      <Rectangle Opacity="125" Fill="Green" Height="50" Width="100" Canvas.Left="0" Canvas.Top="100"/>
+      <Rectangle Opacity="125" Fill="CadetBlue" Height="50" Width="50" Canvas.Left="100" Canvas.Top="100"/>
+      <Rectangle Opacity="125" Fill="DarkCyan" Height="50" Width="50" Canvas.Left="150" Canvas.Top="100"/>
+      <Rectangle Opacity="125" Fill="DarkOliveGreen" Height="50" Width="200" Canvas.Left="200" Canvas.Top="100"/>
+      <Rectangle Opacity="125" Fill="DarkOliveGreen" Height="50" Width="150" Canvas.Left="0" Canvas.Top="150"/>
+      <Rectangle Opacity="125" Fill="Gray" Height="50" Width="50" Canvas.Left="150" Canvas.Top="150"/>
+      <Rectangle Opacity="125" Fill="Brown" Height="50" Width="100" Canvas.Left="200" Canvas.Top="150"/>
+      <Rectangle Opacity="125" Fill="LightGray" Height="50" Width="100" Canvas.Left="300" Canvas.Top="150"/>
 
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="200"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="250"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="250"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="300"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="350"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="400"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="400"/>
-      <Rectangle Opacity="100" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="450"/>
+      <Rectangle Opacity="125" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="200"/>
+      <Rectangle Opacity="125" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="250"/>
+      <Rectangle Opacity="125" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="250"/>
+      <Rectangle Opacity="125" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="300"/>
+      <Rectangle Opacity="125" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="350"/>
+      <Rectangle Opacity="125" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="400"/>
+      <Rectangle Opacity="125" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="400"/>
+      <Rectangle Opacity="125" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="450"/>
 
       <TextBlock FontSize="12" Canvas.Left="0" Canvas.Top="0">Pokemon ID (PID)</TextBlock>
       <TextBlock FontSize="12" Canvas.Left="200" Canvas.Top="0">Original Trainer ID</TextBlock>

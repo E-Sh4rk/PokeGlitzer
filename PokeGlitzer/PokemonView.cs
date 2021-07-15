@@ -89,7 +89,17 @@ namespace PokeGlitzer
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 
-    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg);
+    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg)
+    {
+        public bool IsShiny
+        {
+            get
+            {
+                ushort key = (ushort)((PID >> 16) ^ (PID & 0xFFFF) ^ (OTID >> 16) ^ (OTID & 0xFFFF));
+                return key < 8;
+            }
+        }
+    }
     public enum EggType
     {
         Invalid = 0,

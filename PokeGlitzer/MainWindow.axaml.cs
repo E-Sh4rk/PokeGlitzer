@@ -14,6 +14,7 @@ using System.Text;
 
 namespace PokeGlitzer
 {
+    // TODO: Restore Initial
     public partial class MainWindow : Window
     {
         public MainWindow()

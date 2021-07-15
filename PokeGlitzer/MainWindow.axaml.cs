@@ -15,7 +15,6 @@ using System.Text;
 
 namespace PokeGlitzer
 {
-    // TODO: Copy and Paste
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -38,6 +37,7 @@ namespace PokeGlitzer
     {
         MainWindow mw;
         byte[] initialData;
+        byte[]? copiedData = null;
         RangeObservableCollection<byte> data;
         const int BOX_PKMN_SIZE = 80;
         const int BOX_SIZE = 30;
@@ -75,6 +75,11 @@ namespace PokeGlitzer
             if (Selection == null) return false;
             if (pkmn.DataLocation.Intersect(Selection)) return true;
             return false;
+        }
+        public byte[]? CopiedData
+        {
+            get => copiedData;
+            set { copiedData = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CopiedData))); }
         }
 
         RangeObservableCollection<PokemonExt?> currentBox;
@@ -197,6 +202,15 @@ namespace PokeGlitzer
         public void Delete(DataLocation dl)
         {
             Utils.UpdateCollectionRange(data, new byte[dl.size], dl.offset);
+        }
+        public void Copy(DataLocation dl)
+        {
+            CopiedData = Utils.ExtractCollectionRange(data, dl.offset, dl.size);
+        }
+        public void Paste(DataLocation dl)
+        {
+            if (CopiedData != null)
+                Utils.UpdateCollectionRange(data, new ArraySegment<byte>(CopiedData, 0, Math.Min(dl.size, CopiedData.Length)), dl.offset);
         }
         public void NextBox()
         {

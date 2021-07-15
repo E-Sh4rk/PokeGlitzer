@@ -18,20 +18,22 @@
       <Canvas Width="50" Height="50">
         <Canvas.ContextMenu>
           <ContextMenu>
-            <MenuItem Header="_Open Interpreted Data Editor" Command="{Binding $parent[Window].DataContext.OpenInterpretedEditor}" CommandParameter="{Binding pkmn}" />
-            <MenuItem Header="_Open Hex Data Editor (Assisted)" Command="{Binding $parent[Window].DataContext.OpenDataEditor}" CommandParameter="{Binding pkmn}" >
+            <MenuItem Header="_Open Interpreted Data Editor" Command="{Binding $parent[Window].DataContext.OpenInterpretedEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <MenuItem Header="_Open Hex Data Editor (Assisted)" Command="{Binding $parent[Window].DataContext.OpenDataEditor}" CommandParameter="{Binding pkmn.DataLocation}" >
               <!--
               <MenuItem.Icon>
                 <Image Source="/WpfTutorialSamples;component/Images/cut.png" />
               </MenuItem.Icon>
               -->
             </MenuItem>
-            <MenuItem Header="_Open Hex Data Editor" Command="{Binding $parent[Window].DataContext.OpenRawEditor}" CommandParameter="{Binding pkmn}" />
+            <MenuItem Header="_Open Hex Data Editor" Command="{Binding $parent[Window].DataContext.OpenRawEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <Separator/>
+            <MenuItem Header="_Delete" Command="{Binding $parent[Window].DataContext.Delete}" CommandParameter="{Binding pkmn.DataLocation}" />
           </ContextMenu>
         </Canvas.ContextMenu>
         <Rectangle ZIndex="0" Canvas.Left="0" Canvas.Top="0" Width="49" Height="48" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />
         <TextBlock ZIndex="1" Canvas.Left="2" Canvas.Top="2" Text="{Binding pkmn.View.Interpreted.species, StringFormat={}{0:x}}"/>
-        <Button ZIndex="2" Width="49" Height="48" Foreground="Transparent" Opacity="0" Command="{Binding $parent[Window].DataContext.SelectSlot}" CommandParameter="{Binding pkmn}" />
+        <Button ZIndex="2" Width="49" Height="48" Foreground="Transparent" Opacity="0" Command="{Binding $parent[Window].DataContext.SelectSlot}" CommandParameter="{Binding pkmn.DataLocation}" />
         <!-- TODO: Image -->
       </Canvas>
     </DataTemplate>

@@ -15,7 +15,7 @@ using System.Text;
 
 namespace PokeGlitzer
 {
-    // TODO: Delete, Copy and Paste
+    // TODO: Copy and Paste
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -109,17 +109,17 @@ namespace PokeGlitzer
         }
 
         List<IEditorWindow> openedEditors = new List<IEditorWindow>();
-        public void OpenInterpretedEditor(Pokemon arg)
+        public void OpenInterpretedEditor(DataLocation dl)
         {
-            ShowWindow(new InterpretedEditor(data, arg.DataLocation.offset));
+            ShowWindow(new InterpretedEditor(data, dl.offset));
         }
-        public void OpenDataEditor(Pokemon arg)
+        public void OpenDataEditor(DataLocation dl)
         {
-            ShowWindow(new PokemonViewWindow(data, arg.DataLocation.offset, this));
+            ShowWindow(new PokemonViewWindow(data, dl.offset, this));
         }
-        public void OpenRawEditor(Pokemon arg)
+        public void OpenRawEditor(DataLocation dl)
         {
-            ShowWindow(new HexEditor(data, arg.DataLocation.offset));
+            ShowWindow(new HexEditor(data, dl.offset));
         }
         public void ShowWindow(IEditorWindow w)
         {
@@ -130,12 +130,12 @@ namespace PokeGlitzer
             w.Show(mw);
         }
         static readonly ISolidColorBrush HIGHLIGHT_BRUSH = new SolidColorBrush(Colors.Yellow, 150);
-        public void SelectSlot(Pokemon pokemon)
+        public void SelectSlot(DataLocation dl)
         {
             bool openNew = true;
             foreach (IEditorWindow w in openedEditors)
             {
-                if (w.Pokemon.DataLocation.Intersect(pokemon.DataLocation))
+                if (w.Pokemon.DataLocation.Intersect(dl))
                 {
                     openNew = false;
                     w.Activate();
@@ -151,7 +151,7 @@ namespace PokeGlitzer
                 }
             }
             if (openNew)
-                OpenInterpretedEditor(pokemon);
+                OpenInterpretedEditor(dl);
         }
 
         public void Exit()
@@ -192,7 +192,11 @@ namespace PokeGlitzer
 
         public void RestoreInitialData(DataLocation dl)
         {
-            Utils.UpdateCollectionRange(data, new ArraySegment<byte>(initialData, dl.offset, dl.size).ToArray(), dl.offset);
+            Utils.UpdateCollectionRange(data, new ArraySegment<byte>(initialData, dl.offset, dl.size), dl.offset);
+        }
+        public void Delete(DataLocation dl)
+        {
+            Utils.UpdateCollectionRange(data, new byte[dl.size], dl.offset);
         }
         public void NextBox()
         {

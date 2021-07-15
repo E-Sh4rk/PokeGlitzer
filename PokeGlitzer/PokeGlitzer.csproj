@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
@@ -29,11 +29,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Update="Images\egg.png">
+    <None Update="Images\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Images\unknown-gen5.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Resources\b_none.png" />
   </ItemGroup>
 </Project>

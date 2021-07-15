@@ -159,5 +159,37 @@ namespace PokeGlitzer.Converters
             return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
         }
     }
-
+    public class PokemonToBitmap : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            try
+            {
+                InterpretedData data = (InterpretedData?)value!;
+                switch (data.egg)
+                {
+                    case EggType.None:
+                        return ResLoader.None;
+                    case EggType.Invalid:
+                        return ResLoader.Error;
+                    case EggType.Egg:
+                    case EggType.BadEgg:
+                        return ResLoader.Egg;
+                    case EggType.NotAnEgg:
+                        if (data.species > ResLoader.MAX_SPECIES)
+                            return ResLoader.Unknown;
+                        if (data.IsShiny)
+                            return ResLoader.ShinySpecies[data.species];
+                        else
+                            return ResLoader.Species[data.species];
+                }
+            }
+            catch { }
+            return ResLoader.None;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+        }
+    }
 }

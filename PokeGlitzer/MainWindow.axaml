@@ -4,18 +4,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:convert="clr-namespace:PokeGlitzer.Converters"
         xmlns:local="clr-namespace:PokeGlitzer"
-        mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="400"
-        Width="350" Height="400"
+        mc:Ignorable="d" d:DesignWidth="425" d:DesignHeight="375"
+        Width="425" Height="375"
         x:Class="PokeGlitzer.MainWindow"
         Title="PokeGlitzer">
 
   <Window.Resources>
     <convert:SelectionToColor x:Key="s2c"/>
+    <convert:PokemonToBitmap x:Key="p2b"/>
   </Window.Resources>
 
   <Window.DataTemplates>
     <DataTemplate DataType="{x:Type local:PokemonExt}">
-      <Canvas Width="50" Height="50">
+      <Canvas Width="68" Height="56">
         <Canvas.ContextMenu>
           <ContextMenu>
             <MenuItem Header="_Open Interpreted Data Editor" Command="{Binding $parent[Window].DataContext.OpenInterpretedEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
@@ -34,15 +35,15 @@
             <MenuItem Header="_Delete" Command="{Binding $parent[Window].DataContext.Delete}" CommandParameter="{Binding pkmn.DataLocation}" />
           </ContextMenu>
         </Canvas.ContextMenu>
-        <Rectangle ZIndex="0" Canvas.Left="0" Canvas.Top="0" Width="49" Height="48" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />
-        <TextBlock ZIndex="1" Canvas.Left="2" Canvas.Top="2" Text="{Binding pkmn.View.Interpreted.species, StringFormat={}{0:x}}"/>
-        <Button ZIndex="2" Width="49" Height="48" Foreground="Transparent" Opacity="0" Command="{Binding $parent[Window].DataContext.SelectSlot}" CommandParameter="{Binding pkmn.DataLocation}" />
-        <!-- TODO: Image -->
+        <Rectangle ZIndex="0" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />
+        <Image ZIndex="1" Source="{Binding pkmn.View.Interpreted, Converter={StaticResource p2b}}" />
+        <TextBlock ZIndex="2" Canvas.Left="2" Canvas.Top="2" Text="{Binding pkmn.View.Interpreted.species, StringFormat={}{0:x}}"/>
+        <Button ZIndex="3" Width="67" Height="55" Foreground="Transparent" Opacity="0" Command="{Binding $parent[Window].DataContext.SelectSlot}" CommandParameter="{Binding pkmn.DataLocation}" />
       </Canvas>
     </DataTemplate>
   </Window.DataTemplates>
 
-  <DockPanel Width="300" Height="300" LastChildFill="True">
+  <DockPanel Width="408" LastChildFill="True">
     <Menu DockPanel.Dock="Top">
       <MenuItem Header="_File">
         <MenuItem Header="_Open..." Command="{Binding Open}"/>
@@ -50,19 +51,17 @@
         <Separator/>
         <MenuItem Header="_Exit" Command="{Binding Exit}"/>
       </MenuItem>
-      <!--<MenuItem Header="_Edit">
-        <MenuItem Header="Copy"/>
-        <MenuItem Header="Paste"/>
-      </MenuItem>-->
     </Menu>
 
     <StackPanel Orientation="Vertical">
-      <DockPanel Width="300" LastChildFill="True">
+      <Separator Height="10" />
+      <DockPanel Width="408" LastChildFill="True">
         <Button Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
         <Button Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat=BOX {0}}" />
       </DockPanel>
-      <Grid ColumnDefinitions="50,50,50,50,50,50" RowDefinitions="50,50,50,50,50">
+      <Separator Height="10" />
+      <Grid ColumnDefinitions="68,68,68,68,68,68" RowDefinitions="56,56,56,56,56">
         <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding CurrentBox[0]}"/>
         <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding CurrentBox[1]}"/>
         <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding CurrentBox[2]}"/>

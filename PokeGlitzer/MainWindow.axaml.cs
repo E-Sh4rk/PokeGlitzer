@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
+using Avalonia.Threading;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +14,6 @@ using System.Text;
 
 namespace PokeGlitzer
 {
-    // TODO: Wheb a pokemon is clicked on the main window, focus on the corresponding editor (or open a new one)
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -123,6 +124,30 @@ namespace PokeGlitzer
             w.Activated += (_, _) => { Selection = w.Pokemon.DataLocation; };
             w.Deactivated += (_, _) => { Selection = null; };
             w.Show(mw);
+        }
+        static readonly ISolidColorBrush HIGHLIGHT_BRUSH = new SolidColorBrush(Colors.Yellow, 150);
+        public void SelectSlot(Pokemon pokemon)
+        {
+            bool openNew = true;
+            foreach (IEditorWindow w in openedEditors)
+            {
+                if (w.Pokemon.DataLocation.Intersect(pokemon.DataLocation))
+                {
+                    openNew = false;
+                    w.Activate();
+                    if (w.Background != HIGHLIGHT_BRUSH)
+                    {
+                        IBrush bg = w.Background;
+                        w.Background = HIGHLIGHT_BRUSH;
+                        DispatcherTimer timer = new DispatcherTimer();
+                        timer.Interval = TimeSpan.FromMilliseconds(250);
+                        timer.Tick += new EventHandler((_, _) => { try { w.Background = bg; } catch { } timer.Stop(); });
+                        timer.Start();
+                    }
+                }
+            }
+            if (openNew)
+                OpenInterpretedEditor(pokemon);
         }
 
         public void Exit()

@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -104,7 +105,8 @@ namespace PokeGlitzer
         public bool IsActive { get; }
         public void Show(Window parent);
         public void Close();
-        public void Focus();
+        public void Activate();
+        public IBrush Background { get; set; }
         public event EventHandler Closed;
         public event EventHandler Activated;
         public event EventHandler Deactivated;

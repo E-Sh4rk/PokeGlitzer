@@ -31,6 +31,7 @@
         </Canvas.ContextMenu>
         <Rectangle Canvas.Left="0" Canvas.Top="0" Width="49" Height="48" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />
         <TextBlock Canvas.Left="2" Canvas.Top="2" Text="{Binding pkmn.View.Interpreted.species, StringFormat={}{0:x}}"/>
+        <Button Width="49" Height="48" Foreground="Transparent" Opacity="0" Command="{Binding $parent[Window].DataContext.SelectSlot}" CommandParameter="{Binding pkmn}" />
         <!-- TODO: Image -->
       </Canvas>
     </DataTemplate>

@@ -8,13 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
 namespace PokeGlitzer
 {
-    // TODO: Restore Initial
+    // TODO: Delete, Copy and Paste
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -36,6 +37,7 @@ namespace PokeGlitzer
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         MainWindow mw;
+        byte[] initialData;
         RangeObservableCollection<byte> data;
         const int BOX_PKMN_SIZE = 80;
         const int BOX_SIZE = 30;
@@ -45,6 +47,7 @@ namespace PokeGlitzer
         {
             this.mw = mw;
             data = Utils.ByteCollectionOfSize<byte>(BOX_PKMN_SIZE * BOX_SIZE * BOX_NUMBER);
+            initialData = new byte[data.Count];
             currentBox = Utils.ByteCollectionOfSize<PokemonExt?>(BOX_SIZE);
             LoadBox(0);
         }
@@ -112,7 +115,7 @@ namespace PokeGlitzer
         }
         public void OpenDataEditor(Pokemon arg)
         {
-            ShowWindow(new PokemonViewWindow(data, arg.DataLocation.offset));
+            ShowWindow(new PokemonViewWindow(data, arg.DataLocation.offset, this));
         }
         public void OpenRawEditor(Pokemon arg)
         {
@@ -167,6 +170,7 @@ namespace PokeGlitzer
                 try {
                     CurrentSave = new Save(result[0]);
                     Utils.UpdateCollectionRange(data, CurrentSave.RetrievePCData().pokemonList);
+                    initialData = data.ToArray();
                 } catch { }
             }
         }
@@ -174,11 +178,21 @@ namespace PokeGlitzer
         {
             if (CurrentSave != null)
             {
-                PCData pcd = CurrentSave.RetrievePCData();
-                pcd.pokemonList = Utils.ExtractCollectionRange(data, 0, data.Count);
-                CurrentSave.SetPCData(pcd);
-                CurrentSave.SaveToFile();
+                try
+                {
+                    PCData pcd = CurrentSave.RetrievePCData();
+                    pcd.pokemonList = data.ToArray();
+                    CurrentSave.SetPCData(pcd);
+                    CurrentSave.SaveToFile();
+                    initialData = pcd.pokemonList;
+                }
+                catch { }
             }
+        }
+
+        public void RestoreInitialData(DataLocation dl)
+        {
+            Utils.UpdateCollectionRange(data, new ArraySegment<byte>(initialData, dl.offset, dl.size).ToArray(), dl.offset);
         }
         public void NextBox()
         {

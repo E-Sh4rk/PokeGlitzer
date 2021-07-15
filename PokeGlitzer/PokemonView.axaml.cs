@@ -17,13 +17,13 @@ namespace PokeGlitzer
         {
             InitializeComponent();
             pkmn = new Pokemon(Utils.ByteCollectionOfSize<byte>(80), 0);
-            DataContext = new PokemonViewModel(pkmn);
+            DataContext = new PokemonViewModel(pkmn, null);
         }
-        public PokemonViewWindow(RangeObservableCollection<byte> data, int offset)
+        public PokemonViewWindow(RangeObservableCollection<byte> data, int offset, MainWindowViewModel mw)
         {
             InitializeComponent();
             pkmn = new Pokemon(data, offset);
-            DataContext = new PokemonViewModel(pkmn);
+            DataContext = new PokemonViewModel(pkmn, mw);
 
 #if DEBUG
             this.AttachDevTools();
@@ -46,9 +46,11 @@ namespace PokeGlitzer
     {
         Pokemon pkmn;
         PokemonView view;
+        MainWindowViewModel? mw;
 
-        public PokemonViewModel(Pokemon pkmn)
+        public PokemonViewModel(Pokemon pkmn, MainWindowViewModel? mw)
         {
+            this.mw = mw;
             this.pkmn = pkmn;
             view = pkmn.View;
             displayData = view.Data;
@@ -82,7 +84,8 @@ namespace PokeGlitzer
             get => view;
         }
 
-        public void RestoreInitial() => Utils.UpdateCollectionRange(view.Data, new byte[view.Data.Count]);
+        public void RestoreInitial() => mw?.RestoreInitialData(pkmn.DataLocation);
+            
         public void FixChecksum() => pkmn.FixChecksum();
 
         public event PropertyChangedEventHandler? PropertyChanged;

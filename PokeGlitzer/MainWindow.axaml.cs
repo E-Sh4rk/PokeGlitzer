@@ -12,6 +12,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using MessageBox.Avalonia;
 
 namespace PokeGlitzer
 {
@@ -47,6 +48,7 @@ namespace PokeGlitzer
         const int BOX_SIZE = 30;
         const int BOX_NUMBER = 14;
         Save? save = null;
+        MMFSync sync;
         public MainWindowViewModel(MainWindow mw)
         {
             this.mw = mw;
@@ -54,6 +56,7 @@ namespace PokeGlitzer
             initialData = new byte[data.Count];
             currentBox = Utils.ByteCollectionOfSize<PokemonExt?>(BOX_SIZE);
             LoadBox(0);
+            sync = new MMFSync(data);
         }
 
         void LoadBox(int nb)
@@ -80,6 +83,7 @@ namespace PokeGlitzer
             if (pkmn.DataLocation.Intersect(Selection)) return true;
             return false;
         }
+        public MMFSync Sync { get => sync; }
         public byte[]? CopiedData
         {
             get => copiedData;
@@ -180,7 +184,9 @@ namespace PokeGlitzer
                     CurrentSave = new Save(result[0]);
                     Utils.UpdateCollectionRange(data, CurrentSave.RetrievePCData().pokemonList);
                     initialData = data.ToArray();
-                } catch { }
+                } catch {
+                    await MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while loading the save.").ShowDialog(mw);
+                }
             }
         }
         public void Save()
@@ -195,7 +201,9 @@ namespace PokeGlitzer
                     CurrentSave.SaveToFile();
                     initialData = pcd.pokemonList;
                 }
-                catch { }
+                catch {
+                    MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while saving.").ShowDialog(mw);
+                }
             }
         }
 
@@ -226,5 +234,14 @@ namespace PokeGlitzer
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void StartSync()
+        {
+            if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+                MessageBoxManager.GetMessageBoxStandardWindow("Error", "Sorry, synchronization with Bizhawk is only supported on Windows.").ShowDialog(mw);
+            else if (!sync.Start())
+                MessageBoxManager.GetMessageBoxStandardWindow("Error", "Please run the synchronization LUA script in Bizhawk first.").ShowDialog(mw);
+        }
+        public void StopSync() { sync.Stop(); }
     }
 }

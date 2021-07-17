@@ -5,6 +5,8 @@ local storageSize = 80*14*30;
 lastUpc = 0;
 comm.mmfWriteBytes("bizhawk_upc", {lastUpc});
 comm.mmfCopyFromMemory("bizhawk_up", 0, storageSize, "EWRAM");
+lastDownc = 0;
+comm.mmfWriteBytes("bizhawk_downc", {lastDownc});
 while true do
 	emu.frameadvance();
 	local ptr = memory.read_u32_le(storagePtr, "IWRAM") - 0x02000000;
@@ -14,6 +16,8 @@ while true do
 			lastUpc = upc;
 			comm.mmfCopyToMemory("bizhawk_up", ptr + storageOffset, storageSize, "EWRAM");
 		end
+		lastDownc = (lastDownc+1) % 256;
 		comm.mmfCopyFromMemory("bizhawk_down", ptr + storageOffset, storageSize, "EWRAM");
+		comm.mmfWriteBytes("bizhawk_downc", {lastDownc});
 	end
 end

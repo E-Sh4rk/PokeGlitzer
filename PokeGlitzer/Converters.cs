@@ -176,12 +176,13 @@ namespace PokeGlitzer.Converters
                     case EggType.BadEgg:
                         return ResLoader.Egg;
                     case EggType.NotAnEgg:
-                        if (data.species > ResLoader.MAX_SPECIES)
+                        int species = SpeciesConverter.SetG3Species(data.species);
+                        if (species > ResLoader.MAX_SPECIES)
                             return ResLoader.Unknown;
                         if (data.IsShiny)
-                            return ResLoader.ShinySpecies[data.species];
+                            return ResLoader.ShinySpecies[species];
                         else
-                            return ResLoader.Species[data.species];
+                            return ResLoader.Species[species];
                 }
             }
             catch { }

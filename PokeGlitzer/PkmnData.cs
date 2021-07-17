@@ -163,32 +163,33 @@ namespace PokeGlitzer
             }
             return data;
         }
+    }
+
+    /// <summary>
+    /// Logic for converting a National Pokédex Species ID to/from generation specific values.
+    /// </summary>
+    /// <remarks>Generation 4+ always use the national dex ID. Prior generations do not.</remarks>
+    public static class SpeciesConverter
+        {
+        /// <summary>
+        /// Converts a National Dex ID to Generation 3 species ID.
+        /// </summary>
+        /// <param name="species">National Dex ID</param>
+        /// <returns>Generation 3 species ID.</returns>
+        public static int GetG3Species(int species) => (uint)species >= table3_Internal.Length ? 0 : table3_Internal[species];
 
         /// <summary>
-        /// Logic for converting a National Pokédex Species ID to/from generation specific values.
+        /// Converts Generation 3 species ID to National Dex ID.
         /// </summary>
-        /// <remarks>Generation 4+ always use the national dex ID. Prior generations do not.</remarks>
-        public static class SpeciesConverter
+        /// <param name="raw">Generation 3 species ID.</param>
+        /// <returns>National Dex ID.</returns>
+        public static int SetG3Species(int raw) => (uint)raw >= table3_National.Length ? 0 : table3_National[raw];
+
+        /// <summary>
+        /// National Dex IDs (index) and the associated Gen3 Species IDs (value)
+        /// </summary>
+        private static readonly ushort[] table3_Internal =
         {
-            /// <summary>
-            /// Converts a National Dex ID to Generation 3 species ID.
-            /// </summary>
-            /// <param name="species">National Dex ID</param>
-            /// <returns>Generation 3 species ID.</returns>
-            public static int GetG3Species(int species) => (uint)species >= table3_Internal.Length ? 0 : table3_Internal[species];
-
-            /// <summary>
-            /// Converts Generation 3 species ID to National Dex ID.
-            /// </summary>
-            /// <param name="raw">Generation 3 species ID.</param>
-            /// <returns>National Dex ID.</returns>
-            public static int SetG3Species(int raw) => (uint)raw >= table3_National.Length ? 0 : table3_National[raw];
-
-            /// <summary>
-            /// National Dex IDs (index) and the associated Gen3 Species IDs (value)
-            /// </summary>
-            private static readonly ushort[] table3_Internal =
-            {
             000, 001, 002, 003, 004, 005, 006, 007, 008, 009, 010, 011, 012, 013, 014, 015, 016, 017, 018, 019,
             020, 021, 022, 023, 024, 025, 026, 027, 028, 029, 030, 031, 032, 033, 034, 035, 036, 037, 038, 039,
             040, 041, 042, 043, 044, 045, 046, 047, 048, 049, 050, 051, 052, 053, 054, 055, 056, 057, 058, 059,
@@ -211,11 +212,11 @@ namespace PokeGlitzer
             407, 408, 404, 405, 406, 409, 410
         };
 
-            /// <summary>
-            /// Gen3 Species IDs (index) and the associated National Dex IDs (value)
-            /// </summary>
-            private static readonly ushort[] table3_National =
-            {
+        /// <summary>
+        /// Gen3 Species IDs (index) and the associated National Dex IDs (value)
+        /// </summary>
+        private static readonly ushort[] table3_National =
+        {
             000, 001, 002, 003, 004, 005, 006, 007, 008, 009, 010, 011, 012, 013, 014, 015, 016, 017, 018, 019,
             020, 021, 022, 023, 024, 025, 026, 027, 028, 029, 030, 031, 032, 033, 034, 035, 036, 037, 038, 039,
             040, 041, 042, 043, 044, 045, 046, 047, 048, 049, 050, 051, 052, 053, 054, 055, 056, 057, 058, 059,
@@ -238,8 +239,6 @@ namespace PokeGlitzer
             335, 369, 304, 305, 306, 351, 313, 314, 345, 346, 347, 348, 280, 281, 282, 371, 372, 373, 374, 375,
             376, 377, 378, 379, 382, 383, 384, 380, 381, 385, 386, 358,
         };
-        }
     }
 
-    
 }

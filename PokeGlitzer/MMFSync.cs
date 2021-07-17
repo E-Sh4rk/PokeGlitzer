@@ -11,6 +11,7 @@ namespace PokeGlitzer
 {
     public class MMFSync : INotifyPropertyChanged
     {
+        // TODO: Add control mmf for bizhawk_down? (so that changes are not rolled-back when the game is paused)
         RangeObservableCollection<byte> data;
         DispatcherTimer? timer;
 

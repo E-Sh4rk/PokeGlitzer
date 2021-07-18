@@ -17,7 +17,7 @@ using MessageBox.Avalonia;
 namespace PokeGlitzer
 {
     // TODO: Possibility to edit the whole box data (big hex editor)
-    // TODO: Possibility to synchronize to Bizhawk (with a LUA script)
+    // TODO: Possibility to edit the box names
     // TODO: Possibility to edit the team (not only the boxes)
     // TODO: Glitzer Popping operations (simulations, etc.)
     public partial class MainWindow : Window

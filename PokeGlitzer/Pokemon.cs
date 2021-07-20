@@ -240,7 +240,6 @@ namespace PokeGlitzer
                 }
                 // Update interpreted data
                 view.Interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType);
-                // TODO: how to ensure UpdateViewFromInterpreted will not be called again?
                 if (size == 100)
                 {
                     PkmnStatus status = new PkmnStatus((byte)(pkmn.status & PokemonTeamStruct.SLEEP_MASK), (pkmn.status & PokemonTeamStruct.POISON_MASK) != 0,

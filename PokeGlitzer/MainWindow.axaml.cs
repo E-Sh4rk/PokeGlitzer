@@ -96,7 +96,7 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[TEAM_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(data, TEAM_PKMN_SIZE * i, TEAM_PKMN_SIZE, true);
+                Pokemon pkmn = new Pokemon(teamData, TEAM_PKMN_SIZE * i, TEAM_PKMN_SIZE, true);
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
 

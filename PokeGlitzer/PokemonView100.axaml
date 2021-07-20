@@ -3,9 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PokeGlitzer.Converters"
-        mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="550" Width="410" Height="550"
+        mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="800" Width="410" Height="800"
         SizeToContent="WidthAndHeight" CanResize="False"
-        x:Class="PokeGlitzer.PokemonViewWindow"
+        x:Class="PokeGlitzer.PokemonViewWindow100"
         Title="Pokemon Data Editor">
 
   <Window.Resources>
@@ -16,7 +16,7 @@
   </Window.Resources>
   
   <StackPanel Orientation="Vertical">
-    <Canvas Width="400" Height="500" Margin="5">
+    <Canvas Width="400" Height="650" Margin="5">
       <Rectangle ZIndex="0" Opacity="125" Fill="OrangeRed" Height="50" Width="200" Canvas.Left="0" Canvas.Top="0"/>
       <Rectangle ZIndex="0" Opacity="125" Fill="Orange" Height="50" Width="200" Canvas.Left="200" Canvas.Top="0"/>
       <Rectangle ZIndex="0" Opacity="125" Fill="Green" Height="50" Width="400" Canvas.Left="0" Canvas.Top="50"/>
@@ -38,6 +38,17 @@
       <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="400"/>
       <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="450"/>
 
+      <Rectangle ZIndex="0" Opacity="125" Fill="YellowGreen" Height="50" Width="200" Canvas.Left="0" Canvas.Top="500"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="Orange" Height="50" Width="50" Canvas.Left="200" Canvas.Top="500"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="DarkCyan" Height="50" Width="50" Canvas.Left="250" Canvas.Top="500"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="Brown" Height="50" Width="100" Canvas.Left="300" Canvas.Top="500"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="Gray" Height="50" Width="100" Canvas.Left="0" Canvas.Top="550"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="DarkGray" Height="50" Width="100" Canvas.Left="100" Canvas.Top="550"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="Gray" Height="50" Width="100" Canvas.Left="200" Canvas.Top="550"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="DarkGray" Height="50" Width="100" Canvas.Left="300" Canvas.Top="550"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="Gray" Height="50" Width="100" Canvas.Left="0" Canvas.Top="600"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="DarkGray" Height="50" Width="100" Canvas.Left="100" Canvas.Top="600"/>
+
       <TextBlock ZIndex="1" FontSize="12" Canvas.Left="0" Canvas.Top="0">Pokemon ID (PID)</TextBlock>
       <TextBlock ZIndex="1" FontSize="12" Canvas.Left="200" Canvas.Top="0">Original Trainer ID</TextBlock>
       <TextBlock ZIndex="1" FontSize="12" Canvas.Left="0" Canvas.Top="50">Nickname</TextBlock>
@@ -51,6 +62,16 @@
       <TextBlock ZIndex="1" FontSize="12" Canvas.Left="200" Canvas.Top="250" Text="{Binding View.SubstructureAtPos1, Converter={StaticResource s2t}}"/>
       <TextBlock ZIndex="1" FontSize="12" Canvas.Left="0" Canvas.Top="350" Text="{Binding View.SubstructureAtPos2, Converter={StaticResource s2t}}"/>
       <TextBlock ZIndex="1" FontSize="12" Canvas.Left="200" Canvas.Top="400" Text="{Binding View.SubstructureAtPos3, Converter={StaticResource s2t}}"/>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="0" Canvas.Top="500">Status condition</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="200" Canvas.Top="500">Level</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="250" Canvas.Top="500">Pokerus</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="300" Canvas.Top="500">Current HP</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="0" Canvas.Top="550">Total HP</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="100" Canvas.Top="550">Attack</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="200" Canvas.Top="550">Defense</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="300" Canvas.Top="550">Speed</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="0" Canvas.Top="600">Sp. Attack</TextBlock>
+      <TextBlock ZIndex="1" FontSize="12" Canvas.Left="100" Canvas.Top="600">Sp. Defense</TextBlock>
 
       <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="5" Canvas.Top="15" Text="{Binding DisplayData[0], Converter={StaticResource bsc}}" />
       <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="55" Canvas.Top="15" Text="{Binding DisplayData[1], Converter={StaticResource bsc}}" />
@@ -141,6 +162,29 @@
       <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="255" Canvas.Top="465" Text="{Binding DisplayData[77], Converter={StaticResource bsc}}" />
       <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="305" Canvas.Top="465" Text="{Binding DisplayData[78], Converter={StaticResource bsc}}" />
       <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="355" Canvas.Top="465" Text="{Binding DisplayData[79], Converter={StaticResource bsc}}" />
+
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="5" Canvas.Top="515" Text="{Binding DisplayData[80], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="55" Canvas.Top="515" Text="{Binding DisplayData[81], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="105" Canvas.Top="515" Text="{Binding DisplayData[82], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="155" Canvas.Top="515" Text="{Binding DisplayData[83], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="205" Canvas.Top="515" Text="{Binding DisplayData[84], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="255" Canvas.Top="515" Text="{Binding DisplayData[85], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="305" Canvas.Top="515" Text="{Binding DisplayData[86], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="355" Canvas.Top="515" Text="{Binding DisplayData[87], Converter={StaticResource bsc}}" />
+
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="5" Canvas.Top="565" Text="{Binding DisplayData[88], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="55" Canvas.Top="565" Text="{Binding DisplayData[89], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="105" Canvas.Top="565" Text="{Binding DisplayData[90], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="155" Canvas.Top="565" Text="{Binding DisplayData[91], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="205" Canvas.Top="565" Text="{Binding DisplayData[92], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="255" Canvas.Top="565" Text="{Binding DisplayData[93], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="305" Canvas.Top="565" Text="{Binding DisplayData[94], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="355" Canvas.Top="565" Text="{Binding DisplayData[95], Converter={StaticResource bsc}}" />
+
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="5" Canvas.Top="615" Text="{Binding DisplayData[96], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="55" Canvas.Top="615" Text="{Binding DisplayData[97], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="105" Canvas.Top="615" Text="{Binding DisplayData[98], Converter={StaticResource bsc}}" />
+      <TextBox ZIndex="2" MinWidth="40" Width="40" MinHeight="30" Height="30" FontSize="15" Padding="3" TextAlignment="Center" Canvas.Left="155" Canvas.Top="615" Text="{Binding DisplayData[99], Converter={StaticResource bsc}}" />
     </Canvas>
     <StackPanel Orientation="Horizontal" Width="400" Spacing="35" Margin="5">
       <CheckBox IsChecked="{Binding Decoded}">Decode Data</CheckBox>

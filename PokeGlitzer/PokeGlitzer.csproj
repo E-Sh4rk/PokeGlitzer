@@ -14,6 +14,9 @@
     <PackageReference Include="MessageBox.Avalonia" Version="1.5.1" />
    </ItemGroup>
   <ItemGroup>
+    <Compile Update="PokemonView100.axaml.cs">
+      <DependentUpon>PokemonView100.axaml</DependentUpon>
+    </Compile>
     <Compile Update="PokemonView.axaml.cs">
       <DependentUpon>PokemonView.axaml</DependentUpon>
     </Compile>

@@ -40,22 +40,31 @@ namespace PokeGlitzer
     public record PokemonExt(Pokemon pkmn, bool selected);
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        // TODO: Load/Save for team
         MainWindow mw;
         byte[] initialData;
+        byte[] initialTeamData;
         byte[]? copiedData = null;
         RangeObservableCollection<byte> data;
+        RangeObservableCollection<byte> teamData;
         const int BOX_PKMN_SIZE = 80;
         const int BOX_SIZE = 30;
         const int BOX_NUMBER = 14;
+        const int TEAM_PKMN_SIZE = 100;
+        const int TEAM_SIZE = 6;
         Save? save = null;
         MMFSync sync;
         public MainWindowViewModel(MainWindow mw)
         {
             this.mw = mw;
             data = Utils.ByteCollectionOfSize<byte>(BOX_PKMN_SIZE * BOX_SIZE * BOX_NUMBER);
+            teamData = Utils.ByteCollectionOfSize<byte>(TEAM_PKMN_SIZE * TEAM_SIZE);
             initialData = new byte[data.Count];
+            initialTeamData = new byte[teamData.Count];
             currentBox = Utils.ByteCollectionOfSize<PokemonExt?>(BOX_SIZE);
             LoadBox(0);
+            team = Utils.ByteCollectionOfSize<PokemonExt?>(TEAM_SIZE);
+            LoadTeam();
             sync = new MMFSync(data);
         }
 
@@ -70,12 +79,28 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[BOX_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(data, BOX_PKMN_SIZE * i + offset);
+                Pokemon pkmn = new Pokemon(data, BOX_PKMN_SIZE * i + offset, BOX_PKMN_SIZE, false);
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
                 
             Utils.UpdateCollectionRange(CurrentBox, pkmns);
             CurrentBoxNumber = nb+1;
+        }
+        void LoadTeam()
+        {
+            for (int i = 0; i < Team.Count; i++)
+            {
+                if (Team[i] != null)
+                    Team[i]!.pkmn.Dispose();
+            }
+            PokemonExt?[] pkmns = new PokemonExt?[TEAM_SIZE];
+            for (int i = 0; i < pkmns.Length; i++)
+            {
+                Pokemon pkmn = new Pokemon(data, TEAM_PKMN_SIZE * i, TEAM_PKMN_SIZE, true);
+                pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
+            }
+
+            Utils.UpdateCollectionRange(Team, pkmns);
         }
         bool IsSelected(Pokemon pkmn)
         {
@@ -91,12 +116,14 @@ namespace PokeGlitzer
         }
 
         RangeObservableCollection<PokemonExt?> currentBox;
+        RangeObservableCollection<PokemonExt?> team;
         int currentBoxNumber;
         DataLocation? selection;
         public int CurrentBoxNumber {
             get => currentBoxNumber + 1;
             set { currentBoxNumber = value - 1; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxNumber))); }
         }
+        public RangeObservableCollection<PokemonExt?> Team { get => team; }
         public RangeObservableCollection<PokemonExt?> CurrentBox { get => currentBox; }
         public Save? CurrentSave
         {
@@ -118,21 +145,32 @@ namespace PokeGlitzer
                     if (selected != pkmn.selected)
                         CurrentBox[i] = new PokemonExt(pkmn.pkmn, selected);
                 }
+                for (int i = 0; i < Team.Count; i++)
+                {
+                    if (Team[i] == null) continue;
+                    PokemonExt pkmn = Team[i]!;
+                    bool selected = IsSelected(pkmn.pkmn);
+                    if (selected != pkmn.selected)
+                        Team[i] = new PokemonExt(pkmn.pkmn, selected);
+                }
             }
         }
 
         List<IEditorWindow> openedEditors = new List<IEditorWindow>();
         public void OpenInterpretedEditor(DataLocation dl)
         {
-            ShowWindow(new InterpretedEditor(data, dl.offset));
+            ShowWindow(new InterpretedEditor(dl.inTeam ? teamData : data, dl.offset, dl.size, dl.inTeam));
         }
         public void OpenDataEditor(DataLocation dl)
         {
-            ShowWindow(new PokemonViewWindow(data, dl.offset, this));
+            if (dl.size == TEAM_PKMN_SIZE)
+                ShowWindow(new PokemonViewWindow100(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this));
+            else
+                ShowWindow(new PokemonViewWindow(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this));
         }
         public void OpenRawEditor(DataLocation dl)
         {
-            ShowWindow(new HexEditor(data, dl.offset));
+            ShowWindow(new HexEditor(dl.inTeam ? teamData : data, dl.offset, dl.size, dl.inTeam));
         }
         public void ShowWindow(IEditorWindow w)
         {
@@ -209,20 +247,21 @@ namespace PokeGlitzer
 
         public void RestoreInitialData(DataLocation dl)
         {
-            Utils.UpdateCollectionRange(data, new ArraySegment<byte>(initialData, dl.offset, dl.size), dl.offset);
+            ArraySegment<byte> initial = new ArraySegment<byte>(dl.inTeam ? initialTeamData : initialData, dl.offset, dl.size);
+            Utils.UpdateCollectionRange(dl.inTeam ? teamData : data, initial, dl.offset);
         }
         public void Delete(DataLocation dl)
         {
-            Utils.UpdateCollectionRange(data, new byte[dl.size], dl.offset);
+            Utils.UpdateCollectionRange(dl.inTeam ? teamData : data, new byte[dl.size], dl.offset);
         }
         public void Copy(DataLocation dl)
         {
-            CopiedData = Utils.ExtractCollectionRange(data, dl.offset, dl.size);
+            CopiedData = Utils.ExtractCollectionRange(dl.inTeam ? teamData : data, dl.offset, dl.size);
         }
         public void Paste(DataLocation dl)
         {
             if (CopiedData != null)
-                Utils.UpdateCollectionRange(data, new ArraySegment<byte>(CopiedData, 0, Math.Min(dl.size, CopiedData.Length)), dl.offset);
+                Utils.UpdateCollectionRange(dl.inTeam ? teamData : data, new ArraySegment<byte>(CopiedData, 0, Math.Min(dl.size, CopiedData.Length)), dl.offset);
         }
         public void NextBox()
         {

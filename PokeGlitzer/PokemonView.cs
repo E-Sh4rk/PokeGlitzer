@@ -32,8 +32,20 @@ namespace PokeGlitzer
             get => interpreted;
             set
             {
+                bool changed = interpreted != value;
                 interpreted = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Interpreted)));
+                if (changed) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Interpreted)));
+            }
+        }
+        TeamInterpretedData? teamInterpreted;
+        public TeamInterpretedData? TeamInterpreted
+        {
+            get => teamInterpreted;
+            set
+            {
+                bool changed = teamInterpreted != value;
+                teamInterpreted = value;
+                if (changed) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TeamInterpreted)));
             }
         }
 
@@ -108,6 +120,10 @@ namespace PokeGlitzer
         Egg = 3,
         BadEgg = 4
     }
+
+    public record TeamInterpretedData(PkmnStatus status, byte level, byte pokerusRemaining, ushort currentHP, ushort maxHP, ushort attack,
+        ushort defense, ushort speed, ushort speAttack, ushort speDefense);
+    public record PkmnStatus(byte sleep, bool poison, bool burn, bool freeze, bool paralysis, bool badPoison);
 
     public interface IEditorWindow
     {

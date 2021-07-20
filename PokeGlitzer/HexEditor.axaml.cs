@@ -15,13 +15,13 @@ namespace PokeGlitzer
         public HexEditor()
         {
             InitializeComponent();
-            pkmn = new Pokemon(Utils.ByteCollectionOfSize<byte>(80), 0);
+            pkmn = new Pokemon(Utils.ByteCollectionOfSize<byte>(80), 0, 80, false);
             DataContext = new HexEditorModel(pkmn);
         }
-        public HexEditor(RangeObservableCollection<byte> data, int offset)
+        public HexEditor(RangeObservableCollection<byte> data, int offset, int size, bool inTeam)
         {
             InitializeComponent();
-            pkmn = new Pokemon(data, offset);
+            pkmn = new Pokemon(data, offset, size, inTeam);
             DataContext = new HexEditorModel(pkmn);
 #if DEBUG
             this.AttachDevTools();

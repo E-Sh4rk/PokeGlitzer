@@ -7,6 +7,28 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
+    [StructLayout(LayoutKind.Sequential, Size = 100, Pack = 1)]
+    struct PokemonTeamStruct
+    {
+        public const byte SLEEP_MASK = 0b0000_0111;
+        public const byte POISON_MASK = 0b0000_1000;
+        public const byte BURN_MASK = 0b0001_0000;
+        public const byte FREEZE_MASK = 0b0010_0000;
+        public const byte PARALYSIS_MASK = 0b0100_0000;
+        public const byte BAD_POISON_MASK = 0b1000_0000;
+
+        public PokemonStruct permanent;
+        public uint status;
+        public byte level;
+        public byte pokerusRemaining;
+        public ushort currentHP;
+        public ushort maxHP;
+        public ushort attack;
+        public ushort defense;
+        public ushort speed;
+        public ushort speAttack;
+        public ushort speDefense;
+    }
     [StructLayout(LayoutKind.Sequential/*Explicit*/, Size = 80, Pack = 1)]
     struct PokemonStruct
     {

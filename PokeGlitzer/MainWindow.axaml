@@ -4,8 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:convert="clr-namespace:PokeGlitzer.Converters"
         xmlns:local="clr-namespace:PokeGlitzer"
-        mc:Ignorable="d" d:DesignWidth="425" d:DesignHeight="375"
-        Width="425" Height="375"
+        mc:Ignorable="d" d:DesignWidth="425" d:DesignHeight="450"
+        Width="425" Height="450"
         x:Class="PokeGlitzer.MainWindow"
         Title="PokeGlitzer">
 
@@ -100,6 +100,17 @@
         <ContentControl Grid.Row="4" Grid.Column="3" Content="{Binding CurrentBox[27]}"/>
         <ContentControl Grid.Row="4" Grid.Column="4" Content="{Binding CurrentBox[28]}"/>
         <ContentControl Grid.Row="4" Grid.Column="5" Content="{Binding CurrentBox[29]}"/>
+      </Grid>
+      
+      <Separator Height="23" />
+
+      <Grid ColumnDefinitions="68,68,68,68,68,68" RowDefinitions="56">
+        <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding Team[0]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding Team[1]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding Team[2]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="3" Content="{Binding Team[3]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="4" Content="{Binding Team[4]}"/>
+        <ContentControl Grid.Row="0" Grid.Column="5" Content="{Binding Team[5]}"/>
       </Grid>
     </StackPanel>
   </DockPanel>

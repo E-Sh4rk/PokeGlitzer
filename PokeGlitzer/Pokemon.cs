@@ -11,10 +11,11 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
-    public record DataLocation(int offset, int size)
+    public record DataLocation(int offset, int size, bool inTeam)
     {
         public static bool Intersect(DataLocation dl1, DataLocation dl2)
         {
+            if (dl1.inTeam != dl2.inTeam) return false;
             int l1 = dl1.offset; int r1 = l1 + dl1.size;
             int l2 = dl2.offset; int r2 = l2 + dl2.size;
             return Math.Max(l1, l2) < Math.Min(r1, r2);
@@ -29,9 +30,12 @@ namespace PokeGlitzer
         RangeObservableCollection<byte> data;
         int index;
         int size;
-        public Pokemon(RangeObservableCollection<byte> rawData, int rawDataIndex)
+        bool inTeam;
+        public Pokemon(RangeObservableCollection<byte> rawData, int rawDataIndex, int size, bool inTeam)
         {
-            size = 80;
+            if (size != 80 && size != 100) throw new ArgumentException("Size must be 80 or 100.");
+            this.size = size;
+            this.inTeam = inTeam;
             data = rawData;
             index = rawDataIndex;
             view = new PokemonView(size);
@@ -44,7 +48,7 @@ namespace PokeGlitzer
 
         PokemonView view;
         public PokemonView View { get => view; }
-        public DataLocation DataLocation { get => new DataLocation(index, size); }
+        public DataLocation DataLocation { get => new DataLocation(index, size, inTeam); }
 
         int[][] subOrders = new int[][]
         {
@@ -79,27 +83,34 @@ namespace PokeGlitzer
             switch (args.Action)
             {
                 case NotifyCollectionChangedAction.Replace:
-                    Utils.UpdateCollectionRange(data, args.NewItems!.Cast<byte>(), index + args.OldStartingIndex);
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    Utils.UpdateCollectionRange(data, view.Data, index);
+                    if (Enumerable.SequenceEqual(args.OldItems!.Cast<byte>(), args.NewItems!.Cast<byte>())) return;
+                    UpdateView(view.Data.ToArray(), false, false, true, true);
+                    Utils.UpdateCollectionRange(data, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count), index + args.OldStartingIndex);
                     break;
                 default:
                     throw new NotImplementedException();
             }
-            UpdateView(view.Data.ToArray(), false, false, true, true);
         }
 
         void ViewDecodedDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            UpdateView(view.DecodedData.ToArray(), true, true, false, true);
-            Utils.UpdateCollectionRange(data, view.Data, index);
+            switch (args.Action)
+            {
+                case NotifyCollectionChangedAction.Replace:
+                    if (Enumerable.SequenceEqual(args.OldItems!.Cast<byte>(), args.NewItems!.Cast<byte>())) return;
+                    UpdateView(view.DecodedData.ToArray(), true, true, false, true);
+                    Utils.UpdateCollectionRange(data, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count), index + args.OldStartingIndex);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         void ViewInterpretedChanged(object? sender, PropertyChangedEventArgs args)
         {
-            if (args.PropertyName != nameof(PokemonView.Interpreted)) return;
-
+            if (args.PropertyName != nameof(PokemonView.Interpreted) &&
+                args.PropertyName != nameof(PokemonView.TeamInterpreted)) return;
+            
             UpdateViewFromInterpreted();
             Utils.UpdateCollectionRange(data, view.Data, index);
         }
@@ -110,14 +121,13 @@ namespace PokeGlitzer
             switch (args.Action)
             {
                 case NotifyCollectionChangedAction.Replace:
-                    needUpdate = DataLocation.Intersect(new DataLocation(args.OldStartingIndex, args.NewItems!.Count));
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    needUpdate = true;
+                    if (Enumerable.SequenceEqual(args.OldItems!.Cast<byte>(), args.NewItems!.Cast<byte>())) return;
+                    needUpdate = DataLocation.Intersect(new DataLocation(args.OldStartingIndex, args.NewItems!.Count, inTeam));
                     break;
                 default:
                     throw new NotImplementedException();
             }
+            
             if (needUpdate) UpdateViewFromSource();
         }
 
@@ -158,32 +168,53 @@ namespace PokeGlitzer
             Array.Copy(pkmn.data, offset, res, 0, PokemonStruct.SUBSTRUCTURE_SIZE);
             return res;
         }
+        /*PokemonStruct GetPkmnStruct(byte[] dataArr)
+        {
+            if (dataArr.Length == 100)
+                return Utils.ByteToType<PokemonTeamStruct>(dataArr).permanent;
+            else
+                return Utils.ByteToType<PokemonStruct>(dataArr);
+        }*/
+        PokemonTeamStruct GetPkmnTeamStruct(byte[] dataArr)
+        {
+            if (dataArr.Length == 100)
+                return Utils.ByteToType<PokemonTeamStruct>(dataArr);
+            else
+            {
+                PokemonTeamStruct pt = new PokemonTeamStruct();
+                pt.permanent = Utils.ByteToType<PokemonStruct>(dataArr);
+                return pt;
+            }
+        }
         void UpdateView(byte[] dataArr, bool isDecoded, bool updateData, bool updateDecodedData, bool updateInterpreted)
         {
-            PokemonStruct pkmn = Utils.ByteToType<PokemonStruct>(dataArr);
+            PokemonTeamStruct pkmn = GetPkmnTeamStruct(dataArr);
             // Checksum and data
-            UpdateChecksumAndViewData(pkmn, dataArr, isDecoded, updateData, updateDecodedData);
+            UpdateChecksumAndViewData(pkmn.permanent, dataArr, isDecoded, updateData, updateDecodedData);
             // Compute substructures position order
-            int[] order = subOrders[pkmn.PID % 24];
+            int[] order = subOrders[pkmn.permanent.PID % 24];
             view.SubstructureAtPos0 = order[0];
             view.SubstructureAtPos1 = order[1];
             view.SubstructureAtPos2 = order[2];
             view.SubstructureAtPos3 = order[3];
             // XOR data
-            uint key = pkmn.PID ^ pkmn.OTID;
-            for (int i = 0; i < pkmn.data.Length; i += 4)
+            uint key = pkmn.permanent.PID ^ pkmn.permanent.OTID;
+            for (int i = 0; i < pkmn.permanent.data.Length; i += 4)
             {
-                uint data = BitConverter.ToUInt32(pkmn.data, i);
+                uint data = BitConverter.ToUInt32(pkmn.permanent.data, i);
                 byte[] res = BitConverter.GetBytes(data^key);
-                pkmn.data[i] = res[0];
-                pkmn.data[i+1] = res[1];
-                pkmn.data[i+2] = res[2];
-                pkmn.data[i+3] = res[3];
+                pkmn.permanent.data[i] = res[0];
+                pkmn.permanent.data[i+1] = res[1];
+                pkmn.permanent.data[i+2] = res[2];
+                pkmn.permanent.data[i+3] = res[3];
             }
-            dataArr = Utils.TypeToByte(pkmn);
+            if (dataArr.Length == 100)
+                dataArr = Utils.TypeToByte(pkmn);
+            else
+                dataArr = Utils.TypeToByte(pkmn.permanent);
             isDecoded = !isDecoded;
             // Checksum and data
-            UpdateChecksumAndViewData(pkmn, dataArr, isDecoded, updateData, updateDecodedData);
+            UpdateChecksumAndViewData(pkmn.permanent, dataArr, isDecoded, updateData, updateDecodedData);
             // Interpreted data
             if (updateInterpreted)
             {
@@ -208,39 +239,48 @@ namespace PokeGlitzer
                     else if (!egg && !badEgg) eggType = EggType.None;
                 }
                 // Update interpreted data
-                view.Interpreted = new InterpretedData(pkmn.PID, pkmn.OTID, sub0.species, eggType);
+                view.Interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType);
+                // TODO: how to ensure UpdateViewFromInterpreted will not be called again?
+                if (size == 100)
+                {
+                    PkmnStatus status = new PkmnStatus((byte)(pkmn.status & PokemonTeamStruct.SLEEP_MASK), (pkmn.status & PokemonTeamStruct.POISON_MASK) != 0,
+                        (pkmn.status & PokemonTeamStruct.BURN_MASK) != 0, (pkmn.status & PokemonTeamStruct.FREEZE_MASK) != 0,
+                        (pkmn.status & PokemonTeamStruct.PARALYSIS_MASK) != 0, (pkmn.status & PokemonTeamStruct.BAD_POISON_MASK) != 0);
+                    view.TeamInterpreted = new TeamInterpretedData(status, pkmn.level, pkmn.pokerusRemaining, pkmn.currentHP, pkmn.maxHP, pkmn.attack,
+                        pkmn.defense, pkmn.speed, pkmn.speAttack, pkmn.speDefense);
+                }
             }
         }
         void UpdateViewFromInterpreted()
         {
             InterpretedData interpreted = view.Interpreted!;
-            PokemonStruct pkmn = Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray());
+            PokemonTeamStruct pkmn = GetPkmnTeamStruct(view.DecodedData.ToArray());
             // Retrieving substructures
-            Substructure0 sub0 = Utils.ByteToType<Substructure0>(GetSubstructure(pkmn, 0));
-            Substructure1 sub1 = Utils.ByteToType<Substructure1>(GetSubstructure(pkmn, 1));
-            Substructure2 sub2 = Utils.ByteToType<Substructure2>(GetSubstructure(pkmn, 2));
-            Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(pkmn, 3));
+            Substructure0 sub0 = Utils.ByteToType<Substructure0>(GetSubstructure(pkmn.permanent, 0));
+            Substructure1 sub1 = Utils.ByteToType<Substructure1>(GetSubstructure(pkmn.permanent, 1));
+            Substructure2 sub2 = Utils.ByteToType<Substructure2>(GetSubstructure(pkmn.permanent, 2));
+            Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(pkmn.permanent, 3));
             // Modifying data
-            pkmn.PID = interpreted.PID;
-            pkmn.OTID = interpreted.OTID;
+            pkmn.permanent.PID = interpreted.PID;
+            pkmn.permanent.OTID = interpreted.OTID;
             sub0.species = interpreted.species;
             switch (interpreted.egg)
             {
                 case EggType.Egg:
                     sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
-                    pkmn.isEgg = (byte)((pkmn.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK) & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.permanent.isEgg = (byte)((pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK) & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.BadEgg:
                     sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
-                    pkmn.isEgg = (byte)(pkmn.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.NotAnEgg:
                     sub3.ivEggAbility = sub3.ivEggAbility & ~Substructure3.EGG_MASK;
-                    pkmn.isEgg = (byte)((pkmn.isEgg | PokemonStruct.HAS_SPECIES_MASK) & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.permanent.isEgg = (byte)((pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK) & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.None:
                     sub3.ivEggAbility = sub3.ivEggAbility & ~Substructure3.EGG_MASK;
-                    pkmn.isEgg = (byte)(pkmn.isEgg & ~PokemonStruct.HAS_SPECIES_MASK & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg & ~PokemonStruct.HAS_SPECIES_MASK & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 default:
                     break;
@@ -251,15 +291,44 @@ namespace PokeGlitzer
             byte[] b2 = Utils.TypeToByte(sub2);
             byte[] b3 = Utils.TypeToByte(sub3);
             byte[] subs = new byte[PokemonStruct.SUBSTRUCTURE_SIZE*4];
-            int[] order = SubstructuresOrder(pkmn);
+            int[] order = SubstructuresOrder(pkmn.permanent);
             Array.Copy(b0, 0, subs, OffsetOfSubstructure(order, 0), PokemonStruct.SUBSTRUCTURE_SIZE);
             Array.Copy(b1, 0, subs, OffsetOfSubstructure(order, 1), PokemonStruct.SUBSTRUCTURE_SIZE);
             Array.Copy(b2, 0, subs, OffsetOfSubstructure(order, 2), PokemonStruct.SUBSTRUCTURE_SIZE);
             Array.Copy(b3, 0, subs, OffsetOfSubstructure(order, 3), PokemonStruct.SUBSTRUCTURE_SIZE);
-            pkmn.data = subs;
+            pkmn.permanent.data = subs;
             // Fixing checksum if it was valid initially
-            if (view.ChecksumValid) pkmn.checksum = ComputeChecksum(pkmn);
-            UpdateView(Utils.TypeToByte(pkmn), true, true, true, false);
+            if (view.ChecksumValid) pkmn.permanent.checksum = ComputeChecksum(pkmn.permanent);
+            byte[] res;
+            if (size == 100)
+            {
+                // Team data
+                TeamInterpretedData teamInterpreted = view.TeamInterpreted!;
+                pkmn.currentHP = teamInterpreted.currentHP;
+                pkmn.maxHP = teamInterpreted.maxHP;
+                pkmn.attack = teamInterpreted.attack;
+                pkmn.defense = teamInterpreted.defense;
+                pkmn.speed = teamInterpreted.speed;
+                pkmn.speAttack = teamInterpreted.speAttack;
+                pkmn.speDefense = teamInterpreted.speDefense;
+                pkmn.level = teamInterpreted.level;
+                pkmn.pokerusRemaining = teamInterpreted.pokerusRemaining;
+                pkmn.status = (byte)(teamInterpreted.status.sleep & PokemonTeamStruct.SLEEP_MASK);
+                if (teamInterpreted.status.poison)
+                    pkmn.status |= PokemonTeamStruct.POISON_MASK;
+                if (teamInterpreted.status.burn)
+                    pkmn.status |= PokemonTeamStruct.BURN_MASK;
+                if (teamInterpreted.status.freeze)
+                    pkmn.status |= PokemonTeamStruct.FREEZE_MASK;
+                if (teamInterpreted.status.paralysis)
+                    pkmn.status |= PokemonTeamStruct.PARALYSIS_MASK;
+                if (teamInterpreted.status.badPoison)
+                    pkmn.status |= PokemonTeamStruct.BAD_POISON_MASK;
+                res = Utils.TypeToByte(pkmn);
+            }
+            else
+                res = Utils.TypeToByte(pkmn.permanent);
+            UpdateView(res, true, true, true, false);
         }
 
         // ===== PUBLIC FUNCTIONS =====

@@ -164,4 +164,40 @@ namespace PokeGlitzer
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0xE)]
         public byte[] boxWallpapers;
     }
+    [StructLayout(LayoutKind.Sequential, Size = 610, Pack = 1)]
+    public struct TeamItemsData
+    {
+        public const int SECTION_ID = 1;
+        public const int SECTION_OFFSET_RSE = 0x0234;
+        public const int SECTION_OFFSET_FRLG = 0x0034;
+
+        public uint teamSize;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 600)]
+        public byte[] pokemonList;
+        public uint money;
+        public ushort coins;
+    }
+    [StructLayout(LayoutKind.Sequential, Size = 0xB0, Pack = 1)]
+    public struct TrainerInfoData
+    {
+        public const int SECTION_ID = 0;
+        public const int GAMECODE_RS = 0;
+        public const int GAMECODE_FRLG = 1;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x7)]
+        public byte[] playerName;
+        public byte playerGender;
+        public byte unused1;
+        public uint trainedID;
+        public ushort hoursPlayed;
+        public byte minutesPlayed;
+        public byte secondsPlayed;
+        public byte framesPlayed;
+        public byte options1;
+        public byte options2;
+        public byte options3;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x99)]
+        public byte[] unused2;
+        public uint gameCode;
+    }
 }

@@ -15,6 +15,7 @@ namespace PokeGlitzer
         string path;
         PokemonSaveFile save;
         SaveSlot currentSaveSlot;
+        uint gameCode;
         public Save(string path)
         {
             this.path = path;
@@ -36,6 +37,12 @@ namespace PokeGlitzer
                 currentSaveSlot = SaveSlot.SlotB;
             else
                 throw new FormatException("The save file is corrupted.");
+
+            Section tiSection = GetSection(TrainerInfoData.SECTION_ID)!.Value;
+            byte[] tiData = new byte[Marshal.SizeOf(typeof(TrainerInfoData))];
+            Array.Copy(tiSection.data, tiData, tiData.Length);
+            TrainerInfoData ti = Utils.ByteToType<TrainerInfoData>(tiData);
+            gameCode = ti.gameCode;
         }
         uint GetSaveIndex(Section[] sections)
         {
@@ -120,6 +127,25 @@ namespace PokeGlitzer
                 SetSection(s);
                 offset += sectionSize;
             }
+        }
+
+        public TeamItemsData RetrieveTeamData()
+        {
+            int offset = gameCode == TrainerInfoData.GAMECODE_FRLG ? TeamItemsData.SECTION_OFFSET_FRLG : TeamItemsData.SECTION_OFFSET_RSE;
+            Section tSection = GetSection(TeamItemsData.SECTION_ID)!.Value;
+            byte[] tData = new byte[Marshal.SizeOf(typeof(TeamItemsData))];
+            Array.Copy(tSection.data, offset, tData, 0, tData.Length);
+            return Utils.ByteToType<TeamItemsData>(tData);
+        }
+        public void SetTeamData(TeamItemsData ti)
+        {
+            int offset = gameCode == TrainerInfoData.GAMECODE_FRLG ? TeamItemsData.SECTION_OFFSET_FRLG : TeamItemsData.SECTION_OFFSET_RSE;
+
+            byte[] tData = Utils.TypeToByte(ti);
+            Section tSection = GetSection(TeamItemsData.SECTION_ID)!.Value;
+            Array.Copy(tData, 0, tSection.data, offset, tData.Length);
+            tSection.checksum = ComputeChecksum(tSection.data, Section.DATA_SIZE[TeamItemsData.SECTION_ID]);
+            SetSection(tSection);
         }
     }
 }

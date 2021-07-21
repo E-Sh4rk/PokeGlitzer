@@ -18,7 +18,6 @@ namespace PokeGlitzer
 {
     // TODO: Possibility to edit the whole box data (big hex editor)
     // TODO: Possibility to edit the box names
-    // TODO: Possibility to edit the team (not only the boxes)
     // TODO: Glitzer Popping operations (simulations, etc.)
     public partial class MainWindow : Window
     {
@@ -40,7 +39,7 @@ namespace PokeGlitzer
     public record PokemonExt(Pokemon pkmn, bool selected);
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        // TODO: Load/Save for team
+        // TODO: Synchronize team data
         MainWindow mw;
         byte[] initialData;
         byte[] initialTeamData;
@@ -221,7 +220,9 @@ namespace PokeGlitzer
                 try {
                     CurrentSave = new Save(result[0]);
                     Utils.UpdateCollectionRange(data, CurrentSave.RetrievePCData().pokemonList);
+                    Utils.UpdateCollectionRange(teamData, CurrentSave.RetrieveTeamData().pokemonList);
                     initialData = data.ToArray();
+                    initialTeamData = teamData.ToArray();
                 } catch {
                     await MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while loading the save.").ShowDialog(mw);
                 }
@@ -236,8 +237,12 @@ namespace PokeGlitzer
                     PCData pcd = CurrentSave.RetrievePCData();
                     pcd.pokemonList = data.ToArray();
                     CurrentSave.SetPCData(pcd);
+                    TeamItemsData tid = CurrentSave.RetrieveTeamData();
+                    tid.pokemonList = teamData.ToArray();
+                    CurrentSave.SetTeamData(tid);
                     CurrentSave.SaveToFile();
                     initialData = pcd.pokemonList;
+                    initialTeamData = tid.pokemonList;
                 }
                 catch {
                     MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while saving.").ShowDialog(mw);

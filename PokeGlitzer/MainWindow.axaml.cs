@@ -39,18 +39,17 @@ namespace PokeGlitzer
     public record PokemonExt(Pokemon pkmn, bool selected);
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        // TODO: Synchronize team data
         MainWindow mw;
         byte[] initialData;
         byte[] initialTeamData;
         byte[]? copiedData = null;
         RangeObservableCollection<byte> data;
         RangeObservableCollection<byte> teamData;
-        const int BOX_PKMN_SIZE = 80;
-        const int BOX_SIZE = 30;
-        const int BOX_NUMBER = 14;
-        const int TEAM_PKMN_SIZE = 100;
-        const int TEAM_SIZE = 6;
+        public const int BOX_PKMN_SIZE = 80;
+        public const int BOX_SIZE = 30;
+        public const int BOX_NUMBER = 14;
+        public const int TEAM_PKMN_SIZE = 100;
+        public const int TEAM_SIZE = 6;
         Save? save = null;
         MMFSync sync;
         public MainWindowViewModel(MainWindow mw)
@@ -64,7 +63,7 @@ namespace PokeGlitzer
             LoadBox(0);
             team = Utils.ByteCollectionOfSize<PokemonExt?>(TEAM_SIZE);
             LoadTeam();
-            sync = new MMFSync(data);
+            sync = new MMFSync(data, teamData);
         }
 
         void LoadBox(int nb)

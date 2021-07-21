@@ -12,23 +12,37 @@ namespace PokeGlitzer
     public class MMFSync : INotifyPropertyChanged
     {
         RangeObservableCollection<byte> data;
+        RangeObservableCollection<byte> teamData;
         DispatcherTimer? timer;
 
-        public MMFSync(RangeObservableCollection<byte> data)
+        public MMFSync(RangeObservableCollection<byte> data, RangeObservableCollection<byte> teamData)
         {
             this.data = data;
+            this.teamData = teamData;
         }
 
-        MemoryMappedFile? inData;
-        MemoryMappedViewAccessor? inAcc;
-        MemoryMappedFile? cInData;
-        MemoryMappedViewAccessor? cInAcc;
-        byte cIn;
-        MemoryMappedFile? outData;
-        MemoryMappedViewAccessor? outAcc;
-        MemoryMappedFile? cOutData;
-        MemoryMappedViewAccessor? cOutAcc;
-        byte cOut;
+        enum CHANNEL_DIR { IN = 0, OUT = 1 }
+        const int NUMBER_CHANNELS = 4;
+        const int PC_IN = 0;
+        const int PC_OUT = 1;
+        const int TEAM_IN = 2;
+        const int TEAM_OUT = 3;
+        static readonly string[] CHANNELS_NAME =
+            new string[] { "bizhawk_down", "bizhawk_up", "bizhawk2_down", "bizhawk2_up" };
+        static readonly CHANNEL_DIR[] CHANNELS_DIRECTION =
+            new CHANNEL_DIR[] { CHANNEL_DIR.IN, CHANNEL_DIR.OUT, CHANNEL_DIR.IN, CHANNEL_DIR.OUT };
+        static readonly int[] CHANNELS_LENGTH =
+            new int[] { MainWindowViewModel.BOX_NUMBER* MainWindowViewModel.BOX_SIZE*MainWindowViewModel.BOX_PKMN_SIZE,
+                        MainWindowViewModel.BOX_NUMBER* MainWindowViewModel.BOX_SIZE*MainWindowViewModel.BOX_PKMN_SIZE,
+                        MainWindowViewModel.TEAM_SIZE * MainWindowViewModel.TEAM_PKMN_SIZE,
+                        MainWindowViewModel.TEAM_SIZE * MainWindowViewModel.TEAM_PKMN_SIZE
+            };
+
+        MemoryMappedFile[]? mmfData;
+        MemoryMappedViewAccessor[]? mmfAcc;
+        MemoryMappedFile[]? mmfCData;
+        MemoryMappedViewAccessor[]? mmfCAcc;
+        byte[]? mmfC;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "42")]
         public bool Start()
@@ -39,20 +53,38 @@ namespace PokeGlitzer
                 timer = new DispatcherTimer(DispatcherPriority.Input);
                 timer.Interval = TimeSpan.FromMilliseconds(500);
 
-                inData = MemoryMappedFile.OpenExisting("bizhawk_down", MemoryMappedFileRights.Read);
-                inAcc = inData.CreateViewAccessor(0, data.Count, MemoryMappedFileAccess.Read);
-                cInData = MemoryMappedFile.OpenExisting("bizhawk_downc", MemoryMappedFileRights.Read);
-                cInAcc = cInData.CreateViewAccessor(0, 0x1, MemoryMappedFileAccess.Read);
-                cIn = (byte)(cInAcc.ReadByte(0)-1);
-                outData = MemoryMappedFile.OpenExisting("bizhawk_up", MemoryMappedFileRights.Write);
-                outAcc = outData.CreateViewAccessor(0, data.Count, MemoryMappedFileAccess.Write);
-                cOutData = MemoryMappedFile.OpenExisting("bizhawk_upc", MemoryMappedFileRights.ReadWrite);
-                cOutAcc = cOutData.CreateViewAccessor(0, 0x1, MemoryMappedFileAccess.ReadWrite);
-                cOut = (byte)(cOutAcc.ReadByte(0)+1);
+                mmfData = new MemoryMappedFile[NUMBER_CHANNELS];
+                mmfAcc = new MemoryMappedViewAccessor[NUMBER_CHANNELS];
+                mmfCData = new MemoryMappedFile[NUMBER_CHANNELS];
+                mmfCAcc = new MemoryMappedViewAccessor[NUMBER_CHANNELS];
+                mmfC = new byte[NUMBER_CHANNELS];
+
+                for (int i = 0; i < NUMBER_CHANNELS; i++)
+                {
+                    string name = CHANNELS_NAME[i];
+                    int len = CHANNELS_LENGTH[i];
+                    if (CHANNELS_DIRECTION[i] == CHANNEL_DIR.IN)
+                    {
+                        mmfData[i] = MemoryMappedFile.OpenExisting(name, MemoryMappedFileRights.Read);
+                        mmfAcc[i] = mmfData[i].CreateViewAccessor(0, len, MemoryMappedFileAccess.Read);
+                        mmfCData[i] = MemoryMappedFile.OpenExisting(name + "_c", MemoryMappedFileRights.Read);
+                        mmfCAcc[i] = mmfCData[i].CreateViewAccessor(0, 0x1, MemoryMappedFileAccess.Read);
+                        mmfC[i] = (byte)(mmfCAcc[i].ReadByte(0) - 1);
+                    }
+                    else
+                    {
+                        mmfData[i] = MemoryMappedFile.OpenExisting(name, MemoryMappedFileRights.Write);
+                        mmfAcc[i] = mmfData[i].CreateViewAccessor(0, len, MemoryMappedFileAccess.Write);
+                        mmfCData[i] = MemoryMappedFile.OpenExisting(name + "_c", MemoryMappedFileRights.ReadWrite);
+                        mmfCAcc[i] = mmfCData[i].CreateViewAccessor(0, 0x1, MemoryMappedFileAccess.ReadWrite);
+                        mmfC[i] = (byte)(mmfCAcc[i].ReadByte(0) + 1);
+                    }
+                }
 
                 timer.Tick += Refresh;
                 timer.Start();
                 data.CollectionChanged += DataChanged;
+                teamData.CollectionChanged += DataChanged;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRunning)));
                 return true;
             }
@@ -66,6 +98,7 @@ namespace PokeGlitzer
         public void Stop()
         {
             data.CollectionChanged -= DataChanged;
+            teamData.CollectionChanged -= DataChanged;
             if (IsRunning)
             {
                 timer!.Stop();
@@ -73,16 +106,46 @@ namespace PokeGlitzer
                 timer = null;
             }
 
-            cOutAcc?.Dispose(); cOutAcc = null;
-            cOutData?.Dispose(); cOutData = null;
-            outAcc?.Dispose(); outAcc = null;
-            outData?.Dispose(); outData = null;
-            cInAcc?.Dispose(); cInAcc = null;
-            cInData?.Dispose(); cInData = null;
-            inAcc?.Dispose(); inAcc = null;
-            inData?.Dispose(); inData = null;
+            for (int i = 0; i < NUMBER_CHANNELS; i++)
+            {
+                if (mmfAcc != null && mmfAcc[i] != null) mmfAcc[i].Dispose();
+                if (mmfCAcc != null && mmfCAcc[i] != null) mmfCAcc[i].Dispose();
+                if (mmfData != null && mmfData[i] != null) mmfData[i].Dispose();
+                if (mmfCData != null && mmfCData[i] != null) mmfCData[i].Dispose();
+            }
+            mmfData = null; mmfAcc = null; mmfCData = null; mmfCAcc = null; mmfC = null;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRunning)));
+        }
+
+        bool CheckChannelUpdate(int id)
+        {
+            byte c = mmfCAcc![id].ReadByte(0);
+            if (c != mmfC![id])
+            {
+                mmfC![id] = c;
+                return true;
+            }
+            return false;
+        }
+        byte[] ReadChannel(int id)
+        {
+            int len = CHANNELS_LENGTH[id];
+            byte[] res = new byte[len];
+            mmfAcc![id].ReadArray(0, res, 0, len);
+            return res;
+        }
+        byte[] ReadChannel(int id, int start, int count)
+        {
+            byte[] res = new byte[count];
+            mmfAcc![id].ReadArray(start, res, 0, count);
+            return res;
+        }
+        void WriteChannel(int id, byte[] data, int position = 0)
+        {
+            mmfAcc![id].WriteArray(position, data, 0, data.Length);
+            mmfCAcc![id].Write(0, mmfC![id]);
+            mmfC![id]++;
         }
 
         private void DataChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -94,46 +157,54 @@ namespace PokeGlitzer
                 case NotifyCollectionChangedAction.Replace:
                     i = e.OldStartingIndex; c = e.NewItems!.Count;
                     break;
-                case NotifyCollectionChangedAction.Reset:
-                    i = 0; c = data.Count;
-                    break;
                 default:
                     throw new NotImplementedException();
             }
-            byte[] emu_data = new byte[c];
-            inAcc!.ReadArray(i, emu_data, 0, c);
-            byte[] new_data = Utils.ExtractCollectionRange(data, i, c);
 
-            if (!Enumerable.SequenceEqual(new_data, emu_data))
+            if (sender == data) // Boxes
             {
-                byte[] dataArr = data.ToArray();
-                outAcc!.WriteArray(0, dataArr, 0, dataArr.Length);
-                cOutAcc!.Write(0, cOut);
-                cOut++;
+                byte[] emu_data = ReadChannel(PC_IN, i, c);
+                byte[] new_data = Utils.ExtractCollectionRange(data, i, c);
+                if (!Enumerable.SequenceEqual(new_data, emu_data))
+                    WriteChannel(PC_OUT, data.ToArray());
+            }
+            else if (sender == teamData) // Team
+            {
+                byte[] emu_data = ReadChannel(TEAM_IN, i, c);
+                byte[] new_data = Utils.ExtractCollectionRange(teamData, i, c);
+                if (!Enumerable.SequenceEqual(new_data, emu_data))
+                    WriteChannel(TEAM_OUT, teamData.ToArray());
             }
         }
-
-        const int PKMN_SIZE = 80;
-        const int PKMN_NB = 30*14;
 
         private void Refresh(object? sender, EventArgs e)
         {
             if (!IsRunning) return;
 
-            byte cIn2 = cInAcc!.ReadByte(0);
-            if (cIn != cIn2)
+            if (CheckChannelUpdate(PC_IN))
             {
-                cIn = cIn2;
+                // Boxes
                 byte[] oldData = data.ToArray();
-
-                for (int i = 0; i < PKMN_NB; i++)
+                for (int i = 0; i < MainWindowViewModel.BOX_NUMBER*MainWindowViewModel.BOX_SIZE; i++)
                 {
-                    int offset = i * PKMN_SIZE;
-                    byte[] pkmn = new byte[PKMN_SIZE];
-                    inAcc!.ReadArray(offset, pkmn, 0, PKMN_SIZE);
-                    IEnumerable<byte> oldPkmn = new ArraySegment<byte>(oldData, offset, PKMN_SIZE);
+                    int offset = i * MainWindowViewModel.BOX_PKMN_SIZE;
+                    byte[] pkmn = ReadChannel(PC_IN, offset, MainWindowViewModel.BOX_PKMN_SIZE);
+                    IEnumerable<byte> oldPkmn = new ArraySegment<byte>(oldData, offset, MainWindowViewModel.BOX_PKMN_SIZE);
                     if (!Enumerable.SequenceEqual(pkmn, oldPkmn))
                         Utils.UpdateCollectionRange(data, pkmn, offset);
+                }
+            }
+            if (CheckChannelUpdate(TEAM_IN))
+            {
+                // Team
+                byte[] oldData = teamData.ToArray();
+                for (int i = 0; i < MainWindowViewModel.TEAM_SIZE; i++)
+                {
+                    int offset = i * MainWindowViewModel.TEAM_PKMN_SIZE;
+                    byte[] pkmn = ReadChannel(TEAM_IN, offset, MainWindowViewModel.TEAM_PKMN_SIZE);
+                    IEnumerable<byte> oldPkmn = new ArraySegment<byte>(oldData, offset, MainWindowViewModel.TEAM_PKMN_SIZE);
+                    if (!Enumerable.SequenceEqual(pkmn, oldPkmn))
+                        Utils.UpdateCollectionRange(teamData, pkmn, offset);
                 }
             }
         }

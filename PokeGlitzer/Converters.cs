@@ -180,9 +180,9 @@ namespace PokeGlitzer.Converters
                         if (species > ResLoader.MAX_SPECIES)
                             return ResLoader.Unknown;
                         if (data.IsShiny)
-                            return ResLoader.ShinySpecies[species];
+                            return ResLoader.ShinySpecies(species);
                         else
-                            return ResLoader.Species[species];
+                            return ResLoader.Species(species);
                 }
             }
             catch { }

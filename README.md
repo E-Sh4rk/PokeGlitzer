@@ -1,1 +1,53 @@
 # PokeGlitzer
+
+## Running the app
+
+The following dependencies are required in order to run this application:
+
+- Windows (recommended), or MacOS/Linux (not tested yet)
+- .NET Runtime 5.0: https://dotnet.microsoft.com/download/dotnet/5.0
+
+You can then download the last version of this app in the [release section](https://github.com/E-Sh4rk/PokeGlitzer/releases).
+
+To run this app:
+- On Windows, just open `PokeGlitzer.exe`
+- On Linux/MacOS, you can use the command `dotnet PokeGlitzer.dll` (not tested yet)
+
+## Features (more to come)
+
+The following ROMs are compatible with this save editor:
+- Emerald (any language)
+- Ruby/Sapphire (any language, not tested yet)
+- RedFire/LeafGreen (any language, not tested yet)
+
+In any case, **please backup your save before using this save editor** as it has not been tested extensively yet.
+
+The following elements can be edited:
+- Pokemons in the party
+- Pokemons in the boxes
+
+## Synchronization with Bizhawk
+
+It is possible to synchronize the save editor with Bizhawk in order see/modify in live
+the content of your party/boxes. This feature is **only available on Windows** as Bizhawk does not
+support LUA scripting on Linux/MacOS.
+
+This feature requires a recent version of Bizhawk:
+you have to build it from the [master](https://github.com/TASVideos/BizHawk/tree/master) channel (or any version after commit [e79d33bcfdd9dac596dce0d60bf7c8621d92ce62](https://github.com/TASVideos/BizHawk/tree/e79d33bcfdd9dac596dce0d60bf7c8621d92ce62)).
+
+You can then synchronize the level editor with Bizhawk by doing the following:
+1. Open a Pokemon ROM (generation 3) with a recent version of Bizhawk
+2. Open the `LUA console` and load the script `Misc/bizhawk_synchronize.lua` (in this repo)  
+Note that this script only works with Emerald US for now, but you can easily adapt it to work with other
+versions.
+3. Open the save editor and click on `Sync -> Start synchronization`
+
+## Building the app
+
+If you want to build the app yourself, you should first clone this repo
+(`git clone https://github.com/E-Sh4rk/PokeGlitzer.git`).
+
+Then:
+- On Windows, just open `PokeGlitzer.sln` using Visual Studio 2019
+- On Linux/MacOS, you should be able to build with the command `dotnet build PokeGlitzer.sln -c Release`
+(not tested yet)

@@ -173,8 +173,9 @@ namespace PokeGlitzer.Converters
                     case EggType.Invalid:
                         return ResLoader.Error;
                     case EggType.Egg:
-                    case EggType.BadEgg:
                         return ResLoader.Egg;
+                    case EggType.BadEgg:
+                        return ResLoader.BadEgg;
                     case EggType.NotAnEgg:
                         int species = SpeciesConverter.SetG3Species(data.species);
                         if (species > ResLoader.MAX_SPECIES)

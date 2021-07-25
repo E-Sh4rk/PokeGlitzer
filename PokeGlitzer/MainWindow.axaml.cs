@@ -19,6 +19,8 @@ namespace PokeGlitzer
     // TODO: Possibility to edit the whole box data (big hex editor)
     // TODO: Possibility to edit the box names
     // TODO: Glitzer Popping operations (simulations, etc.)
+
+    // TODO: Investigate corruptions when switching pokemons in battle
     public partial class MainWindow : Window
     {
         public MainWindow()

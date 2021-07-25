@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -24,6 +25,17 @@ namespace PokeGlitzer
                 return false;
             }
             return true;
+        }
+
+        public static bool IsNonTrivialReplacement(NotifyCollectionChangedEventArgs args)
+        {
+            switch (args.Action)
+            {
+                case NotifyCollectionChangedAction.Replace:
+                    return !Enumerable.SequenceEqual(args.OldItems!.Cast<byte>(), args.NewItems!.Cast<byte>());
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         public static void UpdateCollectionRange<T>(RangeObservableCollection<T> col, IEnumerable<T> newData, int start = 0)

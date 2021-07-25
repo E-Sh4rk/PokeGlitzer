@@ -151,29 +151,26 @@ namespace PokeGlitzer
         private void DataChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (!IsRunning) return;
-            int i; int c;
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Replace:
-                    i = e.OldStartingIndex; c = e.NewItems!.Count;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
 
-            if (sender == data) // Boxes
+            if (Utils.IsNonTrivialReplacement(e))
             {
-                byte[] emu_data = ReadChannel(PC_IN, i, c);
-                byte[] new_data = Utils.ExtractCollectionRange(data, i, c);
-                if (!Enumerable.SequenceEqual(new_data, emu_data))
-                    WriteChannel(PC_OUT, data.ToArray());
-            }
-            else if (sender == teamData) // Team
-            {
-                byte[] emu_data = ReadChannel(TEAM_IN, i, c);
-                byte[] new_data = Utils.ExtractCollectionRange(teamData, i, c);
-                if (!Enumerable.SequenceEqual(new_data, emu_data))
-                    WriteChannel(TEAM_OUT, teamData.ToArray());
+                int i = e.OldStartingIndex;
+                int c = e.NewItems!.Count;
+                if (sender == data) // Boxes
+                {
+                    byte[] emu_data = ReadChannel(PC_IN, i, c);
+                    byte[] new_data = Utils.ExtractCollectionRange(data, i, c);
+                    if (!Enumerable.SequenceEqual(new_data, emu_data))
+                        WriteChannel(PC_OUT, data.ToArray());
+                }
+                else if (sender == teamData) // Team
+                {
+                    byte[] emu_data = ReadChannel(TEAM_IN, i, c);
+                    byte[] new_data = Utils.ExtractCollectionRange(teamData, i, c);
+                    if (!Enumerable.SequenceEqual(new_data, emu_data))
+                        WriteChannel(TEAM_OUT, teamData.ToArray());
+                }
+
             }
         }
 

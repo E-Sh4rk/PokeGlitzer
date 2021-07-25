@@ -1,6 +1,8 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="PokeGlitzer.App">
+             x:Class="PokeGlitzer.App"
+             xmlns:local="clr-namespace:PokeGlitzer"
+             xmlns:convert="clr-namespace:PokeGlitzer.Converters">
     <Application.Styles>
       <FluentTheme Mode="Light"/>
 
@@ -80,4 +82,46 @@
       </Style>
       
     </Application.Styles>
+
+  <Application.Resources>
+    <convert:SelectionToColor x:Key="s2c"/>
+    <convert:PokemonToBitmap x:Key="p2b"/>
+    <convert:NumberToStringConverter x:Key="n2s"/>
+    <convert:EggTypeToIndex x:Key="egg2i"/>
+    <convert:ByteStringConverter x:Key="bsc"/>
+    <convert:SubstructureToColor x:Key="ss2c"/>
+    <convert:SubstructureToText x:Key="s2t"/>
+    <convert:BoolToColor x:Key="b2c"/>
+  </Application.Resources>
+
+  <Application.DataTemplates>
+    <DataTemplate DataType="{x:Type local:PokemonExt}">
+      <Canvas Width="68" Height="56">
+        <Canvas.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="_Open Interpreted Data Editor" Command="{Binding $parent[Window].DataContext.OpenInterpretedEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <MenuItem Header="_Open Hex Data Editor (Assisted)" Command="{Binding $parent[Window].DataContext.OpenDataEditor}" CommandParameter="{Binding pkmn.DataLocation}" >
+              <!--
+              <MenuItem.Icon>
+                <Image Source="/WpfTutorialSamples;component/Images/cut.png" />
+              </MenuItem.Icon>
+              -->
+            </MenuItem>
+            <MenuItem Header="_Open Hex Data Editor" Command="{Binding $parent[Window].DataContext.OpenRawEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <Separator/>
+            <MenuItem Header="_Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <MenuItem Header="_Paste" Command="{Binding $parent[Window].DataContext.Paste}" CommandParameter="{Binding pkmn.DataLocation}"
+                      IsEnabled="{Binding $parent[Window].DataContext.CopiedData, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+            <MenuItem Header="_Delete" Command="{Binding $parent[Window].DataContext.Delete}" CommandParameter="{Binding pkmn.DataLocation}" />
+          </ContextMenu>
+        </Canvas.ContextMenu>
+        <Rectangle ZIndex="0" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />
+        <Rectangle ZIndex="1" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="200" Fill="Red" IsVisible="{Binding !pkmn.View.ChecksumValid}" />
+        <Image ZIndex="2" Source="{Binding pkmn.View.Interpreted, Converter={StaticResource p2b}}" />
+        <TextBlock ZIndex="3" Canvas.Left="2" Canvas.Top="2" Text="{Binding pkmn.View.Interpreted.species, StringFormat={}{0:x}}"/>
+        <Button ZIndex="4" Width="67" Height="55" Foreground="Transparent" Opacity="0" Command="{Binding $parent[Window].DataContext.SelectSlot}" CommandParameter="{Binding pkmn.DataLocation}" />
+      </Canvas>
+    </DataTemplate>
+
+  </Application.DataTemplates>
 </Application>

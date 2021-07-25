@@ -2,18 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PokeGlitzer.Converters"
         mc:Ignorable="d" d:DesignWidth="410" d:DesignHeight="800" Width="410" Height="800"
         SizeToContent="WidthAndHeight" CanResize="False"
         x:Class="PokeGlitzer.PokemonViewWindow100"
         Title="Pokemon Data Editor">
-
-  <Window.Resources>
-    <local:ByteStringConverter x:Key="bsc"/>
-    <local:SubstructureToColor x:Key="s2c"/>
-    <local:SubstructureToText x:Key="s2t"/>
-    <local:BoolToColor x:Key="b2c"/>
-  </Window.Resources>
   
   <StackPanel Orientation="Vertical">
     <Canvas Width="400" Height="650" Margin="5">
@@ -29,14 +21,14 @@
       <Rectangle ZIndex="0" Opacity="125" Fill="Red" Height="50" Width="100" Canvas.Left="200" Canvas.Top="150"/>
       <Rectangle ZIndex="0" Opacity="125" Fill="LightGray" Height="50" Width="100" Canvas.Left="300" Canvas.Top="150"/>
 
-      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="200"/>
-      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="250"/>
-      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="250"/>
-      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="300"/>
-      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="350"/>
-      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="400"/>
-      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="400"/>
-      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource s2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="450"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource ss2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="200"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos0, Converter={StaticResource ss2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="250"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource ss2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="250"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos1, Converter={StaticResource ss2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="300"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource ss2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="350"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos2, Converter={StaticResource ss2c}}" Height="50" Width="200" Canvas.Left="0" Canvas.Top="400"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource ss2c}}" Height="50" Width="200" Canvas.Left="200" Canvas.Top="400"/>
+      <Rectangle ZIndex="0" Opacity="125" Fill="{Binding View.SubstructureAtPos3, Converter={StaticResource ss2c}}" Height="50" Width="400" Canvas.Left="0" Canvas.Top="450"/>
 
       <Rectangle ZIndex="0" Opacity="125" Fill="YellowGreen" Height="50" Width="200" Canvas.Left="0" Canvas.Top="500"/>
       <Rectangle ZIndex="0" Opacity="125" Fill="Orange" Height="50" Width="50" Canvas.Left="200" Canvas.Top="500"/>

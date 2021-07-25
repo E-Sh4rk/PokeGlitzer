@@ -2,16 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PokeGlitzer.Converters"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500" Width="400" Height="500"
         SizeToContent="WidthAndHeight" CanResize="False"
         x:Class="PokeGlitzer.InterpretedEditor"
         Title="Pokemon Interpreted Data Editor">
-
-  <Window.Resources>
-    <local:NumberToStringConverter x:Key="n2s"/>
-    <local:EggTypeToIndex x:Key="egg2i"/>
-  </Window.Resources>
 
   <StackPanel Orientation="Vertical" Margin="10">
     <Grid ColumnDefinitions="75,175,75,175" RowDefinitions="Auto,Auto">

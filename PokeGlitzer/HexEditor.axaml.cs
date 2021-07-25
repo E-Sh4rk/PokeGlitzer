@@ -15,7 +15,7 @@ namespace PokeGlitzer
         public HexEditor()
         {
             InitializeComponent();
-            pkmn = new Pokemon(Utils.ByteCollectionOfSize<byte>(80), 0, 80, false);
+            pkmn = new Pokemon(Utils.CollectionOfSize<byte>(80), 0, 80, false);
             DataContext = new HexEditorModel(pkmn);
         }
         public HexEditor(RangeObservableCollection<byte> data, int offset, int size, bool inTeam)

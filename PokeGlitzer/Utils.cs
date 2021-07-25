@@ -12,7 +12,7 @@ namespace PokeGlitzer
 {
     static class Utils
     {
-        public static RangeObservableCollection<T> ByteCollectionOfSize<T>(int size)
+        public static RangeObservableCollection<T> CollectionOfSize<T>(int size)
         {
             return new RangeObservableCollection<T>(new T[size]);
         }

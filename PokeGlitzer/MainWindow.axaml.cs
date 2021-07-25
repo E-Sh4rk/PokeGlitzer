@@ -56,13 +56,13 @@ namespace PokeGlitzer
         public MainWindowViewModel(MainWindow mw)
         {
             this.mw = mw;
-            data = Utils.ByteCollectionOfSize<byte>(BOX_PKMN_SIZE * BOX_SIZE * BOX_NUMBER);
-            teamData = Utils.ByteCollectionOfSize<byte>(TEAM_PKMN_SIZE * TEAM_SIZE);
+            data = Utils.CollectionOfSize<byte>(BOX_PKMN_SIZE * BOX_SIZE * BOX_NUMBER);
+            teamData = Utils.CollectionOfSize<byte>(TEAM_PKMN_SIZE * TEAM_SIZE);
             initialData = new byte[data.Count];
             initialTeamData = new byte[teamData.Count];
-            currentBox = Utils.ByteCollectionOfSize<PokemonExt?>(BOX_SIZE);
+            currentBox = Utils.CollectionOfSize<PokemonExt?>(BOX_SIZE);
             LoadBox(0);
-            team = Utils.ByteCollectionOfSize<PokemonExt?>(TEAM_SIZE);
+            team = Utils.CollectionOfSize<PokemonExt?>(TEAM_SIZE);
             LoadTeam();
             sync = new MMFSync(data, teamData);
         }
@@ -204,6 +204,19 @@ namespace PokeGlitzer
                 OpenInterpretedEditor(dl);
         }
 
+        List<GlitzerWindow> openedGPs = new List<GlitzerWindow>();
+        public void OpenGP()
+        {
+            GlitzerWindow gw = new GlitzerWindow(this, data);
+            openedGPs.Add(gw);
+            GlitzerWindowViewModel gwvm = (GlitzerWindowViewModel)gw.DataContext!;
+            gw.Closed += (_, _) => { openedGPs.Remove(gw); GC.Collect(); };
+            gwvm.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == nameof(GlitzerWindowViewModel.CurrentSelection))
+                    Selection = gwvm.CurrentSelection;
+            };
+            gw.Show(mw);
+        }
         public void Exit()
         {
             mw.Close();

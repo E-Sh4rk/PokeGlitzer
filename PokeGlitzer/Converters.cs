@@ -12,6 +12,37 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer.Converters
 {
+    // ========== GENRAL PURPOSE ==========
+    public class NumberToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType != typeof(string)) throw new NotImplementedException();
+
+            long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
+            string format = (string)parameter;
+            if (format == "X" || format == "x")
+                return "0x" + nb.ToString(format);
+            else
+                return nb.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+
+            string v = (string)value;
+            try
+            {
+                checked
+                {
+                    return System.Convert.ChangeType(new Int64Converter().ConvertFromString(v), targetType);
+                }
+            }
+            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
+        }
+    }
+
     // ========== DATA EDITOR ==========
     public class ByteStringConverter : IValueConverter
     {
@@ -106,37 +137,6 @@ namespace PokeGlitzer.Converters
     }
 
     // ========== INTERPRETED EDITOR ==========
-
-    public class NumberToStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (targetType != typeof(string)) throw new NotImplementedException();
-
-            long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
-            string format = (string)parameter;
-            if (format == "X" || format == "x")
-                return "0x" + nb.ToString(format);
-            else
-                return nb.ToString();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
-
-            string v = (string)value;
-            try
-            {
-                checked
-                {
-                    return System.Convert.ChangeType(new Int64Converter().ConvertFromString(v), targetType);
-                }
-            }
-            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
-        }
-    }
-
     public class EggTypeToIndex : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }

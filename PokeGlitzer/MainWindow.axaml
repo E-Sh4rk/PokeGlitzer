@@ -2,47 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:convert="clr-namespace:PokeGlitzer.Converters"
-        xmlns:local="clr-namespace:PokeGlitzer"
         mc:Ignorable="d" d:DesignWidth="425" d:DesignHeight="450"
         Width="425" Height="450"
         x:Class="PokeGlitzer.MainWindow"
         Title="PokeGlitzer">
-
-  <Window.Resources>
-    <convert:SelectionToColor x:Key="s2c"/>
-    <convert:PokemonToBitmap x:Key="p2b"/>
-  </Window.Resources>
-
-  <Window.DataTemplates>
-    <DataTemplate DataType="{x:Type local:PokemonExt}">
-      <Canvas Width="68" Height="56">
-        <Canvas.ContextMenu>
-          <ContextMenu>
-            <MenuItem Header="_Open Interpreted Data Editor" Command="{Binding $parent[Window].DataContext.OpenInterpretedEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
-            <MenuItem Header="_Open Hex Data Editor (Assisted)" Command="{Binding $parent[Window].DataContext.OpenDataEditor}" CommandParameter="{Binding pkmn.DataLocation}" >
-              <!--
-              <MenuItem.Icon>
-                <Image Source="/WpfTutorialSamples;component/Images/cut.png" />
-              </MenuItem.Icon>
-              -->
-            </MenuItem>
-            <MenuItem Header="_Open Hex Data Editor" Command="{Binding $parent[Window].DataContext.OpenRawEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
-            <Separator/>
-            <MenuItem Header="_Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding pkmn.DataLocation}" />
-            <MenuItem Header="_Paste" Command="{Binding $parent[Window].DataContext.Paste}" CommandParameter="{Binding pkmn.DataLocation}"
-                      IsEnabled="{Binding $parent[Window].DataContext.CopiedData, Converter={x:Static ObjectConverters.IsNotNull}}"/>
-            <MenuItem Header="_Delete" Command="{Binding $parent[Window].DataContext.Delete}" CommandParameter="{Binding pkmn.DataLocation}" />
-          </ContextMenu>
-        </Canvas.ContextMenu>
-        <Rectangle ZIndex="0" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />
-        <Rectangle ZIndex="1" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="200" Fill="Red" IsVisible="{Binding !pkmn.View.ChecksumValid}" />
-        <Image ZIndex="2" Source="{Binding pkmn.View.Interpreted, Converter={StaticResource p2b}}" />
-        <TextBlock ZIndex="3" Canvas.Left="2" Canvas.Top="2" Text="{Binding pkmn.View.Interpreted.species, StringFormat={}{0:x}}"/>
-        <Button ZIndex="4" Width="67" Height="55" Foreground="Transparent" Opacity="0" Command="{Binding $parent[Window].DataContext.SelectSlot}" CommandParameter="{Binding pkmn.DataLocation}" />
-      </Canvas>
-    </DataTemplate>
-  </Window.DataTemplates>
 
   <DockPanel Width="408" LastChildFill="True">
     <Menu DockPanel.Dock="Top">
@@ -55,6 +18,9 @@
       <MenuItem Header="_Sync">
         <MenuItem Header="_Start synchronization..." Command="{Binding StartSync}" IsEnabled="{Binding !Sync.IsRunning}" />
         <MenuItem Header="_Stop synchronization..." Command="{Binding StopSync}" IsEnabled="{Binding Sync.IsRunning}" />
+      </MenuItem>
+      <MenuItem Header="_Glitzer Popping">
+        <MenuItem Header="_Open new GP window..." Command="{Binding OpenGP}" />
       </MenuItem>
     </Menu>
 

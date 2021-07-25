@@ -1,5 +1,8 @@
 # PokeGlitzer
 
+If you are looking for a regular save editor (no glitch species, no raw data manipulation),
+you should use [PKHeX](https://github.com/kwsch/PKHeX).
+
 ## Running the app
 
 The following dependencies are required in order to run this application:
@@ -33,7 +36,8 @@ the content of your party/boxes. This feature is **only available on Windows** a
 support LUA scripting on Linux/MacOS.
 
 This feature requires a recent version of Bizhawk:
-you have to build it from the [master](https://github.com/TASVideos/BizHawk/tree/master) channel (or any version after commit [e79d33bcfdd9dac596dce0d60bf7c8621d92ce62](https://github.com/TASVideos/BizHawk/tree/e79d33bcfdd9dac596dce0d60bf7c8621d92ce62)).
+you have to build it from the [master](https://github.com/TASVideos/BizHawk/tree/master) channel
+(or any version after commit [e79d33bcfdd9dac596dce0d60bf7c8621d92ce62](https://github.com/TASVideos/BizHawk/tree/e79d33bcfdd9dac596dce0d60bf7c8621d92ce62)).
 
 You can then synchronize the level editor with Bizhawk by doing the following:
 1. Open a Pokemon ROM (generation 3) with a recent version of Bizhawk
@@ -49,5 +53,5 @@ If you want to build the app yourself, you should first clone this repo
 
 Then:
 - On Windows, just open `PokeGlitzer.sln` using Visual Studio 2019
-- On Linux/MacOS, you should be able to build with the command `dotnet build PokeGlitzer.sln -c Release`
+- On Linux/MacOS, you should be able to build it with the command `dotnet build PokeGlitzer.sln -c Release`
 (not tested yet)

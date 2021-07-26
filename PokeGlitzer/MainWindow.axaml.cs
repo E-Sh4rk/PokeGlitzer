@@ -101,7 +101,7 @@ namespace PokeGlitzer
 
             Utils.UpdateCollectionRange(Team, pkmns);
         }
-        bool IsSelected(Pokemon pkmn)
+        public bool IsSelected(Pokemon pkmn)
         {
             if (Selection == null) return false;
             if (pkmn.DataLocation.Intersect(Selection)) return true;
@@ -152,35 +152,56 @@ namespace PokeGlitzer
                     if (selected != pkmn.selected)
                         Team[i] = new PokemonExt(pkmn.pkmn, selected);
                 }
+                foreach (GlitzerWindow gw in openedGPs)
+                {
+                    ((GlitzerWindowViewModel)gw.DataContext!).UpdateSelection();
+                }
             }
         }
 
         List<IEditorWindow> openedEditors = new List<IEditorWindow>();
-        public void OpenInterpretedEditor(DataLocation dl)
+        public void OpenInterpretedEditor(DataLocation dl) { OpenInterpretedEditor(dl, null); }
+        public void OpenInterpretedEditor(DataLocation dl, Window? parent)
         {
-            ShowWindow(new InterpretedEditor(dl.inTeam ? teamData : data, dl.offset, dl.size, dl.inTeam));
+            ShowWindow(new InterpretedEditor(dl.inTeam ? teamData : data, dl.offset, dl.size, dl.inTeam), parent);
         }
-        public void OpenDataEditor(DataLocation dl)
+        public void OpenDataEditor(DataLocation dl) { OpenDataEditor(dl, null); }
+        public void OpenDataEditor(DataLocation dl, Window? parent)
         {
             if (dl.size == TEAM_PKMN_SIZE)
-                ShowWindow(new PokemonViewWindow100(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this));
+                ShowWindow(new PokemonViewWindow100(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this), parent);
             else
-                ShowWindow(new PokemonViewWindow(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this));
+                ShowWindow(new PokemonViewWindow(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this), parent);
         }
-        public void OpenRawEditor(DataLocation dl)
+        public void OpenRawEditor(DataLocation dl) { OpenRawEditor(dl, null); }
+        public void OpenRawEditor(DataLocation dl, Window? parent)
         {
-            ShowWindow(new HexEditor(dl.inTeam ? teamData : data, dl.offset, dl.size, dl.inTeam));
+            ShowWindow(new HexEditor(dl.inTeam ? teamData : data, dl.offset, dl.size, dl.inTeam), parent);
         }
-        public void ShowWindow(IEditorWindow w)
+        public void ShowWindow(IEditorWindow w, Window? parent)
         {
             openedEditors.Add(w);
             w.Closed += (_, _) => { openedEditors.Remove(w); GC.Collect(); };
             w.Activated += (_, _) => { Selection = w.Pokemon.DataLocation; };
             w.Deactivated += (_, _) => { Selection = null; };
-            w.Show(mw);
+            w.Show(parent == null ? mw : parent);
         }
         static readonly ISolidColorBrush HIGHLIGHT_BRUSH = new SolidColorBrush(Colors.Yellow, 150);
-        public void SelectSlot(DataLocation dl)
+        void HighlightWindow(Window w)
+        {
+            w.Activate();
+            if (w.Background != HIGHLIGHT_BRUSH)
+            {
+                IBrush bg = w.Background;
+                w.Background = HIGHLIGHT_BRUSH;
+                DispatcherTimer timer = new DispatcherTimer();
+                timer.Interval = TimeSpan.FromMilliseconds(250);
+                timer.Tick += new EventHandler((_, _) => { try { w.Background = bg; } catch { } timer.Stop(); });
+                timer.Start();
+            }
+        }
+        public void SelectSlot(DataLocation dl) { SelectSlot(dl, null); }
+        public void SelectSlot(DataLocation dl, Window? parent)
         {
             bool openNew = true;
             foreach (IEditorWindow w in openedEditors)
@@ -188,20 +209,20 @@ namespace PokeGlitzer
                 if (w.Pokemon.DataLocation.Intersect(dl))
                 {
                     openNew = false;
-                    w.Activate();
-                    if (w.Background != HIGHLIGHT_BRUSH)
-                    {
-                        IBrush bg = w.Background;
-                        w.Background = HIGHLIGHT_BRUSH;
-                        DispatcherTimer timer = new DispatcherTimer();
-                        timer.Interval = TimeSpan.FromMilliseconds(250);
-                        timer.Tick += new EventHandler((_, _) => { try { w.Background = bg; } catch { } timer.Stop(); });
-                        timer.Start();
-                    }
+                    HighlightWindow((Window)w);
+                }
+            }
+            foreach (GlitzerWindow gw in openedGPs)
+            {
+                if (gw == parent) continue;
+                if (((GlitzerWindowViewModel)gw.DataContext!).DataLocation.Intersect(dl))
+                {
+                    openNew = false;
+                    HighlightWindow(gw);
                 }
             }
             if (openNew)
-                OpenInterpretedEditor(dl);
+                OpenInterpretedEditor(dl, parent);
         }
 
         List<GlitzerWindow> openedGPs = new List<GlitzerWindow>();
@@ -211,9 +232,11 @@ namespace PokeGlitzer
             openedGPs.Add(gw);
             GlitzerWindowViewModel gwvm = (GlitzerWindowViewModel)gw.DataContext!;
             gw.Closed += (_, _) => { openedGPs.Remove(gw); GC.Collect(); };
+            gw.Activated += (_, _) => { Selection = gwvm.DataLocation; };
+            gw.Deactivated += (_, _) => { Selection = null; };
             gwvm.PropertyChanged += (sender, args) => {
-                if (args.PropertyName == nameof(GlitzerWindowViewModel.CurrentSelection))
-                    Selection = gwvm.CurrentSelection;
+                if (args.PropertyName == nameof(GlitzerWindowViewModel.DataLocation))
+                    Selection = gwvm.DataLocation;
             };
             gw.Show(mw);
         }

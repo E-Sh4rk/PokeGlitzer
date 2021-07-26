@@ -184,7 +184,7 @@ namespace PokeGlitzer
         public const int GAMECODE_RS = 0;
         public const int GAMECODE_FRLG = 1;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x7)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x8)]
         public byte[] playerName;
         public byte playerGender;
         public byte unused1;
@@ -196,7 +196,7 @@ namespace PokeGlitzer
         public byte options1;
         public byte options2;
         public byte options3;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x99)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 0x96)]
         public byte[] unused2;
         public uint gameCode;
     }

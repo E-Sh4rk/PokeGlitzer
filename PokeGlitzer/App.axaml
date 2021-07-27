@@ -113,6 +113,9 @@
             <MenuItem Header="_Paste" Command="{Binding $parent[Window].DataContext.Paste}" CommandParameter="{Binding pkmn.DataLocation}"
                       IsEnabled="{Binding $parent[Window].DataContext.CopiedData, Converter={x:Static ObjectConverters.IsNotNull}}"/>
             <MenuItem Header="_Delete" Command="{Binding $parent[Window].DataContext.Delete}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <Separator/>
+            <MenuItem Header="_Open GP window starting here" Command="{Binding $parent[Window].DataContext.OpenGPAfter}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <MenuItem Header="_Open GP window ending here" Command="{Binding $parent[Window].DataContext.OpenGPBefore}" CommandParameter="{Binding pkmn.DataLocation}" />
           </ContextMenu>
         </Canvas.ContextMenu>
         <Rectangle ZIndex="0" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />

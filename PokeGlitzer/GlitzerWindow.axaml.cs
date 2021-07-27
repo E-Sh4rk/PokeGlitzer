@@ -22,12 +22,12 @@ namespace PokeGlitzer
         {
             InitializeComponent();
             DataContext = new GlitzerWindowViewModel(null, this,
-                Utils.CollectionOfSize<byte>(MainWindowViewModel.BOX_PKMN_SIZE * MainWindowViewModel.BOX_SIZE * MainWindowViewModel.BOX_NUMBER));
+                Utils.CollectionOfSize<byte>(MainWindowViewModel.BOX_PKMN_SIZE * MainWindowViewModel.BOX_SIZE * MainWindowViewModel.BOX_NUMBER), 0);
         }
-        public GlitzerWindow(MainWindowViewModel mw, RangeObservableCollection<byte> data)
+        public GlitzerWindow(MainWindowViewModel mw, RangeObservableCollection<byte> data, int offset)
         {
             InitializeComponent();
-            DataContext = new GlitzerWindowViewModel(mw, this, data);
+            DataContext = new GlitzerWindowViewModel(mw, this, data, offset);
 
 #if DEBUG
             this.AttachDevTools();
@@ -50,21 +50,23 @@ namespace PokeGlitzer
         MainWindowViewModel? mw;
         GlitzerWindow parent;
         const int NB_SLOTS = 12;
-        const int SIZE = NB_SLOTS * MainWindowViewModel.TEAM_PKMN_SIZE;
+        public const int SIZE = NB_SLOTS * MainWindowViewModel.TEAM_PKMN_SIZE;
         RangeObservableCollection<byte> data;
-        public GlitzerWindowViewModel(MainWindowViewModel? mw, GlitzerWindow parent, RangeObservableCollection<byte> data)
+        public GlitzerWindowViewModel(MainWindowViewModel? mw, GlitzerWindow parent, RangeObservableCollection<byte> data, int offset)
         {
             this.mw = mw;
             this.parent = parent;
             this.data = data;
-            UpdateDataLocation();
+            
             glitzer = Utils.CollectionOfSize<PokemonExt?>(NB_SLOTS);
-            ReloadGlitzer();
+            try { CurrentOffset = offset; } catch { CurrentOffset = 0; }
+
+            UpdateDataLocation();
         }
 
         void UpdateDataLocation()
         {
-            DataLocation = new DataLocation(CurrentOffset, Math.Min(SIZE, data.Count - CurrentOffset), false);
+            DataLocation = new DataLocation(CurrentOffset, SIZE, false);
         }
         public void UpdateSelection()
         {
@@ -107,7 +109,10 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[NB_SLOTS];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(data, start + MainWindowViewModel.TEAM_PKMN_SIZE * i, MainWindowViewModel.TEAM_PKMN_SIZE, false);
+                int offset = start + MainWindowViewModel.TEAM_PKMN_SIZE * i;
+                if (offset < 0) continue;
+                if (offset + MainWindowViewModel.TEAM_PKMN_SIZE > data.Count) continue;
+                Pokemon pkmn = new Pokemon(data, offset, MainWindowViewModel.TEAM_PKMN_SIZE, false);
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
 
@@ -123,14 +128,14 @@ namespace PokeGlitzer
         RangeObservableCollection<PokemonExt?> glitzer;
         public RangeObservableCollection<PokemonExt?> Glitzer { get => glitzer; }
 
-        int currentOffset = 0;
+        int currentOffset;
         public int CurrentOffset
         {
             get => currentOffset;
             set
             {
-                if (value < 0 || value + SIZE >= data.Count)
-                    throw new Avalonia.Data.DataValidationException(null);
+                /*if (value < 0 || value + SIZE > data.Count)
+                    throw new Avalonia.Data.DataValidationException(null);*/
                 currentOffset = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentOffset)));
                 UpdateDataLocation();
@@ -143,6 +148,10 @@ namespace PokeGlitzer
         public void OpenRawEditor(DataLocation dl) { mw?.OpenRawEditor(dl, parent); }
 
         public void SelectSlot(DataLocation dl) { mw?.SelectSlot(dl, parent); }
+
+        public void Delete(DataLocation dl) { mw?.Delete(dl); }
+        public void Copy(DataLocation dl) { mw?.Copy(dl); }
+        public void Paste(DataLocation dl) { mw?.Paste(dl); }
 
         public void Prev() { try { CurrentOffset -= 4; } catch { } }
         public void Next() { try { CurrentOffset += 4; } catch { } }

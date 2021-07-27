@@ -22,7 +22,11 @@ namespace PokeGlitzer.Converters
             long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
             string format = (string)parameter;
             if (format == "X" || format == "x")
-                return "0x" + nb.ToString(format);
+            {
+                string prefix = nb >= 0 ? "" : "-";
+                nb = Math.Abs(nb);
+                return prefix + "0x" + nb.ToString(format);
+            }
             else
                 return nb.ToString();
         }
@@ -32,11 +36,23 @@ namespace PokeGlitzer.Converters
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
 
             string v = (string)value;
+            string format = (string)parameter;
+            bool neg = false;
+            if (format == "X" || format == "x")
+            {
+                if (v.StartsWith("-"))
+                {
+                    v = v.Substring(1);
+                    neg = true;
+                }
+            }
             try
             {
                 checked
                 {
-                    return System.Convert.ChangeType(new Int64Converter().ConvertFromString(v), targetType);
+                    long res = (long)(new Int64Converter().ConvertFromString(v));
+                    if (neg) res = -res;
+                    return System.Convert.ChangeType(res, targetType);
                 }
             }
             catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }

@@ -14,14 +14,14 @@ namespace PokeGlitzer
         {
             InitializeComponent();
             pkmn = new Pokemon(Utils.CollectionOfSize<byte>(80), 0, 80, false);
-            DataContext = new InterpretedEditorModel(pkmn);
+            DataContext = new InterpretedEditorModel(pkmn, this);
         }
 
         public InterpretedEditor(RangeObservableCollection<byte> data, int offset, int size, bool inTeam)
         {
             InitializeComponent();
             pkmn = new Pokemon(data, offset, size, inTeam);
-            DataContext = new InterpretedEditorModel(pkmn);
+            DataContext = new InterpretedEditorModel(pkmn, this);
 #if DEBUG
             this.AttachDevTools();
 #endif
@@ -42,9 +42,11 @@ namespace PokeGlitzer
     public class InterpretedEditorModel : INotifyPropertyChanged
     {
         PokemonView view;
+        Window parent;
 
-        public InterpretedEditorModel(Pokemon pkmn)
+        public InterpretedEditorModel(Pokemon pkmn, Window parent)
         {
+            this.parent = parent;
             view = pkmn.View;
             //view.PropertyChanged += ViewInterpretedChanged;
             Avalonia.Utilities.WeakEventHandlerManager.Subscribe<PokemonView, PropertyChangedEventArgs, InterpretedEditorModel>(view,
@@ -71,6 +73,10 @@ namespace PokeGlitzer
         {
             InterpretedData d = new InterpretedData(PID, OTID, Species, Egg);
             view.Interpreted = d;
+        }
+        public void SaveAndClose()
+        {
+            Save(); parent.Close();
         }
 
         uint pid;

@@ -32,7 +32,8 @@
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
       <Button HorizontalContentAlignment="Center" Content="Reset" Width="100" Command="{Binding RefreshControls}" />
       <Button HorizontalContentAlignment="Center" Content="Save" Width="100" Command="{Binding Save}" />
-    </StackPanel>
+      <Button HorizontalContentAlignment="Center" Content="Save and Close" Width="125" Command="{Binding SaveAndClose}" />  
+  </StackPanel>
   </StackPanel>
   
   

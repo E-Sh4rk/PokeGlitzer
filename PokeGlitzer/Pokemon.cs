@@ -335,6 +335,13 @@ namespace PokeGlitzer
             }
         }
 
+        public void FlagAsBaddEggIfInvalid()
+        {
+            if (View.Interpreted == null) return;
+            if (!View.ChecksumValid)
+                View.Interpreted = View.Interpreted with { egg = EggType.BadEgg };
+        }
+
         public void Dispose()
         {
             data.CollectionChanged -= SourceDataChanged;

@@ -16,11 +16,12 @@
         <MenuItem Header="_Exit" Command="{Binding Exit}"/>
       </MenuItem>
       <MenuItem Header="_Sync">
-        <MenuItem Header="_Start synchronization..." Command="{Binding StartSync}" IsEnabled="{Binding !Sync.IsRunning}" />
-        <MenuItem Header="_Stop synchronization..." Command="{Binding StopSync}" IsEnabled="{Binding Sync.IsRunning}" />
+        <MenuItem Header="_Start synchronization" Command="{Binding StartSync}" IsEnabled="{Binding !Sync.IsRunning}" />
+        <MenuItem Header="_Stop synchronization" Command="{Binding StopSync}" IsEnabled="{Binding Sync.IsRunning}" />
       </MenuItem>
       <MenuItem Header="_Glitzer Popping">
         <MenuItem Header="_Open new GP window..." Command="{Binding OpenGP}" />
+        <MenuItem Header="_Flag invalid Pokemons as bad eggs" Command="{Binding FlagBadEggs}" />
       </MenuItem>
     </Menu>
 

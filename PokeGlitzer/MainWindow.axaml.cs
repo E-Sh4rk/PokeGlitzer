@@ -243,6 +243,15 @@ namespace PokeGlitzer
         public void OpenGP() { openGP(0); }
         public void OpenGPBefore(DataLocation dl) { openGP(dl.offset + dl.size - GlitzerWindowViewModel.SIZE); }
         public void OpenGPAfter(DataLocation dl) { openGP(dl.offset); }
+
+        public void FlagBadEggs()
+        {
+            foreach (PokemonExt? p in CurrentBox)
+                if (p != null) p.pkmn.FlagAsBaddEggIfInvalid();
+            foreach (PokemonExt? p in Team)
+                if (p != null) p.pkmn.FlagAsBaddEggIfInvalid();
+        }
+
         public void Exit()
         {
             mw.Close();

@@ -66,7 +66,11 @@ namespace PokeGlitzer
 
         void UpdateDataLocation()
         {
-            DataLocation = new DataLocation(CurrentOffset, SIZE, false);
+            int start = CurrentOffset;
+            int end = start + SIZE;
+            start = Math.Min(Math.Max(0, start), data.Count);
+            end = Math.Min(Math.Max(0, end), data.Count);
+            DataLocation = new DataLocation(start, end-start, false);
         }
         public void UpdateSelection()
         {
@@ -155,6 +159,35 @@ namespace PokeGlitzer
 
         public void Prev() { try { CurrentOffset -= 4; } catch { } }
         public void Next() { try { CurrentOffset += 4; } catch { } }
+
+        public void FlagBadEggs()
+        {
+            if (PreviousData != null && previousOffset == CurrentOffset) return;
+            PreviousData = Utils.ExtractCollectionRange(data, DataLocation.offset, DataLocation.size);
+            previousDataLocation = DataLocation;
+            previousOffset = CurrentOffset;
+            foreach (PokemonExt? p in Glitzer)
+                if (p != null) p.pkmn.FlagAsBaddEggIfInvalid();
+        }
+
+        byte[]? previousData = null;
+        DataLocation? previousDataLocation = null;
+        int previousOffset = 0;
+        public byte[]? PreviousData
+        {
+            get => previousData;
+            private set
+            {
+                previousData = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PreviousData)));
+            }
+        }
+        public void Revert()
+        {
+            if (PreviousData == null) return;
+            Utils.UpdateCollectionRange(data, PreviousData!, previousDataLocation!.offset);
+            PreviousData = null;
+        }
 
         public void Dispose()
         {

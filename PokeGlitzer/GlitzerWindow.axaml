@@ -2,8 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="425" d:DesignHeight="171"
-        Width="425" Height="171"
+        mc:Ignorable="d" d:DesignWidth="425" d:DesignHeight="211"
+        Width="425" Height="211"
         x:Class="PokeGlitzer.GlitzerWindow"
         Title="Glitzer Popping Window">
 
@@ -32,6 +32,12 @@
         <ContentControl Grid.Row="1" Grid.Column="4" Content="{Binding Glitzer[10]}"/>
         <ContentControl Grid.Row="1" Grid.Column="5" Content="{Binding Glitzer[11]}"/>
       </Grid>
+
+      <Separator Height="10" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+        <Button Content="Flag bad eggs" Command="{Binding FlagBadEggs}"/>
+        <Button Content="Revert last" Command="{Binding Revert}" IsEnabled="{Binding PreviousData, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+      </StackPanel>
     </StackPanel>
   </DockPanel>
   

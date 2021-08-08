@@ -17,6 +17,9 @@
     <Compile Update="GlitzerWindow.axaml.cs">
       <DependentUpon>GlitzerWindow.axaml</DependentUpon>
     </Compile>
+    <Compile Update="LogWindow.axaml.cs">
+      <DependentUpon>LogWindow.axaml</DependentUpon>
+    </Compile>
     <Compile Update="PokemonView100.axaml.cs">
       <DependentUpon>PokemonView100.axaml</DependentUpon>
     </Compile>

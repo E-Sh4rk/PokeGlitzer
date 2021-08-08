@@ -32,10 +32,10 @@ namespace PokeGlitzer
         static readonly CHANNEL_DIR[] CHANNELS_DIRECTION =
             new CHANNEL_DIR[] { CHANNEL_DIR.IN, CHANNEL_DIR.OUT, CHANNEL_DIR.IN, CHANNEL_DIR.OUT };
         static readonly int[] CHANNELS_LENGTH =
-            new int[] { MainWindowViewModel.BOX_NUMBER* MainWindowViewModel.BOX_SIZE*MainWindowViewModel.BOX_PKMN_SIZE,
-                        MainWindowViewModel.BOX_NUMBER* MainWindowViewModel.BOX_SIZE*MainWindowViewModel.BOX_PKMN_SIZE,
-                        MainWindowViewModel.TEAM_SIZE * MainWindowViewModel.TEAM_PKMN_SIZE,
-                        MainWindowViewModel.TEAM_SIZE * MainWindowViewModel.TEAM_PKMN_SIZE
+            new int[] { MainWindowViewModel.BOX_NUMBER* MainWindowViewModel.BOX_SIZE*Pokemon.PC_SIZE,
+                        MainWindowViewModel.BOX_NUMBER* MainWindowViewModel.BOX_SIZE*Pokemon.PC_SIZE,
+                        MainWindowViewModel.TEAM_SIZE * Pokemon.TEAM_SIZE,
+                        MainWindowViewModel.TEAM_SIZE * Pokemon.TEAM_SIZE
             };
 
         MemoryMappedFile[]? mmfData;
@@ -184,9 +184,9 @@ namespace PokeGlitzer
                 byte[] oldData = data.ToArray();
                 for (int i = 0; i < MainWindowViewModel.BOX_NUMBER*MainWindowViewModel.BOX_SIZE; i++)
                 {
-                    int offset = i * MainWindowViewModel.BOX_PKMN_SIZE;
-                    byte[] pkmn = ReadChannel(PC_IN, offset, MainWindowViewModel.BOX_PKMN_SIZE);
-                    IEnumerable<byte> oldPkmn = new ArraySegment<byte>(oldData, offset, MainWindowViewModel.BOX_PKMN_SIZE);
+                    int offset = i * Pokemon.PC_SIZE;
+                    byte[] pkmn = ReadChannel(PC_IN, offset, Pokemon.PC_SIZE);
+                    IEnumerable<byte> oldPkmn = new ArraySegment<byte>(oldData, offset, Pokemon.PC_SIZE);
                     if (!Enumerable.SequenceEqual(pkmn, oldPkmn))
                         Utils.UpdateCollectionRange(data, pkmn, offset);
                 }
@@ -197,9 +197,9 @@ namespace PokeGlitzer
                 byte[] oldData = teamData.ToArray();
                 for (int i = 0; i < MainWindowViewModel.TEAM_SIZE; i++)
                 {
-                    int offset = i * MainWindowViewModel.TEAM_PKMN_SIZE;
-                    byte[] pkmn = ReadChannel(TEAM_IN, offset, MainWindowViewModel.TEAM_PKMN_SIZE);
-                    IEnumerable<byte> oldPkmn = new ArraySegment<byte>(oldData, offset, MainWindowViewModel.TEAM_PKMN_SIZE);
+                    int offset = i * Pokemon.TEAM_SIZE;
+                    byte[] pkmn = ReadChannel(TEAM_IN, offset, Pokemon.TEAM_SIZE);
+                    IEnumerable<byte> oldPkmn = new ArraySegment<byte>(oldData, offset, Pokemon.TEAM_SIZE);
                     if (!Enumerable.SequenceEqual(pkmn, oldPkmn))
                         Utils.UpdateCollectionRange(teamData, pkmn, offset);
                 }

@@ -88,19 +88,14 @@ namespace PokeGlitzer.Converters
         {
             if (targetType != typeof(IBrush)) throw new NotImplementedException();
             if (!(value is int)) throw new NotImplementedException();
-            switch (value)
+            return value switch
             {
-                case 0:
-                    return Brushes.Orchid;
-                case 1:
-                    return Brushes.SlateBlue;
-                case 2:
-                    return Brushes.DarkOrchid;
-                case 3:
-                    return Brushes.DarkSlateBlue;
-                default:
-                    return Brushes.Black;
-            }
+                0 => Brushes.Orchid,
+                1 => Brushes.SlateBlue,
+                2 => Brushes.DarkOrchid,
+                3 => Brushes.DarkSlateBlue,
+                _ => Brushes.Black
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -115,19 +110,14 @@ namespace PokeGlitzer.Converters
         {
             if (targetType != typeof(string)) throw new NotImplementedException();
             if (!(value is int)) throw new NotImplementedException();
-            switch (value)
+            return value switch
             {
-                case 0:
-                    return "Growth (Substructure 1)";
-                case 1:
-                    return "Attacks (Substructure 2)";
-                case 2:
-                    return "EVs & Condition (Substructure 3)";
-                case 3:
-                    return "Miscellaneous (Substructure 4)";
-                default:
-                    return "Invalid";
-            }
+                0 => "Growth (Substructure 1)",
+                1 => "Attacks (Substructure 2)",
+                2 => "EVs & Condition (Substructure 3)",
+                3 => "Miscellaneous (Substructure 4)",
+                _ => "Invalid"
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

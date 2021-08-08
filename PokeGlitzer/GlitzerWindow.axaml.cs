@@ -22,7 +22,7 @@ namespace PokeGlitzer
         {
             InitializeComponent();
             DataContext = new GlitzerWindowViewModel(null, this,
-                Utils.CollectionOfSize<byte>(MainWindowViewModel.BOX_PKMN_SIZE * MainWindowViewModel.BOX_SIZE * MainWindowViewModel.BOX_NUMBER), 0);
+                Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE * MainWindowViewModel.BOX_SIZE * MainWindowViewModel.BOX_NUMBER), 0);
         }
         public GlitzerWindow(MainWindowViewModel mw, RangeObservableCollection<byte> data, int offset)
         {
@@ -50,7 +50,7 @@ namespace PokeGlitzer
         MainWindowViewModel? mw;
         GlitzerWindow parent;
         const int NB_SLOTS = 12;
-        public const int SIZE = NB_SLOTS * MainWindowViewModel.TEAM_PKMN_SIZE;
+        public const int SIZE = NB_SLOTS * Pokemon.TEAM_SIZE;
         RangeObservableCollection<byte> data;
         public GlitzerWindowViewModel(MainWindowViewModel? mw, GlitzerWindow parent, RangeObservableCollection<byte> data, int offset)
         {
@@ -113,10 +113,10 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[NB_SLOTS];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                int offset = start + MainWindowViewModel.TEAM_PKMN_SIZE * i;
+                int offset = start + Pokemon.TEAM_SIZE * i;
                 if (offset < 0) continue;
-                if (offset + MainWindowViewModel.TEAM_PKMN_SIZE > data.Count) continue;
-                Pokemon pkmn = new Pokemon(data, offset, MainWindowViewModel.TEAM_PKMN_SIZE, false);
+                if (offset + Pokemon.TEAM_SIZE > data.Count) continue;
+                Pokemon pkmn = new Pokemon(data, offset, Pokemon.TEAM_SIZE, false);
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
 

@@ -27,13 +27,15 @@ namespace PokeGlitzer
     }
     public class Pokemon : IDisposable
     {
+        public const int TEAM_SIZE = 100;
+        public const int PC_SIZE = 80;
         RangeObservableCollection<byte> data;
         int index;
         int size;
         bool inTeam;
         public Pokemon(RangeObservableCollection<byte> rawData, int rawDataIndex, int size, bool inTeam)
         {
-            if (size != 80 && size != 100) throw new ArgumentException("Size must be 80 or 100.");
+            if (size != PC_SIZE && size != TEAM_SIZE) throw new ArgumentException();
             this.size = size;
             this.inTeam = inTeam;
             data = rawData;
@@ -156,14 +158,14 @@ namespace PokeGlitzer
         }
         /*PokemonStruct GetPkmnStruct(byte[] dataArr)
         {
-            if (dataArr.Length == 100)
+            if (dataArr.Length == TEAM_SIZE)
                 return Utils.ByteToType<PokemonTeamStruct>(dataArr).permanent;
             else
                 return Utils.ByteToType<PokemonStruct>(dataArr);
         }*/
         PokemonTeamStruct GetPkmnTeamStruct(byte[] dataArr)
         {
-            if (dataArr.Length == 100)
+            if (dataArr.Length == TEAM_SIZE)
                 return Utils.ByteToType<PokemonTeamStruct>(dataArr);
             else
             {
@@ -194,7 +196,7 @@ namespace PokeGlitzer
                 pkmn.permanent.data[i+2] = res[2];
                 pkmn.permanent.data[i+3] = res[3];
             }
-            if (dataArr.Length == 100)
+            if (dataArr.Length == TEAM_SIZE)
                 dataArr = Utils.TypeToByte(pkmn);
             else
                 dataArr = Utils.TypeToByte(pkmn.permanent);
@@ -227,7 +229,7 @@ namespace PokeGlitzer
                 view.Interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType);
             }
             // Team Interpreted data
-            if (updateTeamInterpreted && size == 100)
+            if (updateTeamInterpreted && size == TEAM_SIZE)
             {
                 PkmnStatus status = new PkmnStatus((byte)(pkmn.status & PokemonTeamStruct.SLEEP_MASK), (pkmn.status & PokemonTeamStruct.POISON_MASK) != 0,
                     (pkmn.status & PokemonTeamStruct.BURN_MASK) != 0, (pkmn.status & PokemonTeamStruct.FREEZE_MASK) != 0,
@@ -285,7 +287,7 @@ namespace PokeGlitzer
             // Fixing checksum if it was valid initially
             if (view.ChecksumValid) pkmn.permanent.checksum = ComputeChecksum(pkmn.permanent);
             byte[] res;
-            if (size == 100)
+            if (size == TEAM_SIZE)
                 res = Utils.TypeToByte(pkmn);
             else
                 res = Utils.TypeToByte(pkmn.permanent);
@@ -293,7 +295,7 @@ namespace PokeGlitzer
         }
         void UpdateViewFromTeamInterpreted()
         {
-            if (size != 100) return;
+            if (size != TEAM_SIZE) return;
             PokemonTeamStruct pkmn = GetPkmnTeamStruct(view.DecodedData.ToArray());
             TeamInterpretedData teamInterpreted = view.TeamInterpreted!;
             pkmn.currentHP = teamInterpreted.currentHP;

@@ -18,7 +18,7 @@ namespace PokeGlitzer
 {
     // TODO: Possibility to edit the whole box data (big hex editor)
     // TODO: Possibility to edit the box names
-    // TODO: Glitzer Popping operations (simulations, etc.)
+    // TODO: Ini file to store MMF and glitzer-popping related offsets
 
     public partial class MainWindow : Window
     {
@@ -46,18 +46,16 @@ namespace PokeGlitzer
         byte[]? copiedData = null;
         RangeObservableCollection<byte> data;
         RangeObservableCollection<byte> teamData;
-        public const int BOX_PKMN_SIZE = 80;
         public const int BOX_SIZE = 30;
         public const int BOX_NUMBER = 14;
-        public const int TEAM_PKMN_SIZE = 100;
         public const int TEAM_SIZE = 6;
         Save? save = null;
         MMFSync sync;
         public MainWindowViewModel(MainWindow mw)
         {
             this.mw = mw;
-            data = Utils.CollectionOfSize<byte>(BOX_PKMN_SIZE * BOX_SIZE * BOX_NUMBER);
-            teamData = Utils.CollectionOfSize<byte>(TEAM_PKMN_SIZE * TEAM_SIZE);
+            data = Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE * BOX_SIZE * BOX_NUMBER);
+            teamData = Utils.CollectionOfSize<byte>(Pokemon.TEAM_SIZE * TEAM_SIZE);
             initialData = new byte[data.Count];
             initialTeamData = new byte[teamData.Count];
             currentBox = Utils.CollectionOfSize<PokemonExt?>(BOX_SIZE);
@@ -69,7 +67,7 @@ namespace PokeGlitzer
 
         void LoadBox(int nb)
         {
-            int offset = BOX_PKMN_SIZE * BOX_SIZE * nb;
+            int offset = Pokemon.PC_SIZE * BOX_SIZE * nb;
             for (int i = 0; i < CurrentBox.Count; i++)
             {
                 if (CurrentBox[i] != null)
@@ -78,7 +76,7 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[BOX_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(data, BOX_PKMN_SIZE * i + offset, BOX_PKMN_SIZE, false);
+                Pokemon pkmn = new Pokemon(data, Pokemon.PC_SIZE * i + offset, Pokemon.PC_SIZE, false);
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
                 
@@ -95,7 +93,7 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[TEAM_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(teamData, TEAM_PKMN_SIZE * i, TEAM_PKMN_SIZE, true);
+                Pokemon pkmn = new Pokemon(teamData, Pokemon.TEAM_SIZE * i, Pokemon.TEAM_SIZE, true);
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
 
@@ -168,7 +166,7 @@ namespace PokeGlitzer
         public void OpenDataEditor(DataLocation dl) { OpenDataEditor(dl, null); }
         public void OpenDataEditor(DataLocation dl, Window? parent)
         {
-            if (dl.size == TEAM_PKMN_SIZE)
+            if (dl.size == Pokemon.TEAM_SIZE)
                 ShowWindow(new PokemonViewWindow100(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this), parent);
             else
                 ShowWindow(new PokemonViewWindow(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this), parent);
@@ -272,7 +270,7 @@ namespace PokeGlitzer
                     initialData = data.ToArray();
                     initialTeamData = teamData.ToArray();
                 } catch {
-                    await MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while loading the save.").ShowDialog(mw);
+                    await MessageBoxManager.GetMessageBoxStandardWindow("Error", "Unable to load this save.").ShowDialog(mw);
                 }
             }
         }
@@ -296,6 +294,47 @@ namespace PokeGlitzer
                     MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while saving.").ShowDialog(mw);
                 }
             }
+        }
+
+        public void RunGPSimulation()
+        {
+            LogWindow log = new LogWindow();
+            log.Show(mw);
+            GlitzerSimulation sim = new GlitzerSimulation(data);
+            GlitzerSimulation.SimulationResult res = sim.Simulate();
+            StringBuilder str = new StringBuilder();
+            str.AppendLine("Below are the species which can be obtained by corruption.");
+            str.AppendLine("Unmodified Pokemons are not shown.");
+            str.AppendLine("Pokemons with an invalid checksum are not shown.");
+            str.AppendLine();
+            List<GlitzerSimulation.SimulationEntry> entries = res.obtained.Keys.ToList();
+            entries.Sort(GlitzerSimulation.CompareEntries);
+            foreach (GlitzerSimulation.SimulationEntry e in entries)
+            {
+                List<GlitzerSimulation.OffsetASLR> o = res.obtained[e];
+                string type = e.type switch
+                {
+                    GlitzerSimulation.CorruptionType.PID => "PID",
+                    GlitzerSimulation.CorruptionType.TID => "TID",
+                    GlitzerSimulation.CorruptionType.Other => "Misc.",
+                    _ => throw new NotImplementedException(),
+                };
+                string egg = e.egg switch
+                {
+                    EggType.Egg => "egg",
+                    EggType.Invalid => "inconsistent",
+                    EggType.None => "empty slot",
+                    EggType.NotAnEgg => "not an egg",
+                    EggType.BadEgg => "bad egg",
+                    _ => throw new NotImplementedException(),
+                };
+                str.AppendLine($"Species 0x{e.species:X} ({egg}) by {type} corruption:");
+                foreach (GlitzerSimulation.OffsetASLR oa in o)
+                    str.AppendLine($"    By corrupting from 0x{oa.startOffset:X} to 0x{oa.endOffset:X} (ASLR: +{oa.aslr})");
+                str.AppendLine($"    Total probability: {o.Count}/{res.nbTries}");
+                str.AppendLine();
+            }
+            log.Text = str.ToString();
         }
 
         public void RestoreInitialData(DataLocation dl)
@@ -330,7 +369,7 @@ namespace PokeGlitzer
         public void StartSync()
         {
             if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-                MessageBoxManager.GetMessageBoxStandardWindow("Error", "Sorry, synchronization with Bizhawk is only supported on Windows.").ShowDialog(mw);
+                MessageBoxManager.GetMessageBoxStandardWindow("Error", "Synchronization with Bizhawk is only supported on Windows.").ShowDialog(mw);
             else if (!sync.Start())
                 MessageBoxManager.GetMessageBoxStandardWindow("Error", "Please run the synchronization LUA script in Bizhawk first.").ShowDialog(mw);
         }

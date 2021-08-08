@@ -22,6 +22,7 @@
       <MenuItem Header="_Glitzer Popping">
         <MenuItem Header="_Open new GP window..." Command="{Binding OpenGP}" />
         <MenuItem Header="_Flag invalid Pokemons as bad eggs" Command="{Binding FlagBadEggs}" />
+        <MenuItem Header="_Run GP simulation..." Command="{Binding RunGPSimulation}" />
       </MenuItem>
     </Menu>
 

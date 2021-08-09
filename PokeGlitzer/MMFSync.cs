@@ -175,17 +175,19 @@ namespace PokeGlitzer
                 int c = e.NewItems!.Count;
                 if (sender == data && !IsLocked(new DataLocation(i, c, false))) // Boxes
                 {
-                    byte[] emu_data = ReadChannel(PC_IN, i, c);
+                    // NOTE: The check below is not needed anymore (locks are enough). Also, it can cause issue when the emulator is paused.
+                    /*byte[] emu_data = ReadChannel(PC_IN, i, c);
                     byte[] new_data = Utils.ExtractCollectionRange(data, i, c);
-                    if (!Enumerable.SequenceEqual(new_data, emu_data))
-                        WriteChannel(PC_OUT, data.ToArray());
+                    if (!Enumerable.SequenceEqual(new_data, emu_data))*/
+                    WriteChannel(PC_OUT, data.ToArray());
                 }
                 else if (sender == teamData && !IsLocked(new DataLocation(i, c, true))) // Team
                 {
-                    byte[] emu_data = ReadChannel(TEAM_IN, i, c);
+                    // NOTE: The check below is not needed anymore (locks are enough). Also, it can cause issue when the emulator is paused.
+                    /*byte[] emu_data = ReadChannel(TEAM_IN, i, c);
                     byte[] new_data = Utils.ExtractCollectionRange(teamData, i, c);
-                    if (!Enumerable.SequenceEqual(new_data, emu_data))
-                        WriteChannel(TEAM_OUT, teamData.ToArray());
+                    if (!Enumerable.SequenceEqual(new_data, emu_data))*/
+                    WriteChannel(TEAM_OUT, teamData.ToArray());
                 }
 
             }

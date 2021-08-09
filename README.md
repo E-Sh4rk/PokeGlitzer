@@ -16,18 +16,20 @@ To run this app:
 - On Windows, just open `PokeGlitzer.exe`
 - On Linux/MacOS, you can use the command `dotnet PokeGlitzer.dll` (not tested yet)
 
-## Features (more to come)
+## Features
 
 The following ROMs are compatible with this save editor:
 - Emerald (any language)
 - Ruby/Sapphire (any language, not tested yet)
-- RedFire/LeafGreen (any language, not tested yet)
+- RedFire/LeafGreen (any language)
 
 In any case, **please backup your save before using this save editor** as it has not been tested extensively yet.
 
-The following elements can be edited:
-- Pokemons in the party
-- Pokemons in the boxes
+The following features are implemented:
+- Viewing and editing Pokemons in the party
+- Viewing and editing Pokemons in the boxes
+- Synchronizing data with a running instance of Bizhawk
+- Simulating Glitzer Popping (manually with a given offset, or automatically)
 
 ## Synchronization with Bizhawk
 

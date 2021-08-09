@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -12,6 +13,25 @@ namespace PokeGlitzer
 {
     static class Utils
     {
+        public static T ToNumber<T>(string v)
+        {
+            bool neg = false;
+            if (v.StartsWith("-"))
+            {
+                v = v.Substring(1);
+                neg = true;
+            }
+            try
+            {
+                checked
+                {
+                    long res = (long)(new Int64Converter().ConvertFromString(v));
+                    if (neg) res = -res;
+                    return (T)Convert.ChangeType(res, typeof(T));
+                }
+            }
+            catch { throw new FormatException(); }
+        }
         public static RangeObservableCollection<T> CollectionOfSize<T>(int size)
         {
             return new RangeObservableCollection<T>(new T[size]);

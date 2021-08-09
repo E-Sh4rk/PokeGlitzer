@@ -36,15 +36,11 @@ namespace PokeGlitzer.Converters
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
 
             string v = (string)value;
-            string format = (string)parameter;
             bool neg = false;
-            if (format == "X" || format == "x")
+            if (v.StartsWith("-"))
             {
-                if (v.StartsWith("-"))
-                {
-                    v = v.Substring(1);
-                    neg = true;
-                }
+                v = v.Substring(1);
+                neg = true;
             }
             try
             {

@@ -18,7 +18,7 @@ namespace PokeGlitzer
 {
     // TODO: Possibility to edit the whole box data (big hex editor)
     // TODO: Possibility to edit the box names
-    // TODO: Ini file to store MMF and glitzer-popping related offsets
+    // TODO: Add more interpreted data
 
     public partial class MainWindow : Window
     {

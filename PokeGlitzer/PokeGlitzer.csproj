@@ -12,6 +12,7 @@
     <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
     <PackageReference Include="MessageBox.Avalonia" Version="1.5.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="5.0.0" />
    </ItemGroup>
   <ItemGroup>
     <Compile Update="GlitzerWindow.axaml.cs">
@@ -45,5 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Resources\b_none.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="config.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

@@ -10,6 +10,7 @@ namespace PokeGlitzer
         {
             AvaloniaXamlLoader.Load(this);
             ResLoader.Initialize();
+            Settings.Initialize();
         }
 
         public override void OnFrameworkInitializationCompleted()

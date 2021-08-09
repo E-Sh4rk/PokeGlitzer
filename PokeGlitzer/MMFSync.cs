@@ -27,8 +27,6 @@ namespace PokeGlitzer
         const int PC_OUT = 1;
         const int TEAM_IN = 2;
         const int TEAM_OUT = 3;
-        static readonly string[] CHANNELS_NAME =
-            new string[] { "bizhawk_down", "bizhawk_up", "bizhawk2_down", "bizhawk2_up" };
         static readonly CHANNEL_DIR[] CHANNELS_DIRECTION =
             new CHANNEL_DIR[] { CHANNEL_DIR.IN, CHANNEL_DIR.OUT, CHANNEL_DIR.IN, CHANNEL_DIR.OUT };
         static readonly int[] CHANNELS_LENGTH =
@@ -59,6 +57,7 @@ namespace PokeGlitzer
                 mmfCAcc = new MemoryMappedViewAccessor[NUMBER_CHANNELS];
                 mmfC = new byte[NUMBER_CHANNELS];
 
+                string[] CHANNELS_NAME = new string[] { Settings.MMF_PC_IN, Settings.MMF_PC_OUT, Settings.MMF_PARTY_IN, Settings.MMF_PARTY_OUT };
                 for (int i = 0; i < NUMBER_CHANNELS; i++)
                 {
                     string name = CHANNELS_NAME[i];

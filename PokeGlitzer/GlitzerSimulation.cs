@@ -9,21 +9,18 @@ namespace PokeGlitzer
 {
     class GlitzerSimulation
     {
-        const uint gPokemonStorage = 0x02029808;
-        const uint gPlayerParty = 0x020244ec;
-        const byte aslrMask = 0b0111_1100;
-        const byte numberUpPresses = 12;
-
         readonly RangeObservableCollection<byte> initialData;
         readonly uint baseOffset;
         readonly uint baseOffsetEnd;
+        readonly byte aslrMask;
         readonly byte numberSlots;
         public GlitzerSimulation(RangeObservableCollection<byte> data)
         {
             initialData = new RangeObservableCollection<byte>(data);
-            numberSlots = numberUpPresses;
-            baseOffset = (uint)((gPlayerParty + (0x100 - numberSlots) * Pokemon.TEAM_SIZE) - gPokemonStorage);
-            baseOffsetEnd = (uint)((gPlayerParty + 0x100 * Pokemon.TEAM_SIZE) - gPokemonStorage - 1);
+            numberSlots = Settings.Corruption_numberUpPresses;
+            aslrMask = Settings.Corruption_aslrMask;
+            baseOffset = (uint)((Settings.Corruption_gPlayerParty + (0x100 - numberSlots) * Pokemon.TEAM_SIZE) - Settings.Corruption_gPokemonStorage);
+            baseOffsetEnd = (uint)((Settings.Corruption_gPlayerParty + 0x100 * Pokemon.TEAM_SIZE) - Settings.Corruption_gPokemonStorage - 1);
         }
 
         public enum CorruptionType

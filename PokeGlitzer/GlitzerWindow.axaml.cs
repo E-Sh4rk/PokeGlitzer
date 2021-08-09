@@ -52,7 +52,9 @@ namespace PokeGlitzer
         const int NB_SLOTS = 12;
         public const int SIZE = NB_SLOTS * Pokemon.TEAM_SIZE;
         RangeObservableCollection<byte> data;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public GlitzerWindowViewModel(MainWindowViewModel? mw, GlitzerWindow parent, RangeObservableCollection<byte> data, int offset)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             this.mw = mw;
             this.parent = parent;

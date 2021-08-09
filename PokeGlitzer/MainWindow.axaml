@@ -12,6 +12,7 @@
       <MenuItem Header="_File">
         <MenuItem Header="_Open..." Command="{Binding Open}"/>
         <MenuItem Header="_Save" Command="{Binding Save}" IsEnabled="{Binding CurrentSave, Converter={x:Static ObjectConverters.IsNotNull}}" />
+        <MenuItem Header="_Save as..." Command="{Binding SaveAs}" IsEnabled="{Binding CurrentSave, Converter={x:Static ObjectConverters.IsNotNull}}" />
         <Separator/>
         <MenuItem Header="_Exit" Command="{Binding Exit}"/>
       </MenuItem>

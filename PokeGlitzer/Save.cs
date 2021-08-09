@@ -44,6 +44,7 @@ namespace PokeGlitzer
             TrainerInfoData ti = Utils.ByteToType<TrainerInfoData>(tiData);
             gameCode = ti.gameCode;
         }
+        public void SetSavePath(string path) { this.path = path; }
         uint GetSaveIndex(Section[] sections)
         {
             uint max = 0;

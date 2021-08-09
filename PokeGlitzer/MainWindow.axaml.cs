@@ -308,6 +308,21 @@ namespace PokeGlitzer
                 }
             }
         }
+        public async void SaveAs()
+        {
+            if (CurrentSave != null)
+            {
+                SaveFileDialog dialog = new SaveFileDialog();
+                dialog.Filters.Add(new FileDialogFilter() { Name = "Save file", Extensions = { "sav" } });
+
+                string result = await dialog.ShowAsync(mw);
+                if (result != null)
+                {
+                    CurrentSave.SetSavePath(result);
+                    Save();
+                }
+            }
+        }
 
         public void RunGPSimulation()
         {

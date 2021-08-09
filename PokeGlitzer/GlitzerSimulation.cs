@@ -64,6 +64,7 @@ namespace PokeGlitzer
                             else if (op.View.Interpreted.OTID != p.View.Interpreted.OTID) type = CorruptionType.TID;
                         }
                         res.Add(new Corruption(p.View.Interpreted, type));
+                        op.Dispose();
                     }
                     p.Dispose();
                 }

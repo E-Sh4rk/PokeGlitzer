@@ -25,7 +25,12 @@ namespace PokeGlitzer
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel(this);
+            DataContext = new MainWindowViewModel(this, null);
+        }
+        public MainWindow(string[] args)
+        {
+            InitializeComponent();
+            DataContext = new MainWindowViewModel(this, args);
 
 #if DEBUG
             this.AttachDevTools();
@@ -51,7 +56,7 @@ namespace PokeGlitzer
         public const int TEAM_SIZE = 6;
         Save? save = null;
         MMFSync sync;
-        public MainWindowViewModel(MainWindow mw)
+        public MainWindowViewModel(MainWindow mw, string[]? args)
         {
             this.mw = mw;
             data = Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE * BOX_SIZE * BOX_NUMBER);
@@ -63,6 +68,9 @@ namespace PokeGlitzer
             team = Utils.CollectionOfSize<PokemonExt?>(TEAM_SIZE);
             LoadTeam();
             sync = new MMFSync(data, teamData);
+
+            if (args != null && args.Length == 1)
+                LoadSave(args[0]);
         }
 
         void LoadBox(int nb)
@@ -254,6 +262,21 @@ namespace PokeGlitzer
         {
             mw.Close();
         }
+        void LoadSave(string path)
+        {
+            try
+            {
+                CurrentSave = new Save(path);
+                Utils.UpdateCollectionRange(data, CurrentSave.RetrievePCData().pokemonList);
+                Utils.UpdateCollectionRange(teamData, CurrentSave.RetrieveTeamData().pokemonList);
+                initialData = data.ToArray();
+                initialTeamData = teamData.ToArray();
+            }
+            catch
+            {
+                MessageBoxManager.GetMessageBoxStandardWindow("Error", "Unable to load this save.").ShowDialog(mw);
+            }
+        }
         public async void Open()
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -262,17 +285,7 @@ namespace PokeGlitzer
 
             string[] result = await dialog.ShowAsync(mw);
             if (result != null && result.Length >= 1)
-            {
-                try {
-                    CurrentSave = new Save(result[0]);
-                    Utils.UpdateCollectionRange(data, CurrentSave.RetrievePCData().pokemonList);
-                    Utils.UpdateCollectionRange(teamData, CurrentSave.RetrieveTeamData().pokemonList);
-                    initialData = data.ToArray();
-                    initialTeamData = teamData.ToArray();
-                } catch {
-                    await MessageBoxManager.GetMessageBoxStandardWindow("Error", "Unable to load this save.").ShowDialog(mw);
-                }
-            }
+                LoadSave(result[0]);
         }
         public void Save()
         {

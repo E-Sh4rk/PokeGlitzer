@@ -4,7 +4,9 @@ using Avalonia.Platform;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,20 +15,23 @@ namespace PokeGlitzer
     static class ResLoader
     {
         public const int MAX_SPECIES = 386;
+        static string? imgdir;
         public static void Initialize()
         {
+            imgdir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+            imgdir = Path.Combine(imgdir, "Images");
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
             none = new Bitmap(assets.Open(new Uri("avares://PokeGlitzer/Resources/b_none.png")));
-            try { special[0] = new Bitmap("Images/b_unknown.png"); } catch { special[0] = none; }
-            try { special[1] = new Bitmap("Images/b_unknown_alt.png"); } catch { special[1] = none; }
-            try { special[2] = new Bitmap("Images/b_egg.png"); } catch { special[2] = none; }
-            try { special[3] = new Bitmap("Images/b_bad_egg.png"); } catch { special[3] = none; }
+            try { special[0] = new Bitmap(Path.Combine(imgdir, "b_unknown.png")); } catch { special[0] = none; }
+            try { special[1] = new Bitmap(Path.Combine(imgdir, "b_unknown_alt.png")); } catch { special[1] = none; }
+            try { special[2] = new Bitmap(Path.Combine(imgdir, "b_egg.png")); } catch { special[2] = none; }
+            try { special[3] = new Bitmap(Path.Combine(imgdir, "b_bad_egg.png")); } catch { special[3] = none; }
         }
         static void InitializeSpecies(int i)
         {
             try
             {
-                species[i] = new Bitmap(String.Format("Images/species/b_{0}.png", i));
+                species[i] = new Bitmap(Path.Combine(imgdir!, string.Format("species/b_{0}.png", i)));
             }
             catch
             {
@@ -37,7 +42,7 @@ namespace PokeGlitzer
         {
             try
             {
-                shiny_species[i] = new Bitmap(String.Format("Images/shiny_species/b_{0}s.png", i));
+                shiny_species[i] = new Bitmap(Path.Combine(imgdir!, string.Format("shiny_species/b_{0}s.png", i)));
             }
             catch
             {

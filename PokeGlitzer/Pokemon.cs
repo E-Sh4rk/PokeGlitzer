@@ -134,6 +134,15 @@ namespace PokeGlitzer
         void UpdateChecksumAndViewData(PokemonStruct pkmn, byte[] dataArr, bool isDecoded, bool updateData, bool updateDecodedData)
         {
             if (isDecoded) view.ChecksumValid = ComputeChecksum(pkmn) == pkmn.checksum;
+            else
+            {
+                bool hasData = false;
+                foreach (byte b in dataArr)
+                {
+                    if (b != 0) { hasData = true; break; }
+                }
+                view.HasData = hasData;
+            }
             if (isDecoded && updateDecodedData) Utils.UpdateCollectionRange(view.DecodedData, dataArr);
             if (!isDecoded && updateData) Utils.UpdateCollectionRange(view.Data, dataArr);
         }

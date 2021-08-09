@@ -98,6 +98,17 @@ namespace PokeGlitzer
             }
         }
 
+        bool hasData = false;
+        public bool HasData
+        {
+            get => hasData;
+            set
+            {
+                hasData = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasData)));
+            }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 

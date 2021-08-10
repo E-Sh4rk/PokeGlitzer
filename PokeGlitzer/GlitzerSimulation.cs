@@ -11,8 +11,9 @@ namespace PokeGlitzer
     {
         const int BOX_DATA_OFFSET_FROM_STORAGE = 4;
         readonly RangeObservableCollection<byte> initialData;
-        readonly uint baseOffset;
-        readonly uint baseOffsetEnd;
+        readonly int minOffset;
+        readonly int baseOffset;
+        readonly int maxOffset;
         readonly byte aslrMask;
         readonly byte numberSlots;
         public GlitzerSimulation(RangeObservableCollection<byte> data)
@@ -22,13 +23,14 @@ namespace PokeGlitzer
             aslrMask = Settings.Corruption_aslrMask;
             uint gPokemonBox = Settings.Corruption_gPokemonStorage + BOX_DATA_OFFSET_FROM_STORAGE;
             uint gPlayerParty = Settings.Corruption_gPlayerParty;
-            baseOffset = (uint)((gPlayerParty + (0x100 - numberSlots) * Pokemon.TEAM_SIZE) - gPokemonBox);
-            baseOffsetEnd = (uint)((gPlayerParty + 0x100 * Pokemon.TEAM_SIZE) - gPokemonBox - 1);
+            baseOffset = (int)((gPlayerParty + (0x100 - numberSlots) * Pokemon.TEAM_SIZE) - gPokemonBox);
+            maxOffset = (int)((gPlayerParty + 0x100 * Pokemon.TEAM_SIZE) - gPokemonBox - 1);
+            minOffset = baseOffset - aslrMask;
         }
 
         public enum CorruptionType
         {
-            PID, TID, Other
+            PID, TID, Other, None
         }
         record Corruption(InterpretedData interpreted, CorruptionType type);
         Corruption[] SimulateWithAslr(int aslr)
@@ -43,6 +45,7 @@ namespace PokeGlitzer
                 p.Dispose();
                 cur_offset += Pokemon.TEAM_SIZE;
             }
+            DataLocation impactedArea = new DataLocation(minOffset, maxOffset - minOffset + 1, false);
             // Interpret and gather results
             cur_offset = 0;
             byte[] newData = data.ToArray();
@@ -50,21 +53,26 @@ namespace PokeGlitzer
             List<Corruption> res = new List<Corruption>();
             while (cur_offset + Pokemon.PC_SIZE <= newData.Length)
             {
-                if (!Enumerable.SequenceEqual(new ArraySegment<byte>(newData, cur_offset, Pokemon.PC_SIZE),
-                    new ArraySegment<byte>(oldData, cur_offset, Pokemon.PC_SIZE)))
+                DataLocation dl = new DataLocation(cur_offset, Pokemon.PC_SIZE, false);
+                if (impactedArea.Intersect(dl))
                 {
-                    Pokemon p = new Pokemon(data, cur_offset, Pokemon.PC_SIZE, false);
+                    Pokemon p = new Pokemon(data, dl.offset, dl.size, dl.inTeam);
                     if (p.View.Interpreted != null && p.View.ChecksumValid)
                     {
-                        Pokemon op = new Pokemon(initialData, cur_offset, Pokemon.PC_SIZE, false);
-                        CorruptionType type = CorruptionType.Other;
-                        if (op.View.Interpreted != null)
+                        CorruptionType type = CorruptionType.None;
+                        if (!Enumerable.SequenceEqual(new ArraySegment<byte>(newData, cur_offset, Pokemon.PC_SIZE),
+                            new ArraySegment<byte>(oldData, cur_offset, Pokemon.PC_SIZE)))
                         {
-                            if (op.View.Interpreted.PID != p.View.Interpreted.PID) type = CorruptionType.PID;
-                            else if (op.View.Interpreted.OTID != p.View.Interpreted.OTID) type = CorruptionType.TID;
+                            Pokemon op = new Pokemon(initialData, cur_offset, Pokemon.PC_SIZE, false);
+                            type = CorruptionType.Other;
+                            if (op.View.Interpreted != null)
+                            {
+                                if (op.View.Interpreted.PID != p.View.Interpreted.PID) type = CorruptionType.PID;
+                                else if (op.View.Interpreted.OTID != p.View.Interpreted.OTID) type = CorruptionType.TID;
+                            }
+                            op.Dispose();
                         }
                         res.Add(new Corruption(p.View.Interpreted, type));
-                        op.Dispose();
                     }
                     p.Dispose();
                 }
@@ -108,7 +116,7 @@ namespace PokeGlitzer
                             offsets = obtained[se];
                         else
                             offsets = new List<OffsetASLR>();
-                        OffsetASLR oa = new OffsetASLR((int)baseOffset - aslr, (int)baseOffsetEnd - aslr, aslr);
+                        OffsetASLR oa = new OffsetASLR((int)baseOffset - aslr, (int)maxOffset - aslr, aslr);
                         if (!offsets.Contains(oa)) offsets.Add(oa);
                         obtained[se] = offsets;
                     }

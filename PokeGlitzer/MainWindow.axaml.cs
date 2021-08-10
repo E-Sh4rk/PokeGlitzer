@@ -332,7 +332,6 @@ namespace PokeGlitzer
             GlitzerSimulation.SimulationResult res = sim.Simulate();
             StringBuilder str = new StringBuilder();
             str.AppendLine("Below are the species which can be obtained by corruption.");
-            str.AppendLine("Unmodified Pokemons are not shown.");
             str.AppendLine("Pokemons with an invalid checksum are not shown.");
             str.AppendLine();
             List<GlitzerSimulation.SimulationEntry> entries = res.obtained.Keys.ToList();
@@ -345,6 +344,7 @@ namespace PokeGlitzer
                     GlitzerSimulation.CorruptionType.PID => "PID",
                     GlitzerSimulation.CorruptionType.TID => "TID",
                     GlitzerSimulation.CorruptionType.Other => "Misc.",
+                    GlitzerSimulation.CorruptionType.None => "None",
                     _ => throw new NotImplementedException(),
                 };
                 string egg = e.egg switch

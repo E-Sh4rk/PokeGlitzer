@@ -60,8 +60,8 @@ namespace PokeGlitzer
                     if (p.View.Interpreted != null && p.View.ChecksumValid)
                     {
                         CorruptionType type = CorruptionType.None;
-                        if (!Enumerable.SequenceEqual(new ArraySegment<byte>(newData, cur_offset, Pokemon.PC_SIZE),
-                            new ArraySegment<byte>(oldData, cur_offset, Pokemon.PC_SIZE)))
+                        if (!Enumerable.SequenceEqual(new ArraySegment<byte>(newData, dl.offset, dl.size),
+                            new ArraySegment<byte>(oldData, dl.offset, dl.size)))
                         {
                             Pokemon op = new Pokemon(initialData, cur_offset, Pokemon.PC_SIZE, false);
                             type = CorruptionType.Other;

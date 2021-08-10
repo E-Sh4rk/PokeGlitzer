@@ -33,7 +33,7 @@ namespace PokeGlitzer
         record Corruption(InterpretedData interpreted, CorruptionType type);
         Corruption[] SimulateWithAslr(int aslr)
         {
-            int cur_offset = (int)baseOffset + aslr;
+            int cur_offset = (int)baseOffset - aslr;
             RangeObservableCollection<byte> data = new RangeObservableCollection<byte>(initialData);
             // Simulate
             for (int i = 0; i < numberSlots; i++)
@@ -108,7 +108,7 @@ namespace PokeGlitzer
                             offsets = obtained[se];
                         else
                             offsets = new List<OffsetASLR>();
-                        OffsetASLR oa = new OffsetASLR((int)baseOffset + aslr, (int)baseOffsetEnd + aslr, aslr);
+                        OffsetASLR oa = new OffsetASLR((int)baseOffset - aslr, (int)baseOffsetEnd - aslr, aslr);
                         if (!offsets.Contains(oa)) offsets.Add(oa);
                         obtained[se] = offsets;
                     }

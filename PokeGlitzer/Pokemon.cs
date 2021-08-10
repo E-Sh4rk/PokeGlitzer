@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
+    // TODO: Modify PokemonView so that modifications made here to the view are not notified here
+    // TODO: Test whether it fixes the following issue: loading abra.sav and adding 0x40000000/0x41230000 to the TID alter the decoded data and break the checksum
     public record DataLocation(int offset, int size, bool inTeam)
     {
         public static bool Intersect(DataLocation dl1, DataLocation dl2)

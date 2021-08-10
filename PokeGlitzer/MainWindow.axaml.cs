@@ -378,6 +378,10 @@ namespace PokeGlitzer
         {
             CopiedData = Utils.ExtractCollectionRange(dl.inTeam ? teamData : data, dl.offset, dl.size);
         }
+        public void Cut(DataLocation dl)
+        {
+            Copy(dl); Delete(dl);
+        }
         public void Paste(DataLocation dl)
         {
             if (CopiedData != null)

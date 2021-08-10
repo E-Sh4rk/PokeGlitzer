@@ -136,7 +136,7 @@
     </Canvas>
     <StackPanel Orientation="Horizontal" Width="400" Spacing="35" Margin="5">
       <CheckBox IsChecked="{Binding Decoded}">Decode Data</CheckBox>
-      <Button Command="{Binding FixChecksum}">Fix checksum</Button>
+      <Button Command="{Binding FixChecksum}" IsEnabled="{Binding !View.ChecksumValid}">Fix checksum</Button>
       <Button Command="{Binding RestoreInitial}">Restore initial</Button>
     </StackPanel>
   </StackPanel>

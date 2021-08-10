@@ -110,6 +110,7 @@
             <MenuItem Header="_Open Hex Data Editor" Command="{Binding $parent[Window].DataContext.OpenRawEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
             <Separator/>
             <MenuItem Header="_Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <MenuItem Header="_Cut" Command="{Binding $parent[Window].DataContext.Cut}" CommandParameter="{Binding pkmn.DataLocation}" />
             <MenuItem Header="_Paste" Command="{Binding $parent[Window].DataContext.Paste}" CommandParameter="{Binding pkmn.DataLocation}"
                       IsEnabled="{Binding $parent[Window].DataContext.CopiedData, Converter={x:Static ObjectConverters.IsNotNull}}"/>
             <MenuItem Header="_Delete" Command="{Binding $parent[Window].DataContext.Delete}" CommandParameter="{Binding pkmn.DataLocation}" />

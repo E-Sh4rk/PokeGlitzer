@@ -157,6 +157,7 @@ namespace PokeGlitzer
 
         public void Delete(DataLocation dl) { mw?.Delete(dl); }
         public void Copy(DataLocation dl) { mw?.Copy(dl); }
+        public void Cut(DataLocation dl) { mw?.Cut(dl); }
         public void Paste(DataLocation dl) { mw?.Paste(dl); }
 
         public void Prev() { try { CurrentOffset -= 4; } catch { } }

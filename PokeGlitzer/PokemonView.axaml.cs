@@ -16,13 +16,13 @@ namespace PokeGlitzer
         public PokemonViewWindow()
         {
             InitializeComponent();
-            pkmn = new Pokemon(Utils.CollectionOfSize<byte>(80), 0, 80, false);
+            pkmn = new Pokemon(Utils.CollectionOfSize<byte>(80), DataLocation.DefaultPC);
             DataContext = new PokemonViewModel(pkmn, null);
         }
         public PokemonViewWindow(RangeObservableCollection<byte> data, int offset, bool inTeam, MainWindowViewModel mw)
         {
             InitializeComponent();
-            pkmn = new Pokemon(data, offset, 80, inTeam);
+            pkmn = new Pokemon(data, new DataLocation(offset, 80, inTeam));
             DataContext = new PokemonViewModel(pkmn, mw);
 
 #if DEBUG

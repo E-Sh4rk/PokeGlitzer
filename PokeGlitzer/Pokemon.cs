@@ -26,6 +26,8 @@ namespace PokeGlitzer
         {
             return Intersect(this, dl2);
         }
+        public static DataLocation DefaultPC = new DataLocation(0, Pokemon.PC_SIZE, false);
+        public static DataLocation DefaultTeam = new DataLocation(0, Pokemon.TEAM_SIZE, true);
     }
     public class Pokemon : IDisposable
     {
@@ -35,13 +37,13 @@ namespace PokeGlitzer
         int index;
         int size;
         bool inTeam;
-        public Pokemon(RangeObservableCollection<byte> rawData, int rawDataIndex, int size, bool inTeam)
+        public Pokemon(RangeObservableCollection<byte> rawData, DataLocation dl)
         {
-            if (size != PC_SIZE && size != TEAM_SIZE) throw new ArgumentException();
-            this.size = size;
-            this.inTeam = inTeam;
+            if (dl.size != PC_SIZE && dl.size != TEAM_SIZE) throw new ArgumentException();
+            size = dl.size;
+            inTeam = dl.inTeam;
             sourceData = rawData;
-            index = rawDataIndex;
+            index = dl.offset;
             view = new PokemonView(size);
             UpdateViewFromSource();
             sourceData.CollectionChanged += SourceDataChanged;
@@ -49,6 +51,10 @@ namespace PokeGlitzer
             view.DecodedData.CollectionChanged += ViewDecodedDataChanged;
             view.PropertyChanged += ViewInterpretedChanged;
         }
+        /*byte[] data;
+        byte[] decodedData;
+        InterpretedData interpreted;
+        TeamInterpretedData? teamInterpretedData;*/
 
         PokemonView view;
         public PokemonView View { get => view; }

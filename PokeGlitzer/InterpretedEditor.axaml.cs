@@ -13,14 +13,14 @@ namespace PokeGlitzer
         public InterpretedEditor()
         {
             InitializeComponent();
-            pkmn = new Pokemon(Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE), 0, Pokemon.PC_SIZE, false);
+            pkmn = new Pokemon(Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE), DataLocation.DefaultPC);
             DataContext = new InterpretedEditorModel(pkmn, this);
         }
 
-        public InterpretedEditor(RangeObservableCollection<byte> data, int offset, int size, bool inTeam)
+        public InterpretedEditor(RangeObservableCollection<byte> data, DataLocation dl)
         {
             InitializeComponent();
-            pkmn = new Pokemon(data, offset, size, inTeam);
+            pkmn = new Pokemon(data, dl);
             DataContext = new InterpretedEditorModel(pkmn, this);
 #if DEBUG
             this.AttachDevTools();

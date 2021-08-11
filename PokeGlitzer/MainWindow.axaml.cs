@@ -84,7 +84,7 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[BOX_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(data, Pokemon.PC_SIZE * i + offset, Pokemon.PC_SIZE, false);
+                Pokemon pkmn = new Pokemon(data, new DataLocation(Pokemon.PC_SIZE * i + offset, Pokemon.PC_SIZE, false));
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
                 
@@ -101,7 +101,7 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[TEAM_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(teamData, Pokemon.TEAM_SIZE * i, Pokemon.TEAM_SIZE, true);
+                Pokemon pkmn = new Pokemon(teamData, new DataLocation(Pokemon.TEAM_SIZE * i, Pokemon.TEAM_SIZE, true));
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
 
@@ -169,7 +169,7 @@ namespace PokeGlitzer
         public void OpenInterpretedEditor(DataLocation dl) { OpenInterpretedEditor(dl, null); }
         public void OpenInterpretedEditor(DataLocation dl, Window? parent)
         {
-            ShowWindow(new InterpretedEditor(dl.inTeam ? teamData : data, dl.offset, dl.size, dl.inTeam), parent);
+            ShowWindow(new InterpretedEditor(dl.inTeam ? teamData : data, dl), parent);
         }
         public void OpenDataEditor(DataLocation dl) { OpenDataEditor(dl, null); }
         public void OpenDataEditor(DataLocation dl, Window? parent)
@@ -182,7 +182,7 @@ namespace PokeGlitzer
         public void OpenRawEditor(DataLocation dl) { OpenRawEditor(dl, null); }
         public void OpenRawEditor(DataLocation dl, Window? parent)
         {
-            ShowWindow(new HexEditor(dl.inTeam ? teamData : data, dl.offset, dl.size, dl.inTeam), parent);
+            ShowWindow(new HexEditor(dl.inTeam ? teamData : data, dl), parent);
         }
         public void ShowWindow(IEditorWindow w, Window? parent)
         {

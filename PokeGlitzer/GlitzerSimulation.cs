@@ -40,7 +40,7 @@ namespace PokeGlitzer
             // Simulate
             for (int i = 0; i < numberSlots; i++)
             {
-                Pokemon p = new Pokemon(data, cur_offset, Pokemon.TEAM_SIZE, false);
+                Pokemon p = new Pokemon(data, new DataLocation(cur_offset, Pokemon.TEAM_SIZE, false));
                 p.FlagAsBaddEggIfInvalid();
                 p.Dispose();
                 cur_offset += Pokemon.TEAM_SIZE;
@@ -56,14 +56,14 @@ namespace PokeGlitzer
                 DataLocation dl = new DataLocation(cur_offset, Pokemon.PC_SIZE, false);
                 if (impactedArea.Intersect(dl))
                 {
-                    Pokemon p = new Pokemon(data, dl.offset, dl.size, dl.inTeam);
+                    Pokemon p = new Pokemon(data, dl);
                     if (p.View.ChecksumValid)
                     {
                         CorruptionType type = CorruptionType.None;
                         if (!Enumerable.SequenceEqual(new ArraySegment<byte>(newData, dl.offset, dl.size),
                             new ArraySegment<byte>(oldData, dl.offset, dl.size)))
                         {
-                            Pokemon op = new Pokemon(initialData, cur_offset, Pokemon.PC_SIZE, false);
+                            Pokemon op = new Pokemon(initialData, new DataLocation(cur_offset, Pokemon.PC_SIZE, false));
                             type = CorruptionType.Other;
                             if (op.View.Interpreted.PID != p.View.Interpreted.PID) type = CorruptionType.PID;
                             else if (op.View.Interpreted.OTID != p.View.Interpreted.OTID) type = CorruptionType.TID;

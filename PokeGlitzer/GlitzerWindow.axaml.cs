@@ -118,7 +118,7 @@ namespace PokeGlitzer
                 int offset = start + Pokemon.TEAM_SIZE * i;
                 if (offset < 0) continue;
                 if (offset + Pokemon.TEAM_SIZE > data.Count) continue;
-                Pokemon pkmn = new Pokemon(data, offset, Pokemon.TEAM_SIZE, false);
+                Pokemon pkmn = new Pokemon(data, new DataLocation(offset, Pokemon.TEAM_SIZE, false));
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
 

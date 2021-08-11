@@ -62,8 +62,7 @@ namespace PokeGlitzer
 
         public void RefreshControls()
         {
-            if (view.Interpreted == null) return;
-            InterpretedData d = view.Interpreted!;
+            InterpretedData d = view.Interpreted;
             PID = d.PID;
             OTID = d.OTID;
             Species = d.species;

@@ -31,7 +31,7 @@ namespace PokeGlitzer
     {
         public const int TEAM_SIZE = 100;
         public const int PC_SIZE = 80;
-        RangeObservableCollection<byte> data;
+        RangeObservableCollection<byte> sourceData;
         int index;
         int size;
         bool inTeam;
@@ -40,11 +40,11 @@ namespace PokeGlitzer
             if (size != PC_SIZE && size != TEAM_SIZE) throw new ArgumentException();
             this.size = size;
             this.inTeam = inTeam;
-            data = rawData;
+            sourceData = rawData;
             index = rawDataIndex;
             view = new PokemonView(size);
             UpdateViewFromSource();
-            data.CollectionChanged += SourceDataChanged;
+            sourceData.CollectionChanged += SourceDataChanged;
             view.Data.CollectionChanged += ViewDataChanged;
             view.DecodedData.CollectionChanged += ViewDecodedDataChanged;
             view.PropertyChanged += ViewInterpretedChanged;
@@ -87,7 +87,7 @@ namespace PokeGlitzer
             if (Utils.IsNonTrivialReplacement(args))
             {
                 UpdateView(view.Data.ToArray(), false, false, true, true, true);
-                Utils.UpdateCollectionRange(data, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count), index + args.OldStartingIndex);
+                Utils.UpdateCollectionRange(sourceData, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count), index + args.OldStartingIndex);
             }
         }
 
@@ -96,7 +96,7 @@ namespace PokeGlitzer
             if (Utils.IsNonTrivialReplacement(args))
             {
                 UpdateView(view.DecodedData.ToArray(), true, true, false, true, true);
-                Utils.UpdateCollectionRange(data, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count), index + args.OldStartingIndex);
+                Utils.UpdateCollectionRange(sourceData, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count), index + args.OldStartingIndex);
             }
         }
 
@@ -109,7 +109,7 @@ namespace PokeGlitzer
                 UpdateViewFromInterpreted();
             else
                 UpdateViewFromTeamInterpreted();
-            Utils.UpdateCollectionRange(data, view.Data, index);
+            Utils.UpdateCollectionRange(sourceData, view.Data, index);
         }
 
         void SourceDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
@@ -123,7 +123,7 @@ namespace PokeGlitzer
 
         void UpdateViewFromSource()
         {
-            byte[] dataArr = Utils.ExtractCollectionRange(data, index, size);
+            byte[] dataArr = Utils.ExtractCollectionRange(sourceData, index, size);
             UpdateView(dataArr, false, true, true, true, true);
         }
         ushort ComputeChecksum(PokemonStruct pkmn) // pkmn data must be decoded
@@ -251,7 +251,7 @@ namespace PokeGlitzer
         }
         void UpdateViewFromInterpreted()
         {
-            InterpretedData interpreted = view.Interpreted!;
+            InterpretedData interpreted = view.Interpreted;
             PokemonTeamStruct pkmn = GetPkmnTeamStruct(view.DecodedData.ToArray());
             // Retrieving substructures
             Substructure0 sub0 = Utils.ByteToType<Substructure0>(GetSubstructure(pkmn.permanent, 0));
@@ -341,7 +341,7 @@ namespace PokeGlitzer
                 ushort checksum = ComputeChecksum(Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray()));
                 byte[] res = BitConverter.GetBytes(checksum);
                 int offset = Utils.OffsetOf<PokemonStruct>("checksum");
-                Utils.UpdateCollectionRange(data, res, index + offset);
+                Utils.UpdateCollectionRange(sourceData, res, index + offset);
                 Utils.UpdateCollectionRange(view.Data, res, offset);
                 Utils.UpdateCollectionRange(view.DecodedData, res, offset);
                 view.ChecksumValid = true;
@@ -350,14 +350,13 @@ namespace PokeGlitzer
 
         public void FlagAsBaddEggIfInvalid()
         {
-            if (View.Interpreted == null) return;
             if (!View.ChecksumValid)
                 View.Interpreted = View.Interpreted with { egg = EggType.BadEgg };
         }
 
         public void Dispose()
         {
-            data.CollectionChanged -= SourceDataChanged;
+            sourceData.CollectionChanged -= SourceDataChanged;
         }
     }
 }

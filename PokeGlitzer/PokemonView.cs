@@ -21,6 +21,7 @@ namespace PokeGlitzer
         {
             data = new RangeObservableCollection<byte>(new byte[size]);
             decodedData = new RangeObservableCollection<byte>(new byte[size]);
+            interpreted = new InterpretedData(0,0,0,EggType.Invalid);
             //data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Data)));
             //decodedData.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DecodedData)));
         }
@@ -28,8 +29,8 @@ namespace PokeGlitzer
         public RangeObservableCollection<byte> Data { get => data; }
         public RangeObservableCollection<byte> DecodedData { get => decodedData; }
 
-        InterpretedData? interpreted;
-        public InterpretedData? Interpreted {
+        InterpretedData interpreted;
+        public InterpretedData Interpreted {
             get => interpreted;
             set
             {

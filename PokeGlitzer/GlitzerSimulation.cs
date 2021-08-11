@@ -57,7 +57,7 @@ namespace PokeGlitzer
                 if (impactedArea.Intersect(dl))
                 {
                     Pokemon p = new Pokemon(data, dl.offset, dl.size, dl.inTeam);
-                    if (p.View.Interpreted != null && p.View.ChecksumValid)
+                    if (p.View.ChecksumValid)
                     {
                         CorruptionType type = CorruptionType.None;
                         if (!Enumerable.SequenceEqual(new ArraySegment<byte>(newData, dl.offset, dl.size),
@@ -65,11 +65,8 @@ namespace PokeGlitzer
                         {
                             Pokemon op = new Pokemon(initialData, cur_offset, Pokemon.PC_SIZE, false);
                             type = CorruptionType.Other;
-                            if (op.View.Interpreted != null)
-                            {
-                                if (op.View.Interpreted.PID != p.View.Interpreted.PID) type = CorruptionType.PID;
-                                else if (op.View.Interpreted.OTID != p.View.Interpreted.OTID) type = CorruptionType.TID;
-                            }
+                            if (op.View.Interpreted.PID != p.View.Interpreted.PID) type = CorruptionType.PID;
+                            else if (op.View.Interpreted.OTID != p.View.Interpreted.OTID) type = CorruptionType.TID;
                             op.Dispose();
                         }
                         res.Add(new Corruption(p.View.Interpreted, type));

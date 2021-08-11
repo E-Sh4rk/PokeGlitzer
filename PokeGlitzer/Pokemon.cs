@@ -34,17 +34,13 @@ namespace PokeGlitzer
         public const int TEAM_SIZE = 100;
         public const int PC_SIZE = 80;
         RangeObservableCollection<byte> sourceData;
-        int index;
-        int size;
-        bool inTeam;
+        DataLocation dataLocation;
         public Pokemon(RangeObservableCollection<byte> rawData, DataLocation dl)
         {
             if (dl.size != PC_SIZE && dl.size != TEAM_SIZE) throw new ArgumentException();
-            size = dl.size;
-            inTeam = dl.inTeam;
             sourceData = rawData;
-            index = dl.offset;
-            view = new PokemonView(size);
+            dataLocation = dl;
+            view = new PokemonView(dl.size);
             UpdateViewFromSource();
             sourceData.CollectionChanged += SourceDataChanged;
             view.Data.CollectionChanged += ViewDataChanged;
@@ -58,7 +54,7 @@ namespace PokeGlitzer
 
         PokemonView view;
         public PokemonView View { get => view; }
-        public DataLocation DataLocation { get => new DataLocation(index, size, inTeam); }
+        public DataLocation DataLocation { get => dataLocation; }
 
         int[][] subOrders = new int[][]
         {
@@ -93,7 +89,8 @@ namespace PokeGlitzer
             if (Utils.IsNonTrivialReplacement(args))
             {
                 UpdateView(view.Data.ToArray(), false, false, true, true, true);
-                Utils.UpdateCollectionRange(sourceData, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count), index + args.OldStartingIndex);
+                Utils.UpdateCollectionRange(sourceData, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count),
+                    dataLocation.offset + args.OldStartingIndex);
             }
         }
 
@@ -102,7 +99,8 @@ namespace PokeGlitzer
             if (Utils.IsNonTrivialReplacement(args))
             {
                 UpdateView(view.DecodedData.ToArray(), true, true, false, true, true);
-                Utils.UpdateCollectionRange(sourceData, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count), index + args.OldStartingIndex);
+                Utils.UpdateCollectionRange(sourceData, new ArraySegment<byte>(view.Data.ToArray(), args.OldStartingIndex, args.NewItems!.Count),
+                    dataLocation.offset + args.OldStartingIndex);
             }
         }
 
@@ -115,21 +113,21 @@ namespace PokeGlitzer
                 UpdateViewFromInterpreted();
             else
                 UpdateViewFromTeamInterpreted();
-            Utils.UpdateCollectionRange(sourceData, view.Data, index);
+            Utils.UpdateCollectionRange(sourceData, view.Data, dataLocation.offset);
         }
 
         void SourceDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
             if (Utils.IsNonTrivialReplacement(args))
             {
-                if (DataLocation.Intersect(new DataLocation(args.OldStartingIndex, args.NewItems!.Count, inTeam)))
+                if (dataLocation.Intersect(new DataLocation(args.OldStartingIndex, args.NewItems!.Count, dataLocation.inTeam)))
                     UpdateViewFromSource();
             }
         }
 
         void UpdateViewFromSource()
         {
-            byte[] dataArr = Utils.ExtractCollectionRange(sourceData, index, size);
+            byte[] dataArr = Utils.ExtractCollectionRange(sourceData, dataLocation.offset, dataLocation.size);
             UpdateView(dataArr, false, true, true, true, true);
         }
         ushort ComputeChecksum(PokemonStruct pkmn) // pkmn data must be decoded
@@ -246,7 +244,7 @@ namespace PokeGlitzer
                 view.Interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType);
             }
             // Team Interpreted data
-            if (updateTeamInterpreted && size == TEAM_SIZE)
+            if (updateTeamInterpreted && dataLocation.size == TEAM_SIZE)
             {
                 PkmnStatus status = new PkmnStatus((byte)(pkmn.status & PokemonTeamStruct.SLEEP_MASK), (pkmn.status & PokemonTeamStruct.POISON_MASK) != 0,
                     (pkmn.status & PokemonTeamStruct.BURN_MASK) != 0, (pkmn.status & PokemonTeamStruct.FREEZE_MASK) != 0,
@@ -304,7 +302,7 @@ namespace PokeGlitzer
             // Fixing checksum if it was valid initially
             if (view.ChecksumValid) pkmn.permanent.checksum = ComputeChecksum(pkmn.permanent);
             byte[] res;
-            if (size == TEAM_SIZE)
+            if (dataLocation.size == TEAM_SIZE)
                 res = Utils.TypeToByte(pkmn);
             else
                 res = Utils.TypeToByte(pkmn.permanent);
@@ -312,7 +310,7 @@ namespace PokeGlitzer
         }
         void UpdateViewFromTeamInterpreted()
         {
-            if (size != TEAM_SIZE) return;
+            if (dataLocation.size != TEAM_SIZE) return;
             PokemonTeamStruct pkmn = GetPkmnTeamStruct(view.DecodedData.ToArray());
             TeamInterpretedData teamInterpreted = view.TeamInterpreted!;
             pkmn.currentHP = teamInterpreted.currentHP;
@@ -347,7 +345,7 @@ namespace PokeGlitzer
                 ushort checksum = ComputeChecksum(Utils.ByteToType<PokemonStruct>(view.DecodedData.ToArray()));
                 byte[] res = BitConverter.GetBytes(checksum);
                 int offset = Utils.OffsetOf<PokemonStruct>("checksum");
-                Utils.UpdateCollectionRange(sourceData, res, index + offset);
+                Utils.UpdateCollectionRange(sourceData, res, dataLocation.offset + offset);
                 Utils.UpdateCollectionRange(view.Data, res, offset);
                 Utils.UpdateCollectionRange(view.DecodedData, res, offset);
                 view.ChecksumValid = true;

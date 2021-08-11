@@ -21,7 +21,7 @@ namespace PokeGlitzer
         {
             data = new RangeObservableCollection<byte>(new byte[size]);
             decodedData = new RangeObservableCollection<byte>(new byte[size]);
-            interpreted = new InterpretedData(0,0,0,EggType.Invalid);
+            interpreted = InterpretedData.Dummy;
             //data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Data)));
             //decodedData.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DecodedData)));
         }
@@ -124,6 +124,7 @@ namespace PokeGlitzer
                 return key < 8;
             }
         }
+        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, EggType.Invalid);
     }
     public enum EggType
     {
@@ -135,7 +136,10 @@ namespace PokeGlitzer
     }
 
     public record TeamInterpretedData(PkmnStatus status, byte level, byte pokerusRemaining, ushort currentHP, ushort maxHP, ushort attack,
-        ushort defense, ushort speed, ushort speAttack, ushort speDefense);
+        ushort defense, ushort speed, ushort speAttack, ushort speDefense)
+    {
+        public static TeamInterpretedData Dummy = new TeamInterpretedData(new PkmnStatus(0,false,false,false,false,false),0,0,0,0,0,0,0,0,0);
+    }
     public record PkmnStatus(byte sleep, bool poison, bool burn, bool freeze, bool paralysis, bool badPoison);
 
     public interface IEditorWindow

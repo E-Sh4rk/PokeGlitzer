@@ -65,6 +65,23 @@ namespace PokeGlitzer
     [StructLayout(LayoutKind.Sequential, Size = 12, Pack = 1)]
     struct Substructure0
     {
+        const byte ppb_mask = 0b00000011;
+        const int ppb1s = 0;
+        const int ppb2s = 2;
+        const int ppb3s = 4;
+        const int ppb4s = 6;
+        public byte Ppb1 { get => (byte)((ppBonuses >> ppb1s) & ppb_mask); }
+        public byte Ppb2 { get => (byte)((ppBonuses >> ppb2s) & ppb_mask); }
+        public byte Ppb3 { get => (byte)((ppBonuses >> ppb3s) & ppb_mask); }
+        public byte Ppb4 { get => (byte)((ppBonuses >> ppb4s) & ppb_mask); }
+        public void SetPpBonuses(byte ppb1, byte ppb2, byte ppb3, byte ppb4)
+        {
+            ppBonuses  = (byte)((ppb1 & ppb_mask) << ppb1s);
+            ppBonuses |= (byte)((ppb2 & ppb_mask) << ppb2s);
+            ppBonuses |= (byte)((ppb3 & ppb_mask) << ppb3s);
+            ppBonuses |= (byte)((ppb4 & ppb_mask) << ppb4s);
+        }
+
         public ushort species;
         public ushort item;
         public uint experience;
@@ -104,6 +121,30 @@ namespace PokeGlitzer
     struct Substructure3
     {
         public const uint EGG_MASK = 0b0100_0000_0000_0000_0000_0000_0000_0000;
+        const uint ivs_mask = 0b00111111_11111111_11111111_11111111;
+        const uint iv_mask = 0b00011111;
+        const int iv_hp = 0;
+        const int iv_atk = 5;
+        const int iv_def = 10;
+        const int iv_speed = 15;
+        const int iv_sp_atk = 20;
+        const int iv_sp_def = 25;
+        public byte IV_hp { get => (byte)((ivEggAbility >> iv_hp) & iv_mask); }
+        public byte IV_atk { get => (byte)((ivEggAbility >> iv_atk) & iv_mask); }
+        public byte IV_def { get => (byte)((ivEggAbility >> iv_def) & iv_mask); }
+        public byte IV_speed { get => (byte)((ivEggAbility >> iv_speed) & iv_mask); }
+        public byte IV_sp_atk { get => (byte)((ivEggAbility >> iv_sp_atk) & iv_mask); }
+        public byte IV_sp_def { get => (byte)((ivEggAbility >> iv_sp_def) & iv_mask); }
+        public void SetIVs(byte hp, byte atk, byte def, byte speed, byte sp_atk, byte sp_def)
+        {
+            ivEggAbility &= ~ivs_mask;
+            ivEggAbility |= (hp & iv_mask) << iv_hp;
+            ivEggAbility |= (atk & iv_mask) << iv_atk;
+            ivEggAbility |= (def & iv_mask) << iv_def;
+            ivEggAbility |= (speed & iv_mask) << iv_speed;
+            ivEggAbility |= (sp_atk & iv_mask) << iv_sp_atk;
+            ivEggAbility |= (sp_def & iv_mask) << iv_sp_def;
+        }
 
         public byte pokerus;
         public byte metLocation;

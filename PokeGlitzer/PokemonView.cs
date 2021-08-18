@@ -114,7 +114,19 @@ namespace PokeGlitzer
         public event PropertyChangedEventHandler? PropertyChanged;
     }
 
-    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg)
+    public record EVsIVs(byte hp, byte atk, byte def, byte speed, byte spe_atk, byte spe_def)
+    {
+        public static EVsIVs Dummy = new EVsIVs(0,0,0,0,0,0);
+    }
+    public record Condition(byte coolness, byte beauty, byte cuteness, byte smartness, byte toughness, byte feel)
+    {
+        public static Condition Dummy = new Condition(0, 0, 0, 0, 0, 0);
+    }
+    public record Moves(ushort m1, byte pp1, byte ppb1, ushort m2, byte pp2, byte ppb2, ushort m3, byte pp3, byte ppb3, ushort m4, byte pp4, byte ppb4)
+    {
+        public static Moves Dummy = new Moves(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    }
+    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition)
     {
         public bool IsShiny
         {
@@ -124,7 +136,7 @@ namespace PokeGlitzer
                 return key < 8;
             }
         }
-        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, EggType.Invalid);
+        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, EggType.Invalid, Moves.Dummy, EVsIVs.Dummy, EVsIVs.Dummy, Condition.Dummy);
     }
     public enum EggType
     {

@@ -232,6 +232,8 @@ namespace PokeGlitzer
             // Retrieving substructures
             PokemonStruct decoded = Utils.ByteToType<PokemonStruct>(decodedData);
             Substructure0 sub0 = Utils.ByteToType<Substructure0>(GetSubstructure(decoded, 0));
+            Substructure1 sub1 = Utils.ByteToType<Substructure1>(GetSubstructure(decoded, 1));
+            Substructure2 sub2 = Utils.ByteToType<Substructure2>(GetSubstructure(decoded, 2));
             Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(decoded, 3));
             // Extracting interpreted data
             EggType eggType = EggType.Invalid;
@@ -249,7 +251,11 @@ namespace PokeGlitzer
                 }
                 else if (!egg && !badEgg) eggType = EggType.None;
             }
-            interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType);
+            Moves m = new Moves(sub1.move1, sub1.pp1, sub0.Ppb1, sub1.move2, sub1.pp2, sub0.Ppb2, sub1.move3, sub1.pp3, sub0.Ppb3, sub1.move4, sub1.pp4, sub0.Ppb4);
+            EVsIVs evs = new EVsIVs(sub2.hpEV, sub2.atkEV, sub2.defEV, sub2.speedEV, sub2.spAtkEV, sub2.spDefEV);
+            EVsIVs ivs = new EVsIVs(sub3.IV_hp, sub3.IV_atk, sub3.IV_def, sub3.IV_speed, sub3.IV_sp_atk, sub3.IV_sp_def);
+            Condition c = new Condition(sub2.coolness, sub2.beauty, sub2.cuteness, sub2.smartness, sub2.toughness, sub2.feel);
+            interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType, m, evs, ivs, c);
             // Team Interpreted data
             if (dataLocation.size == TEAM_SIZE)
             {
@@ -295,6 +301,18 @@ namespace PokeGlitzer
                 default:
                     break;
             }
+            EVsIVs ivs = interpreted.IVs;
+            sub3.SetIVs(ivs.hp, ivs.atk, ivs.def, ivs.speed, ivs.spe_atk, ivs.spe_def);
+            EVsIVs evs = interpreted.EVs;
+            sub2.hpEV = evs.hp; sub2.atkEV = evs.atk; sub2.defEV = evs.def;
+            sub2.speedEV = evs.speed; sub2.spAtkEV = evs.spe_atk; sub2.spDefEV = evs.spe_def;
+            Moves m = interpreted.moves;
+            sub0.SetPpBonuses(m.ppb1, m.ppb2, m.ppb3, m.ppb4);
+            sub1.move1 = m.m1; sub1.move2 = m.m2; sub1.move3 = m.m3; sub1.move4 = m.m4;
+            sub1.pp1 = m.pp1; sub1.pp2 = m.pp2; sub1.pp3 = m.pp3; sub1.pp4 = m.pp4;
+            Condition c = interpreted.condition;
+            sub2.coolness = c.coolness; sub2.beauty = c.beauty; sub2.cuteness = c.cuteness;
+            sub2.smartness = c.smartness; sub2.toughness = c.toughness; sub2.feel = c.feel;
             // Joining and updating substructures
             byte[] b0 = Utils.TypeToByte(sub0);
             byte[] b1 = Utils.TypeToByte(sub1);

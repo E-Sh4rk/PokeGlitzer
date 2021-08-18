@@ -6,6 +6,15 @@
     <Application.Styles>
       <FluentTheme Mode="Light"/>
 
+      <Style Selector="TabItem">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0 0 0 0"/>
+        <Setter Property="Padding" Value="5 0"/>
+      </Style>
+
       <!-- Remove tooltips for errors validation -->
       <Style Selector="DataValidationErrors">
         <Style.Resources>

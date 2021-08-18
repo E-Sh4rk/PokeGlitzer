@@ -2,39 +2,137 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500" Width="400" Height="500"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400" Width="400" Height="400"
         SizeToContent="WidthAndHeight" CanResize="False"
         x:Class="PokeGlitzer.InterpretedEditor"
         Title="Pokemon Interpreted Data Editor">
 
-  <StackPanel Orientation="Vertical" Margin="10">
-    <Grid ColumnDefinitions="75,175,75,175" RowDefinitions="Auto,Auto">
-      <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">PID</TextBlock>
-      <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding PID, Converter={StaticResource n2s}, ConverterParameter=X}" />
+  <StackPanel Orientation="Vertical" Margin="10,0,10,10">
+    <TabControl>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">General</TextBlock>
+        </TabItem.Header>
+        <Grid ColumnDefinitions="75,150,75,150" RowDefinitions="Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">PID</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding PID, Converter={StaticResource n2s}, ConverterParameter=X}" />
+
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">OTID</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding OTID, Converter={StaticResource n2s}, ConverterParameter=X}" />
+
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Species</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Species, Converter={StaticResource n2s}, ConverterParameter=X}" />
+
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Egg type</TextBlock>
+          <ComboBox Grid.Row="1" Grid.Column="3" Margin="10,5" HorizontalAlignment="Stretch"
+                    SelectedIndex="{Binding Egg, Converter={StaticResource egg2i}}">
+            <ComboBoxItem>-</ComboBoxItem>
+            <ComboBoxItem>Empty slot</ComboBoxItem>
+            <ComboBoxItem>Not an egg</ComboBoxItem>
+            <ComboBoxItem>Egg</ComboBoxItem>
+            <ComboBoxItem>Bad egg</ComboBoxItem>
+          </ComboBox>
+        </Grid>
+      </TabItem>
       
-      <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">OTID</TextBlock>
-      <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding OTID, Converter={StaticResource n2s}, ConverterParameter=X}" />
+      <TabItem Header="Moves" VerticalContentAlignment="Center">
+        <Grid ColumnDefinitions="50,100,50,100,50,100" RowDefinitions="Auto,Auto,Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Move 1</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding Move1, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">PP 1</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding PP1, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center">PP+ 1</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="5" Margin="10,5" Text="{Binding PPb1, Converter={StaticResource n2s}}" />
 
-      <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Species</TextBlock>
-      <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Species, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Move 2</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Move2, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">PP 2</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding PP2, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center">PP+ 2</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="5" Margin="10,5" Text="{Binding PPb2, Converter={StaticResource n2s}}" />
 
-      <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Egg type</TextBlock>
-      <ComboBox Grid.Row="1" Grid.Column="3" Margin="10,5" HorizontalAlignment="Stretch"
-                SelectedIndex="{Binding Egg, Converter={StaticResource egg2i}}">
-        <ComboBoxItem>-</ComboBoxItem>
-        <ComboBoxItem>Empty slot</ComboBoxItem>
-        <ComboBoxItem>Not an egg</ComboBoxItem>
-        <ComboBoxItem>Egg</ComboBoxItem>
-        <ComboBoxItem>Bad egg</ComboBoxItem>
-      </ComboBox>
-    </Grid>
+          <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Move 3</TextBlock>
+          <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5" Text="{Binding Move3, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">PP 3</TextBlock>
+          <TextBox Grid.Row="2" Grid.Column="3" Margin="10,5" Text="{Binding PP3, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="2" Grid.Column="4" VerticalAlignment="Center">PP+ 3</TextBlock>
+          <TextBox Grid.Row="2" Grid.Column="5" Margin="10,5" Text="{Binding PPb3, Converter={StaticResource n2s}}" />
+
+          <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Move 4</TextBlock>
+          <TextBox Grid.Row="3" Grid.Column="1" Margin="10,5" Text="{Binding Move4, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center">PP 4</TextBlock>
+          <TextBox Grid.Row="3" Grid.Column="3" Margin="10,5" Text="{Binding PP4, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="3" Grid.Column="4" VerticalAlignment="Center">PP+ 4</TextBlock>
+          <TextBox Grid.Row="3" Grid.Column="5" Margin="10,5" Text="{Binding PPb4, Converter={StaticResource n2s}}" />
+        </Grid>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">EVs</TextBlock>
+        </TabItem.Header>
+        <Grid ColumnDefinitions="65,85,65,85,65,85" RowDefinitions="Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">HP EV</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding HpEV, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Atk EV</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding AtkEV, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center">Def EV</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="5" Margin="10,5" Text="{Binding DefEV, Converter={StaticResource n2s}}" />
+
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Speed EV</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding SpeedEV, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Sp.Atk EV</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding SpeAtkEV, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center">Sp.Def EV</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="5" Margin="10,5" Text="{Binding SpeDefEV, Converter={StaticResource n2s}}" />
+        </Grid>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">IVs</TextBlock>
+        </TabItem.Header>
+        <Grid ColumnDefinitions="65,85,65,85,65,85" RowDefinitions="Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">HP IV</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding HpIV, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Atk IV</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding AtkIV, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center">Def IV</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="5" Margin="10,5" Text="{Binding DefIV, Converter={StaticResource n2s}}" />
+
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Speed IV</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding SpeedIV, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Sp. Atk IV</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding SpeAtkIV, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center">Sp. Def IV</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="5" Margin="10,5" Text="{Binding SpeDefIV, Converter={StaticResource n2s}}" />
+        </Grid>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Condition</TextBlock>
+        </TabItem.Header>
+        <Grid ColumnDefinitions="65,85,65,85,65,85" RowDefinitions="Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Coolness</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding Coolness, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Beauty</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding Beauty, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center">Cuteness</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="5" Margin="10,5" Text="{Binding Cuteness, Converter={StaticResource n2s}}" />
+
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Smartness</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Smartness, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Toughness</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding Toughness, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center">Feel</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="5" Margin="10,5" Text="{Binding Feel, Converter={StaticResource n2s}}" />
+        </Grid>
+      </TabItem>
+    </TabControl>
     <Separator Height="25"/>
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
       <Button HorizontalContentAlignment="Center" Content="Reset" Width="100" Command="{Binding RefreshControls}" />
       <Button HorizontalContentAlignment="Center" Content="Save" Width="100" Command="{Binding Save}" />
       <Button HorizontalContentAlignment="Center" Content="Save and Close" Width="125" Command="{Binding SaveAndClose}" />  
+    </StackPanel>
   </StackPanel>
-  </StackPanel>
-  
   
 </Window>

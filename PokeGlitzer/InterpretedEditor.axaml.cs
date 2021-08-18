@@ -62,7 +62,7 @@ namespace PokeGlitzer
 
         public void RefreshControls()
         {
-            InterpretedData d = view.Interpreted;
+            InterpretedData d = view.Interpreted; // TODO
             PID = d.PID;
             OTID = d.OTID;
             Species = d.species;
@@ -70,7 +70,11 @@ namespace PokeGlitzer
         }
         public void Save()
         {
-            InterpretedData d = new InterpretedData(PID, OTID, Species, Egg);
+            EVsIVs evs = view.Interpreted.EVs; // TODO
+            EVsIVs ivs = view.Interpreted.IVs;
+            Moves m = view.Interpreted.moves;
+            Condition c = view.Interpreted.condition;
+            InterpretedData d = new InterpretedData(PID, OTID, Species, Egg, m, evs, ivs, c);
             view.Interpreted = d;
         }
         public void SaveAndClose()

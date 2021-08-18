@@ -155,12 +155,12 @@
         </TabItem.Header>
         <Grid ColumnDefinitions="100,125,100,125" RowDefinitions="Auto,Auto">
           <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Pokérus days</TextBlock>
-          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding PokerusDaysLeft, Converter={StaticResource n2s}}" />
+          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding PokerusDays, Converter={StaticResource n2s}}" />
           <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Pokérus strain</TextBlock>
           <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding PokerusStrain, Converter={StaticResource n2s}}" />
 
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Ribbons</TextBlock>
-          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding PokerusDaysLeft, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Ribbons, Converter={StaticResource n2s}, ConverterParameter=X}" />
           <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Obedient</TextBlock>
           <CheckBox  Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Margin="10,5" IsChecked="{Binding Obedient}" />
         </Grid>

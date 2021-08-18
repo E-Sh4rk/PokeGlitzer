@@ -125,6 +125,31 @@ namespace PokeGlitzer
             get => egg;
             set { egg = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Egg))); }
         }
+        // ========== Battle ==========
+        ushort item;
+        public ushort Item
+        {
+            get => item;
+            set { item = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Item))); }
+        }
+        byte ability;
+        public byte Ability
+        {
+            get => ability;
+            set { ability = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Ability))); }
+        }
+        uint experience;
+        public uint Experience
+        {
+            get => experience;
+            set { experience = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Experience))); }
+        }
+        byte friendship;
+        public byte Friendship
+        {
+            get => friendship;
+            set { friendship = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Friendship))); }
+        }
         // ========== Moves ==========
         ushort move1;
         public ushort Move1
@@ -308,6 +333,31 @@ namespace PokeGlitzer
         {
             get => feel;
             set { feel = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Feel))); }
+        }
+        // ========== Misc ==========
+        byte pokerusDays;
+        public byte PokerusDays
+        {
+            get => pokerusDays;
+            set { pokerusDays = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PokerusDays))); }
+        }
+        byte pokerusStrain;
+        public byte PokerusStrain
+        {
+            get => pokerusStrain;
+            set { pokerusStrain = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PokerusStrain))); }
+        }
+        uint ribbons;
+        public uint Ribbons
+        {
+            get => ribbons;
+            set { ribbons = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Ribbons))); }
+        }
+        bool obedient;
+        public bool Obedient
+        {
+            get => obedient;
+            set { obedient = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Obedient))); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

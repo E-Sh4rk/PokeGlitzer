@@ -126,7 +126,15 @@ namespace PokeGlitzer
     {
         public static Moves Dummy = new Moves(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
-    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition)
+    public record Battle(ushort item, byte ability, uint experience, byte friendship)
+    {
+        public static Battle Dummy = new Battle(0, 0, 0, 0);
+    }
+    public record Misc(byte pokerus_days, byte pokerus_strain, uint ribbons, bool obedient)
+    {
+        public static Misc Dummy = new Misc(0, 0, 0, false);
+    }
+    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg, Battle battle, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition, Misc misc)
     {
         public bool IsShiny
         {
@@ -136,7 +144,7 @@ namespace PokeGlitzer
                 return key < 8;
             }
         }
-        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, EggType.Invalid, Moves.Dummy, EVsIVs.Dummy, EVsIVs.Dummy, Condition.Dummy);
+        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, EggType.Invalid, Battle.Dummy, Moves.Dummy, EVsIVs.Dummy, EVsIVs.Dummy, Condition.Dummy, Misc.Dummy);
     }
     public enum EggType
     {

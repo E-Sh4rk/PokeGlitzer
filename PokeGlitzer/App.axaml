@@ -101,6 +101,7 @@
     <convert:SubstructureToColor x:Key="ss2c"/>
     <convert:SubstructureToText x:Key="s2t"/>
     <convert:BoolToColor x:Key="b2c"/>
+    <convert:BoolToInt x:Key="b2i"/>
   </Application.Resources>
 
   <Application.DataTemplates>

@@ -121,6 +121,9 @@ namespace PokeGlitzer
     struct Substructure3
     {
         public const uint EGG_MASK = 0b0100_0000_0000_0000_0000_0000_0000_0000;
+        public const uint ABILITY_MASK = 0b1000_0000_0000_0000_0000_0000_0000_0000;
+        public const uint OBEDIENCE_MASK = 0b1000_0000_0000_0000_0000_0000_0000_0000;
+        public const uint RIBBONS_MASK = ~OBEDIENCE_MASK; 
         const uint ivs_mask = 0b00111111_11111111_11111111_11111111;
         const uint iv_mask = 0b00011111;
         const int iv_hp = 0;
@@ -129,6 +132,9 @@ namespace PokeGlitzer
         const int iv_speed = 15;
         const int iv_sp_atk = 20;
         const int iv_sp_def = 25;
+        const byte pokerus_mask = 0b00001111;
+        const int pokerus_days = 0;
+        const int pokerus_strain = 4;
         public byte IV_hp { get => (byte)((ivEggAbility >> iv_hp) & iv_mask); }
         public byte IV_atk { get => (byte)((ivEggAbility >> iv_atk) & iv_mask); }
         public byte IV_def { get => (byte)((ivEggAbility >> iv_def) & iv_mask); }
@@ -144,6 +150,13 @@ namespace PokeGlitzer
             ivEggAbility |= (speed & iv_mask) << iv_speed;
             ivEggAbility |= (sp_atk & iv_mask) << iv_sp_atk;
             ivEggAbility |= (sp_def & iv_mask) << iv_sp_def;
+        }
+        public byte PokerusDays { get => (byte)((pokerus >> pokerus_days) & pokerus_mask); }
+        public byte PokerusStrain { get => (byte)((pokerus >> pokerus_strain) & pokerus_mask); }
+        public void SetPokerus(byte days, byte strain)
+        {
+            pokerus  = (byte)((days & pokerus_mask) << pokerus_days);
+            pokerus |= (byte)((strain & pokerus_mask) << pokerus_strain);
         }
 
         public byte pokerus;

@@ -34,6 +34,25 @@
           </ComboBox>
         </Grid>
       </TabItem>
+
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Battle</TextBlock>
+        </TabItem.Header>
+        <Grid ColumnDefinitions="75,150,75,150" RowDefinitions="Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Item held</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding Item, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Ability</TextBlock>
+          <ComboBox Grid.Row="0" Grid.Column="3" Margin="10,5" HorizontalAlignment="Stretch" SelectedIndex="{Binding Ability}">
+            <ComboBoxItem>Primary</ComboBoxItem>
+            <ComboBoxItem>Secondary</ComboBoxItem>
+          </ComboBox>
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Experience</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Experience, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Friendship</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding Friendship, Converter={StaticResource n2s}}" />
+        </Grid>
+      </TabItem>
       
       <TabItem Header="Moves" VerticalContentAlignment="Center">
         <Grid ColumnDefinitions="50,100,50,100,50,100" RowDefinitions="Auto,Auto,Auto,Auto">
@@ -66,6 +85,7 @@
           <TextBox Grid.Row="3" Grid.Column="5" Margin="10,5" Text="{Binding PPb4, Converter={StaticResource n2s}}" />
         </Grid>
       </TabItem>
+      
       <TabItem>
         <TabItem.Header>
           <TextBlock VerticalAlignment="Center">EVs</TextBlock>
@@ -86,6 +106,7 @@
           <TextBox Grid.Row="1" Grid.Column="5" Margin="10,5" Text="{Binding SpeDefEV, Converter={StaticResource n2s}}" />
         </Grid>
       </TabItem>
+      
       <TabItem>
         <TabItem.Header>
           <TextBlock VerticalAlignment="Center">IVs</TextBlock>
@@ -106,6 +127,7 @@
           <TextBox Grid.Row="1" Grid.Column="5" Margin="10,5" Text="{Binding SpeDefIV, Converter={StaticResource n2s}}" />
         </Grid>
       </TabItem>
+      
       <TabItem>
         <TabItem.Header>
           <TextBlock VerticalAlignment="Center">Condition</TextBlock>
@@ -124,6 +146,23 @@
           <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding Toughness, Converter={StaticResource n2s}}" />
           <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center">Feel</TextBlock>
           <TextBox Grid.Row="1" Grid.Column="5" Margin="10,5" Text="{Binding Feel, Converter={StaticResource n2s}}" />
+        </Grid>
+      </TabItem>
+
+      <TabItem>
+        <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Misc</TextBlock>
+        </TabItem.Header>
+        <Grid ColumnDefinitions="100,125,100,125" RowDefinitions="Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Pokérus days</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding PokerusDaysLeft, Converter={StaticResource n2s}}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Pokérus strain</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding PokerusStrain, Converter={StaticResource n2s}}" />
+
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Ribbons</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding PokerusDaysLeft, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Obedient</TextBlock>
+          <CheckBox  Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Margin="10,5" IsChecked="{Binding Obedient}" />
         </Grid>
       </TabItem>
     </TabControl>

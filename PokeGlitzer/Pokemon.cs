@@ -251,11 +251,14 @@ namespace PokeGlitzer
                 }
                 else if (!egg && !badEgg) eggType = EggType.None;
             }
+            Battle b = new Battle(sub0.item, (sub3.ivEggAbility & Substructure3.ABILITY_MASK) == 0 ? (byte)0 : (byte)1, sub0.experience, sub0.friendship);
             Moves m = new Moves(sub1.move1, sub1.pp1, sub0.Ppb1, sub1.move2, sub1.pp2, sub0.Ppb2, sub1.move3, sub1.pp3, sub0.Ppb3, sub1.move4, sub1.pp4, sub0.Ppb4);
             EVsIVs evs = new EVsIVs(sub2.hpEV, sub2.atkEV, sub2.defEV, sub2.speedEV, sub2.spAtkEV, sub2.spDefEV);
             EVsIVs ivs = new EVsIVs(sub3.IV_hp, sub3.IV_atk, sub3.IV_def, sub3.IV_speed, sub3.IV_sp_atk, sub3.IV_sp_def);
             Condition c = new Condition(sub2.coolness, sub2.beauty, sub2.cuteness, sub2.smartness, sub2.toughness, sub2.feel);
-            interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType, m, evs, ivs, c);
+            Misc misc = new Misc(sub3.PokerusDays, sub3.PokerusStrain, sub3.ribbonsObedience & Substructure3.RIBBONS_MASK,
+                (sub3.ribbonsObedience & Substructure3.OBEDIENCE_MASK) != 0);
+            interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType, b, m, evs, ivs, c, misc);
             // Team Interpreted data
             if (dataLocation.size == TEAM_SIZE)
             {
@@ -283,19 +286,19 @@ namespace PokeGlitzer
             switch (interpreted.egg)
             {
                 case EggType.Egg:
-                    sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
+                    sub3.ivEggAbility |= Substructure3.EGG_MASK;
                     pkmn.permanent.isEgg = (byte)((pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK) & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.BadEgg:
-                    sub3.ivEggAbility = sub3.ivEggAbility | Substructure3.EGG_MASK;
+                    sub3.ivEggAbility |= Substructure3.EGG_MASK;
                     pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.NotAnEgg:
-                    sub3.ivEggAbility = sub3.ivEggAbility & ~Substructure3.EGG_MASK;
+                    sub3.ivEggAbility &= ~Substructure3.EGG_MASK;
                     pkmn.permanent.isEgg = (byte)((pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK) & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.None:
-                    sub3.ivEggAbility = sub3.ivEggAbility & ~Substructure3.EGG_MASK;
+                    sub3.ivEggAbility &= ~Substructure3.EGG_MASK;
                     pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg & ~PokemonStruct.HAS_SPECIES_MASK & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 default:
@@ -313,6 +316,17 @@ namespace PokeGlitzer
             Condition c = interpreted.condition;
             sub2.coolness = c.coolness; sub2.beauty = c.beauty; sub2.cuteness = c.cuteness;
             sub2.smartness = c.smartness; sub2.toughness = c.toughness; sub2.feel = c.feel;
+            Battle b = interpreted.battle;
+            sub0.item = b.item;
+            if (b.ability == 0) sub3.ivEggAbility &= ~Substructure3.ABILITY_MASK;
+            else sub3.ivEggAbility |= Substructure3.ABILITY_MASK;
+            sub0.experience = b.experience;
+            sub0.friendship = b.friendship;
+            Misc misc = interpreted.misc;
+            sub3.SetPokerus(misc.pokerus_days, misc.pokerus_strain);
+            sub3.ribbonsObedience = (sub3.ribbonsObedience & ~Substructure3.RIBBONS_MASK) | (misc.ribbons & Substructure3.RIBBONS_MASK);
+            if (misc.obedient) sub3.ribbonsObedience |= Substructure3.OBEDIENCE_MASK;
+            else sub3.ribbonsObedience &= ~Substructure3.OBEDIENCE_MASK;
             // Joining and updating substructures
             byte[] b0 = Utils.TypeToByte(sub0);
             byte[] b1 = Utils.TypeToByte(sub1);

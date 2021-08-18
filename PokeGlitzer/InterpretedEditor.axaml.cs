@@ -81,7 +81,9 @@ namespace PokeGlitzer
             Coolness = d.condition.coolness; Beauty = d.condition.beauty; Cuteness = d.condition.cuteness;
             Smartness = d.condition.smartness; Toughness = d.condition.toughness; Feel = d.condition.feel;
 
-            // TODO
+            Item = d.battle.item; Ability = d.battle.ability; Experience = d.battle.experience; Friendship = d.battle.friendship;
+
+            PokerusDays = d.misc.pokerus_days; PokerusStrain = d.misc.pokerus_strain; Ribbons = d.misc.ribbons; Obedient = d.misc.obedient;
         }
         public void Save()
         {
@@ -89,9 +91,8 @@ namespace PokeGlitzer
             EVsIVs evs = new EVsIVs(HpEV, AtkEV, DefEV, SpeedEV, SpeAtkEV, SpeDefEV);
             EVsIVs ivs = new EVsIVs(HpIV, AtkIV, DefIV, SpeedIV, SpeAtkIV, SpeDefIV);
             Condition c = new Condition(Coolness, Beauty, Cuteness, Smartness, Toughness, Feel);
-            // TODO
-            Battle b = view.Interpreted.battle;
-            Misc misc = view.Interpreted.misc;
+            Battle b = new Battle(Item, Ability, Experience, Friendship);
+            Misc misc = new Misc(PokerusDays, PokerusStrain, Ribbons, Obedient);
             InterpretedData d = new InterpretedData(PID, OTID, Species, Egg, b, m, evs, ivs, c, misc);
             view.Interpreted = d;
         }

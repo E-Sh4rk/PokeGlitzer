@@ -19,8 +19,8 @@ namespace PokeGlitzer
         RangeObservableCollection<byte> decodedData;
         public PokemonView(int size)
         {
-            data = new RangeObservableCollection<byte>(new byte[size]);
-            decodedData = new RangeObservableCollection<byte>(new byte[size]);
+            data = Utils.CollectionOfSize<byte>(size);
+            decodedData = Utils.CollectionOfSize<byte>(size);
             interpreted = InterpretedData.Dummy;
             //data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Data)));
             //decodedData.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DecodedData)));

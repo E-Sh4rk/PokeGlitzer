@@ -16,6 +16,8 @@ namespace PokeGlitzer
     static class Settings
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public static bool Text_japaneseCharset { get; private set; }
+
         public static string MMF_PC_IN { get; private set; }
         public static string MMF_PC_OUT { get; private set; }
         public static string MMF_PARTY_IN { get; private set; }
@@ -36,6 +38,9 @@ namespace PokeGlitzer
             src.FileProvider = new PhysicalFileProvider(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!);
             IniConfigurationProvider prov = new IniConfigurationProvider(src);
             prov.Load();
+            // Text
+            prov.TryGet("Text:japaneseCharset", out string text_japanese);
+            Text_japaneseCharset = Convert.ToBoolean(text_japanese);
             // MMF
             prov.TryGet("MMF:PC_in", out string mmf_pc_in);
             prov.TryGet("MMF:PC_out", out string mmf_pc_out);

@@ -17,6 +17,8 @@ using MessageBox.Avalonia;
 namespace PokeGlitzer
 {
     // TODO: Possibility to edit the box names
+    // TODO: Synchronization of the box names
+    // TODO: Normalize charset with the one of the code generator
     // TODO: Add more interpreted data
 
     public partial class MainWindow : Window
@@ -50,23 +52,30 @@ namespace PokeGlitzer
         byte[]? copiedData = null;
         RangeObservableCollection<byte> data;
         RangeObservableCollection<byte> teamData;
+        RangeObservableCollection<byte> boxNamesData;
         public const int BOX_SIZE = 30;
         public const int BOX_NUMBER = 14;
         public const int TEAM_SIZE = 6;
         Save? save = null;
         MMFSync sync;
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public MainWindowViewModel(MainWindow mw, string[]? args)
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             this.mw = mw;
             data = Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE * BOX_SIZE * BOX_NUMBER);
             teamData = Utils.CollectionOfSize<byte>(Pokemon.TEAM_SIZE * TEAM_SIZE);
+            boxNamesData = Utils.CollectionOfSize<byte>(BoxNames.BOX_NAME_BYTE_SIZE * BOX_NUMBER);
             initialData = new byte[data.Count];
             initialTeamData = new byte[teamData.Count];
             currentBox = Utils.CollectionOfSize<PokemonExt?>(BOX_SIZE);
+            boxNames = new BoxNames(boxNamesData);
             LoadBox(0);
             team = Utils.CollectionOfSize<PokemonExt?>(TEAM_SIZE);
             LoadTeam();
             sync = new MMFSync(data, teamData);
+            BoxNames.Names.CollectionChanged += (_, _) => CurrentBoxName = BoxNames.Names[CurrentBoxNumber-1]; 
 
             if (args != null && args.Length == 1)
                 LoadSave(args[0]);
@@ -89,6 +98,7 @@ namespace PokeGlitzer
                 
             Utils.UpdateCollectionRange(CurrentBox, pkmns);
             CurrentBoxNumber = nb+1;
+            CurrentBoxName = BoxNames.Names[nb];
         }
         void LoadTeam()
         {
@@ -117,6 +127,15 @@ namespace PokeGlitzer
         {
             get => copiedData;
             set { copiedData = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CopiedData))); }
+        }
+
+        BoxNames boxNames;
+        public BoxNames BoxNames { get => boxNames; }
+        string curBoxName;
+        public string CurrentBoxName
+        {
+            get => curBoxName;
+            set { curBoxName = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxName))); }
         }
 
         RangeObservableCollection<PokemonExt?> currentBox;
@@ -274,7 +293,9 @@ namespace PokeGlitzer
             try
             {
                 CurrentSave = new Save(path);
-                Utils.UpdateCollectionRange(data, CurrentSave.RetrievePCData().pokemonList);
+                PCData pcd = CurrentSave.RetrievePCData();
+                Utils.UpdateCollectionRange(data, pcd.pokemonList);
+                Utils.UpdateCollectionRange(boxNamesData, pcd.boxNames);
                 Utils.UpdateCollectionRange(teamData, CurrentSave.RetrieveTeamData().pokemonList);
                 initialData = data.ToArray();
                 initialTeamData = teamData.ToArray();
@@ -302,6 +323,7 @@ namespace PokeGlitzer
                 {
                     PCData pcd = CurrentSave.RetrievePCData();
                     pcd.pokemonList = data.ToArray();
+                    pcd.boxNames = boxNamesData.ToArray();
                     CurrentSave.SetPCData(pcd);
                     TeamItemsData tid = CurrentSave.RetrieveTeamData();
                     tid.pokemonList = teamData.ToArray();

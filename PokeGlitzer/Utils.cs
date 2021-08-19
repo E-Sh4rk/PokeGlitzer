@@ -47,12 +47,12 @@ namespace PokeGlitzer
             return true;
         }
 
-        public static bool IsNonTrivialReplacement(NotifyCollectionChangedEventArgs args)
+        public static bool IsNonTrivialReplacement<T>(NotifyCollectionChangedEventArgs args)
         {
             switch (args.Action)
             {
                 case NotifyCollectionChangedAction.Replace:
-                    return !Enumerable.SequenceEqual(args.OldItems!.Cast<byte>(), args.NewItems!.Cast<byte>());
+                    return !Enumerable.SequenceEqual(args.OldItems!.Cast<T>(), args.NewItems!.Cast<T>());
                 default:
                     throw new NotImplementedException();
             }

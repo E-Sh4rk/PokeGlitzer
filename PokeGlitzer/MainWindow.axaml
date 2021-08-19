@@ -36,7 +36,11 @@
       <DockPanel Width="408" LastChildFill="True">
         <Button Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
         <Button Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat=BOX {0}}" />
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+          <TextBlock Text="{Binding CurrentBoxNumber, StringFormat=BOX {0}}" />
+          <Separator Width="10" />
+          <TextBlock Text="{Binding CurrentBoxName, StringFormat=[{0}]}" />
+        </StackPanel>
       </DockPanel>
       <Separator Height="10" />
       <Grid ColumnDefinitions="68,68,68,68,68,68" RowDefinitions="56,56,56,56,56">

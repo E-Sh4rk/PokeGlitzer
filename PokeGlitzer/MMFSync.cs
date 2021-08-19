@@ -169,7 +169,7 @@ namespace PokeGlitzer
         {
             if (!IsRunning) return;
 
-            if (Utils.IsNonTrivialReplacement(e))
+            if (Utils.IsNonTrivialReplacement<byte>(e))
             {
                 int i = e.OldStartingIndex;
                 int c = e.NewItems!.Count;

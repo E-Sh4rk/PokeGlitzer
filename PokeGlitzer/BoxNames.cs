@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
-    class BoxNames : IDisposable
+    public class BoxNames : IDisposable
     {
         RangeObservableCollection<byte> sourceData;
         byte[] data;
         string[] boxNames;
 
-        const int BOX_NAME_SIZE = 8;
+        public const int BOX_NAME_LENGTH = 8;
+        public const int BOX_NAME_BYTE_SIZE = 9;
 
         public BoxNames(RangeObservableCollection<byte> rawData)
         {
@@ -41,12 +42,12 @@ namespace PokeGlitzer
 
         void NamesChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            if (Utils.IsNonTrivialReplacement(args) && !Enumerable.SequenceEqual(Names, boxNames))
+            if (Utils.IsNonTrivialReplacement<string>(args) && !Enumerable.SequenceEqual(Names, boxNames))
                 UpdateFromNames(Names.ToArray());
         }
         void SourceDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            if (Utils.IsNonTrivialReplacement(args))
+            if (Utils.IsNonTrivialReplacement<byte>(args))
                 UpdateViewFromSource(false);
         }
 
@@ -62,8 +63,8 @@ namespace PokeGlitzer
             data = dataArr;
             for (int i = 0; i < boxNames.Length; i++)
             {
-                int offset = (BOX_NAME_SIZE + 1) * i;
-                boxNames[i] = StringConverter.GetString3(data, offset, BOX_NAME_SIZE + 1, Settings.Text_japaneseCharset);
+                int offset = BOX_NAME_BYTE_SIZE * i;
+                boxNames[i] = StringConverter.GetString3(data, offset, BOX_NAME_BYTE_SIZE, Settings.Text_japaneseCharset);
             }
             ForwardLocalData();
         }

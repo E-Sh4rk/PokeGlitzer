@@ -102,13 +102,13 @@ namespace PokeGlitzer
 
         void ViewDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            if (Utils.IsNonTrivialReplacement(args) && !Enumerable.SequenceEqual(view.Data, data))
+            if (Utils.IsNonTrivialReplacement<byte>(args) && !Enumerable.SequenceEqual(view.Data, data))
                 UpdateFromData(view.Data.ToArray(), false);
         }
 
         void ViewDecodedDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            if (Utils.IsNonTrivialReplacement(args) && !Enumerable.SequenceEqual(view.DecodedData, decodedData))
+            if (Utils.IsNonTrivialReplacement<byte>(args) && !Enumerable.SequenceEqual(view.DecodedData, decodedData))
                 UpdateFromData(view.DecodedData.ToArray(), true);
         }
 
@@ -125,7 +125,7 @@ namespace PokeGlitzer
 
         void SourceDataChanged(object? sender, NotifyCollectionChangedEventArgs args)
         {
-            if (Utils.IsNonTrivialReplacement(args))
+            if (Utils.IsNonTrivialReplacement<byte>(args))
             {
                 if (dataLocation.Intersect(new DataLocation(args.OldStartingIndex, args.NewItems!.Count, dataLocation.inTeam)))
                     UpdateViewFromSource(false);

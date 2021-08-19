@@ -29,7 +29,7 @@ namespace PokeGlitzer
             this.AttachDevTools();
 #endif
         }
-        public Pokemon Pokemon => pkmn;
+        public DataLocation DataLocation => pkmn.DataLocation;
 
         private void InitializeComponent()
         {

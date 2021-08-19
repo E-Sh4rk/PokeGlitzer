@@ -16,7 +16,6 @@ using MessageBox.Avalonia;
 
 namespace PokeGlitzer
 {
-    // TODO: Possibility to edit the whole box data (big hex editor)
     // TODO: Possibility to edit the box names
     // TODO: Add more interpreted data
 
@@ -184,11 +183,19 @@ namespace PokeGlitzer
         {
             ShowWindow(new HexEditor(dl.inTeam ? teamData : data, dl), parent);
         }
+        public void EditFullBoxes()
+        {
+            ShowWindow(new HexEditor(data, false), null);
+        }
+        public void EditFullParty()
+        {
+            ShowWindow(new HexEditor(teamData, true), null);
+        }
         public void ShowWindow(IEditorWindow w, Window? parent)
         {
             openedEditors.Add(w);
             w.Closed += (_, _) => { openedEditors.Remove(w); GC.Collect(); };
-            w.Activated += (_, _) => { Selection = w.Pokemon.DataLocation; };
+            w.Activated += (_, _) => { Selection = w.DataLocation; };
             w.Deactivated += (_, _) => { Selection = null; };
             w.Show(parent == null ? mw : parent);
         }
@@ -212,7 +219,7 @@ namespace PokeGlitzer
             bool openNew = true;
             foreach (IEditorWindow w in openedEditors)
             {
-                if (w.Pokemon.DataLocation.Intersect(dl))
+                if (w.DataLocation.Intersect(dl))
                 {
                     openNew = false;
                     HighlightWindow((Window)w);

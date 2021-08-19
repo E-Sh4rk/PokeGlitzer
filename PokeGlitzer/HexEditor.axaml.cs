@@ -11,23 +11,36 @@ namespace PokeGlitzer
 {
     public partial class HexEditor : Window, IEditorWindow
     {
-        Pokemon pkmn;
+        Pokemon? pkmn;
+        DataLocation dataLocation;
         public HexEditor()
         {
             InitializeComponent();
             pkmn = new Pokemon(Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE), DataLocation.DefaultPC);
-            DataContext = new HexEditorModel(pkmn);
+            dataLocation = pkmn.DataLocation;
+            DataContext = new HexEditorModel(pkmn.View.Data, false);
         }
         public HexEditor(RangeObservableCollection<byte> data, DataLocation dl)
         {
             InitializeComponent();
             pkmn = new Pokemon(data, dl);
-            DataContext = new HexEditorModel(pkmn);
+            dataLocation = dl;
+            DataContext = new HexEditorModel(pkmn.View.Data, false);
 #if DEBUG
             this.AttachDevTools();
 #endif
         }
-        public Pokemon Pokemon => pkmn;
+        public HexEditor(RangeObservableCollection<byte> data, bool inTeam)
+        {
+            InitializeComponent();
+            pkmn = null;
+            dataLocation = new DataLocation(0, data.Count, inTeam);
+            DataContext = new HexEditorModel(data, true, inTeam ? Pokemon.TEAM_SIZE : Pokemon.PC_SIZE);
+#if DEBUG
+            this.AttachDevTools();
+#endif
+        }
+        public DataLocation DataLocation => dataLocation;
 
         private void InitializeComponent()
         {
@@ -36,19 +49,23 @@ namespace PokeGlitzer
 
         protected override void OnClosed(EventArgs e)
         {
-            pkmn.Dispose();
+            if (pkmn != null) pkmn.Dispose();
             base.OnClosed(e);
         }
     }
     public class HexEditorModel : INotifyPropertyChanged
     {
-        PokemonView view;
+        RangeObservableCollection<byte> data;
+        bool multiplePokemons;
+        int pkmnSize;
 
-        public HexEditorModel(Pokemon pkmn)
+        public HexEditorModel(RangeObservableCollection<byte> data, bool multiplePokemons, int pkmnSize = 0)
         {
-            view = pkmn.View;
+            this.data = data;
+            this.multiplePokemons = multiplePokemons;
+            this.pkmnSize = pkmnSize;
             //view.Data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));
-            Avalonia.Utilities.WeakEventHandlerManager.Subscribe<ObservableCollection<byte>, NotifyCollectionChangedEventArgs, HexEditorModel>(view.Data,
+            Avalonia.Utilities.WeakEventHandlerManager.Subscribe<ObservableCollection<byte>, NotifyCollectionChangedEventArgs, HexEditorModel>(data,
                 nameof(ObservableCollection<byte>.CollectionChanged), (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text))));
         }
 
@@ -57,16 +74,25 @@ namespace PokeGlitzer
             get
             {
                 StringBuilder res = new StringBuilder();
-                RangeObservableCollection<byte> col = view.Data;
                 int i = -1;
-                foreach (byte b in col)
+                foreach (byte b in data)
                 {
                     i++;
-                    int mod = i % 8;
-                    if (mod == 0) { if (i != 0) res.Append(Environment.NewLine); }
-                    else if (mod == 4) res.Append("   ");
-                    else res.Append(" ");
-                    res.Append(b.ToString("X").PadLeft(2, '0'));
+                    if (multiplePokemons)
+                    {
+                        bool startOfPkmn = i % pkmnSize == 0;
+                        if (startOfPkmn) { if (i != 0) res.Append(Environment.NewLine); }
+                        else res.Append(" ");
+                        res.Append(b.ToString("X").PadLeft(2, '0'));
+                    }
+                    else
+                    {
+                        int mod = i % 8;
+                        if (mod == 0) { if (i != 0) res.Append(Environment.NewLine); }
+                        else if (mod == 4) res.Append("   ");
+                        else res.Append(" ");
+                        res.Append(b.ToString("X").PadLeft(2, '0'));
+                    }
                 }
                 return res.ToString();
             }
@@ -74,9 +100,7 @@ namespace PokeGlitzer
             {
                 try
                 {
-                    RangeObservableCollection<byte> col = view.Data;
-                    byte[] res = new byte[col.Count];
-
+                    byte[] res = new byte[data.Count];
                     int j = 0;
                     int i = 0;
                     while (i < value.Length)
@@ -91,7 +115,7 @@ namespace PokeGlitzer
                     }
                     if (j != res.Length) throw new Exception();
 
-                    Utils.UpdateCollectionRange(col, res);
+                    Utils.UpdateCollectionRange(data, res);
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));
                 }
                 catch { throw new Avalonia.Data.DataValidationException(null); }

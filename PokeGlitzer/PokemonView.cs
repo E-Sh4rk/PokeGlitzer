@@ -164,7 +164,7 @@ namespace PokeGlitzer
 
     public interface IEditorWindow
     {
-        public Pokemon Pokemon { get; }
+        public DataLocation DataLocation { get; }
         public bool IsActive { get; }
         public void Show(Window parent);
         public void Close();

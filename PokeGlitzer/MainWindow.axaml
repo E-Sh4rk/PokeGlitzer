@@ -16,6 +16,10 @@
         <Separator/>
         <MenuItem Header="_Exit" Command="{Binding Exit}"/>
       </MenuItem>
+      <MenuItem Header="_Edit">
+        <MenuItem Header="_Edit full boxes data" Command="{Binding EditFullBoxes}" />
+        <MenuItem Header="_Edit full party data" Command="{Binding EditFullParty}" />
+      </MenuItem>
       <MenuItem Header="_Sync">
         <MenuItem Header="_Start synchronization" Command="{Binding StartSync}" IsEnabled="{Binding !Sync.IsRunning}" />
         <MenuItem Header="_Stop synchronization" Command="{Binding StopSync}" IsEnabled="{Binding Sync.IsRunning}" />

@@ -83,13 +83,19 @@ namespace PokeGlitzer
         /// <returns>Generation 3 encoded value.</returns>
         private static byte SetG3Char(char chr, bool jp)
         {
-            if (chr == '\'') // ’
-                return 0xB4;
+            /*if (chr == '\'') // ’
+                return 0xB4;*/
             var table = jp ? G3_JP : G3_EN;
             var index = Array.IndexOf(table, chr);
             if (index == -1)
                 return TerminatorByte;
             return (byte)index;
+        }
+
+        public static bool IsCharValid(char chr, bool jp)
+        {
+            byte b = SetG3Char(chr, jp);
+            return b != TerminatorByte;
         }
 
         /// <summary>

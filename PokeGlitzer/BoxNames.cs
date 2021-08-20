@@ -69,12 +69,61 @@ namespace PokeGlitzer
             ForwardLocalData();
         }
 
+        public static bool IsValidName(string name)
+        {
+            if (name.Length > BOX_NAME_BYTE_SIZE) return false;
+            foreach (char c in name)
+            {
+                if (!StringConverter.IsCharValid(c, Settings.Text_japaneseCharset))
+                    return false;
+            }
+            return true;
+        }
+        public static string NormalizeName(string name)
+        {
+            name = name.Replace("␣", " ");
+            name = name.Replace("_", " ");
+            name = name.Replace("'", "’");
+            name = name.Replace("–", "-");
+            name = name.Replace("—", "-");
+            if (Settings.Text_quotationLang == Settings.Lang.FRA)
+            {
+                name = name.Replace("«", "“");
+                name = name.Replace("»", "”");
+            }
+            if (Settings.Text_quotationLang == Settings.Lang.GER)
+            {
+                name = name.Replace("“", "”");
+                name = name.Replace("„", "“");
+            }
+            return name; // TODO
+        }
+        public static string MakeNameLookBetter(string name)
+        {
+            name = name.Replace(" ", "␣");
+            if (Settings.Text_quotationLang == Settings.Lang.FRA)
+            {
+                name = name.Replace("“", "«");
+                name = name.Replace("”", "»");
+            }
+            if (Settings.Text_quotationLang == Settings.Lang.GER)
+            {
+                name = name.Replace("“", "„");
+                name = name.Replace("”", "“");
+            }
+            return name;
+        }
+
         void UpdateFromNames(string[] names)
         {
-            throw new NotImplementedException();
-            /*byte[] res = new byte[data.Length];
-            // TODO
-            UpdateFromData(res);*/
+            byte[] res = new byte[data.Length];
+            for (int i = 0; i < boxNames.Length; i++)
+            {
+                int offset = BOX_NAME_BYTE_SIZE * i;
+                byte[] d = StringConverter.SetString3(names[i], BOX_NAME_BYTE_SIZE, Settings.Text_japaneseCharset, BOX_NAME_BYTE_SIZE, 0xFF);
+                Array.Copy(d, 0, res, offset, d.Length);
+            }
+            UpdateFromData(res);
         }
 
         public void Dispose()

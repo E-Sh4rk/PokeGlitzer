@@ -16,9 +16,7 @@ using MessageBox.Avalonia;
 
 namespace PokeGlitzer
 {
-    // TODO: Possibility to edit the box names individually
     // TODO: Synchronization of the box names
-    // TODO: Normalize charset with the one of the code generator
     // TODO: Add more interpreted data
 
     public partial class MainWindow : Window
@@ -134,8 +132,22 @@ namespace PokeGlitzer
         string curBoxName;
         public string CurrentBoxName
         {
-            get => curBoxName;
-            set { curBoxName = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxName))); }
+            get => BoxNames.MakeNameLookBetter(curBoxName);
+            set
+            {
+                try
+                {
+                    string str = BoxNames.NormalizeName(value);
+                    if (!BoxNames.IsValidName(str)) throw new Exception();
+                    BoxNames.Names[CurrentBoxNumber - 1] = str;
+                    curBoxName = BoxNames.Names[CurrentBoxNumber - 1];
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxName)));
+                }
+                catch
+                {
+                    throw new Avalonia.Data.DataValidationException(null);
+                }
+            }
         }
 
         RangeObservableCollection<PokemonExt?> currentBox;

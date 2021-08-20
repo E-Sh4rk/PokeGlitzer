@@ -38,9 +38,9 @@
         <Button Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
         <Button Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-          <TextBlock Text="{Binding CurrentBoxNumber, StringFormat=BOX {0}}" />
-          <Separator Width="10" />
-          <TextBlock Text="{Binding CurrentBoxName, StringFormat=[{0}]}" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat=BOX {0}}" />
+          <Separator Width="25" />
+          <TextBox FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Regular.ttf?assembly=PokeGlitzer#Cascadia Mono" TextAlignment="Center" Width="100" Text="{Binding CurrentBoxName}" />
         </StackPanel>
       </DockPanel>
       <Separator Height="10" />

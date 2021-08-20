@@ -17,6 +17,7 @@ namespace PokeGlitzer
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public static bool Text_japaneseCharset { get; private set; }
+        public static Lang Text_quotationLang { get; private set; }
 
         public static string MMF_PC_IN { get; private set; }
         public static string MMF_PC_OUT { get; private set; }
@@ -29,6 +30,7 @@ namespace PokeGlitzer
         public static byte Corruption_numberUpPresses { get; private set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
+        public enum Lang { ENG, GER, FRA, SPA, ITA, JAP };
         public static void Initialize()
         {
             NumberToStringConverter conv = new NumberToStringConverter();
@@ -40,7 +42,18 @@ namespace PokeGlitzer
             prov.Load();
             // Text
             prov.TryGet("Text:japaneseCharset", out string text_japanese);
+            prov.TryGet("Text:quotationLang", out string text_lang);
             Text_japaneseCharset = Convert.ToBoolean(text_japanese);
+            Text_quotationLang = text_lang switch
+            {
+                "ENG" => Lang.ENG,
+                "JAP" => Lang.JAP,
+                "GER" => Lang.GER,
+                "FRA" => Lang.FRA,
+                "ITA" => Lang.ITA,
+                "SPA" => Lang.SPA,
+                _ => Lang.ENG
+            };
             // MMF
             prov.TryGet("MMF:PC_in", out string mmf_pc_in);
             prov.TryGet("MMF:PC_out", out string mmf_pc_out);

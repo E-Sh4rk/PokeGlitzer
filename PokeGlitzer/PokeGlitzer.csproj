@@ -8,11 +8,6 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Resources\CascadiaMono-Regular.ttf" />
-    <None Remove="Resources\CascadiaMono.ttf" />
-    <None Remove="Resources\Fonts\CascadiaMono-Regular.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.6" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />

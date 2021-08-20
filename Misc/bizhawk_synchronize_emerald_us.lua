@@ -1,6 +1,6 @@
 local storagePtr = 0x5D94;
 local storageOffset = 4;
-local storageSize = 80*14*30;
+local storageSize = 80*14*30 + 9*14;
 
 local teamAddr = 0x244EC;
 local teamSize = 100*6;

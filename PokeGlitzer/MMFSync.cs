@@ -13,12 +13,14 @@ namespace PokeGlitzer
     {
         RangeObservableCollection<byte> data;
         RangeObservableCollection<byte> teamData;
+        RangeObservableCollection<byte> boxNamesData;
         DispatcherTimer? timer;
 
-        public MMFSync(RangeObservableCollection<byte> data, RangeObservableCollection<byte> teamData)
+        public MMFSync(RangeObservableCollection<byte> data, RangeObservableCollection<byte> teamData, RangeObservableCollection<byte> boxNamesData)
         {
             this.data = data;
             this.teamData = teamData;
+            this.boxNamesData = boxNamesData;
         }
 
         enum CHANNEL_DIR { IN = 0, OUT = 1 }
@@ -30,8 +32,8 @@ namespace PokeGlitzer
         static readonly CHANNEL_DIR[] CHANNELS_DIRECTION =
             new CHANNEL_DIR[] { CHANNEL_DIR.IN, CHANNEL_DIR.OUT, CHANNEL_DIR.IN, CHANNEL_DIR.OUT };
         static readonly int[] CHANNELS_LENGTH =
-            new int[] { MainWindowViewModel.BOX_NUMBER* MainWindowViewModel.BOX_SIZE*Pokemon.PC_SIZE,
-                        MainWindowViewModel.BOX_NUMBER* MainWindowViewModel.BOX_SIZE*Pokemon.PC_SIZE,
+            new int[] { MainWindowViewModel.BOX_NUMBER* (MainWindowViewModel.BOX_SIZE*Pokemon.PC_SIZE + BoxNames.BOX_NAME_BYTE_SIZE),
+                        MainWindowViewModel.BOX_NUMBER* (MainWindowViewModel.BOX_SIZE*Pokemon.PC_SIZE + BoxNames.BOX_NAME_BYTE_SIZE),
                         MainWindowViewModel.TEAM_SIZE * Pokemon.TEAM_SIZE,
                         MainWindowViewModel.TEAM_SIZE * Pokemon.TEAM_SIZE
             };
@@ -43,6 +45,7 @@ namespace PokeGlitzer
         byte[]? mmfC;
         bool[]? boxLock;
         bool[]? teamLock;
+        bool? boxNamesLock;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "42")]
         public bool Start()
@@ -83,11 +86,13 @@ namespace PokeGlitzer
                 }
                 boxLock = new bool[MainWindowViewModel.BOX_NUMBER * MainWindowViewModel.BOX_SIZE];
                 teamLock = new bool[MainWindowViewModel.TEAM_SIZE];
+                boxNamesLock = false;
 
                 timer.Tick += Refresh;
                 timer.Start();
                 data.CollectionChanged += DataChanged;
                 teamData.CollectionChanged += DataChanged;
+                boxNamesData.CollectionChanged += DataChanged;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRunning)));
                 return true;
             }
@@ -102,6 +107,7 @@ namespace PokeGlitzer
         {
             data.CollectionChanged -= DataChanged;
             teamData.CollectionChanged -= DataChanged;
+            boxNamesData.CollectionChanged -= DataChanged;
             if (IsRunning)
             {
                 timer!.Stop();
@@ -117,7 +123,7 @@ namespace PokeGlitzer
                 if (mmfCData != null && mmfCData[i] != null) mmfCData[i].Dispose();
             }
             mmfData = null; mmfAcc = null; mmfCData = null; mmfCAcc = null; mmfC = null;
-            boxLock = null; teamLock = null;
+            boxLock = null; teamLock = null; boxNamesLock = null;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRunning)));
         }
@@ -154,6 +160,8 @@ namespace PokeGlitzer
 
         private bool IsLocked(DataLocation dl)
         {
+            if (dl.src == Source.BoxNames)
+                return boxNamesLock!.Value && dl.size != 0;
             bool[] l = dl.src == Source.Team ? teamLock! : boxLock!;
             int s = dl.src == Source.Team ? Pokemon.TEAM_SIZE : Pokemon.PC_SIZE;
             int offset = 0;
@@ -173,13 +181,17 @@ namespace PokeGlitzer
             {
                 int i = e.OldStartingIndex;
                 int c = e.NewItems!.Count;
-                if (sender == data && !IsLocked(new DataLocation(i, c, Source.PC))) // Boxes
+                if ((sender == data && !IsLocked(new DataLocation(i, c, Source.PC))) ||
+                    (sender == boxNamesData && !IsLocked(new DataLocation(i, c, Source.BoxNames)))) // PC & Box Names
                 {
                     // NOTE: The check below is not needed anymore (locks are enough). Also, it can cause issue when the emulator is paused.
                     /*byte[] emu_data = ReadChannel(PC_IN, i, c);
                     byte[] new_data = Utils.ExtractCollectionRange(data, i, c);
                     if (!Enumerable.SequenceEqual(new_data, emu_data))*/
-                    WriteChannel(PC_OUT, data.ToArray());
+                    byte[] full_data = new byte[data.Count + boxNamesData.Count];
+                    Array.Copy(data.ToArray(), full_data, data.Count);
+                    Array.Copy(boxNamesData.ToArray(), 0, full_data, data.Count, boxNamesData.Count);
+                    WriteChannel(PC_OUT, full_data);
                 }
                 else if (sender == teamData && !IsLocked(new DataLocation(i, c, Source.Team))) // Team
                 {
@@ -189,7 +201,6 @@ namespace PokeGlitzer
                     if (!Enumerable.SequenceEqual(new_data, emu_data))*/
                     WriteChannel(TEAM_OUT, teamData.ToArray());
                 }
-
             }
         }
 
@@ -201,9 +212,9 @@ namespace PokeGlitzer
             {
                 // Boxes
                 byte[] oldData = data.ToArray();
+                int offset = 0;
                 for (int i = 0; i < boxLock!.Length; i++)
                 {
-                    int offset = i * Pokemon.PC_SIZE;
                     byte[] pkmn = ReadChannel(PC_IN, offset, Pokemon.PC_SIZE);
                     IEnumerable<byte> oldPkmn = new ArraySegment<byte>(oldData, offset, Pokemon.PC_SIZE);
                     if (!Enumerable.SequenceEqual(pkmn, oldPkmn))
@@ -213,7 +224,17 @@ namespace PokeGlitzer
                         Utils.UpdateCollectionRange(data, pkmn, offset);
                     }
                     else boxLock![i] = false;
+                    offset += Pokemon.PC_SIZE;
                 }
+                // Box Names
+                byte[] names = ReadChannel(PC_IN, offset, MainWindowViewModel.BOX_NUMBER*BoxNames.BOX_NAME_BYTE_SIZE);
+                if (!Enumerable.SequenceEqual(names, boxNamesData))
+                {
+                    // We do not allow modification of a slot that has just been modified by the game, because its data can be incorrect (due to DMA copies)
+                    boxNamesLock = true;
+                    Utils.UpdateCollectionRange(boxNamesData, names, 0);
+                }
+                else boxNamesLock = false;
             }
             if (CheckChannelUpdate(TEAM_IN))
             {

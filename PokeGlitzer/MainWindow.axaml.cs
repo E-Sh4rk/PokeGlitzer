@@ -16,8 +16,8 @@ using MessageBox.Avalonia;
 
 namespace PokeGlitzer
 {
-    // TODO: Synchronization of the box names
-    // TODO: Add more interpreted data
+    // TODO: Add more interpreted data (origins, etc.)
+    // TODO: Improve species field (show known species names), ribbons, etc.
 
     public partial class MainWindow : Window
     {
@@ -72,7 +72,7 @@ namespace PokeGlitzer
             LoadBox(0);
             team = Utils.CollectionOfSize<PokemonExt?>(TEAM_SIZE);
             LoadTeam();
-            sync = new MMFSync(data, teamData);
+            sync = new MMFSync(data, teamData, boxNamesData);
             BoxNames.Names.CollectionChanged += (_, _) => CurrentBoxName = BoxNames.Names[CurrentBoxNumber-1]; 
 
             if (args != null && args.Length == 1)
@@ -243,7 +243,7 @@ namespace PokeGlitzer
                 IBrush bg = w.Background;
                 w.Background = HIGHLIGHT_BRUSH;
                 DispatcherTimer timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromMilliseconds(250);
+                timer.Interval = TimeSpan.FromMilliseconds(500);
                 timer.Tick += new EventHandler((_, _) => { try { w.Background = bg; } catch { } timer.Stop(); });
                 timer.Start();
             }

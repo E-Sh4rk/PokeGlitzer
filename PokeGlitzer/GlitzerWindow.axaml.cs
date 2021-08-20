@@ -72,7 +72,7 @@ namespace PokeGlitzer
             int end = start + SIZE;
             start = Math.Min(Math.Max(0, start), data.Count);
             end = Math.Min(Math.Max(0, end), data.Count);
-            DataLocation = new DataLocation(start, end-start, false);
+            DataLocation = new DataLocation(start, end-start, Source.PC);
         }
         public void UpdateSelection()
         {
@@ -118,7 +118,7 @@ namespace PokeGlitzer
                 int offset = start + Pokemon.TEAM_SIZE * i;
                 if (offset < 0) continue;
                 if (offset + Pokemon.TEAM_SIZE > data.Count) continue;
-                Pokemon pkmn = new Pokemon(data, new DataLocation(offset, Pokemon.TEAM_SIZE, false));
+                Pokemon pkmn = new Pokemon(data, new DataLocation(offset, Pokemon.TEAM_SIZE, Source.PC));
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
 

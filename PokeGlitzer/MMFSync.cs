@@ -154,12 +154,12 @@ namespace PokeGlitzer
 
         private bool IsLocked(DataLocation dl)
         {
-            bool[] l = dl.inTeam ? teamLock! : boxLock!;
-            int s = dl.inTeam ? Pokemon.TEAM_SIZE : Pokemon.PC_SIZE;
+            bool[] l = dl.src == Source.Team ? teamLock! : boxLock!;
+            int s = dl.src == Source.Team ? Pokemon.TEAM_SIZE : Pokemon.PC_SIZE;
             int offset = 0;
             foreach (bool b in l)
             {
-                if (b && dl.Intersect(new DataLocation(offset,s,dl.inTeam)))
+                if (b && dl.Intersect(new DataLocation(offset,s,dl.src)))
                     return true;
                 offset += s;
             }
@@ -173,7 +173,7 @@ namespace PokeGlitzer
             {
                 int i = e.OldStartingIndex;
                 int c = e.NewItems!.Count;
-                if (sender == data && !IsLocked(new DataLocation(i, c, false))) // Boxes
+                if (sender == data && !IsLocked(new DataLocation(i, c, Source.PC))) // Boxes
                 {
                     // NOTE: The check below is not needed anymore (locks are enough). Also, it can cause issue when the emulator is paused.
                     /*byte[] emu_data = ReadChannel(PC_IN, i, c);
@@ -181,7 +181,7 @@ namespace PokeGlitzer
                     if (!Enumerable.SequenceEqual(new_data, emu_data))*/
                     WriteChannel(PC_OUT, data.ToArray());
                 }
-                else if (sender == teamData && !IsLocked(new DataLocation(i, c, true))) // Team
+                else if (sender == teamData && !IsLocked(new DataLocation(i, c, Source.Team))) // Team
                 {
                     // NOTE: The check below is not needed anymore (locks are enough). Also, it can cause issue when the emulator is paused.
                     /*byte[] emu_data = ReadChannel(TEAM_IN, i, c);

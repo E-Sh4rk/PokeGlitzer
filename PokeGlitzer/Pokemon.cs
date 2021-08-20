@@ -11,11 +11,12 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
-    public record DataLocation(int offset, int size, bool inTeam)
+    public enum Source { PC, Team, BoxNames };
+    public record DataLocation(int offset, int size, Source src)
     {
         public static bool Intersect(DataLocation dl1, DataLocation dl2)
         {
-            if (dl1.inTeam != dl2.inTeam) return false;
+            if (dl1.src != dl2.src) return false;
             int l1 = dl1.offset; int r1 = l1 + dl1.size;
             int l2 = dl2.offset; int r2 = l2 + dl2.size;
             return Math.Max(l1, l2) < Math.Min(r1, r2);
@@ -24,8 +25,8 @@ namespace PokeGlitzer
         {
             return Intersect(this, dl2);
         }
-        public static DataLocation DefaultPC = new DataLocation(0, Pokemon.PC_SIZE, false);
-        public static DataLocation DefaultTeam = new DataLocation(0, Pokemon.TEAM_SIZE, true);
+        public static DataLocation DefaultPC = new DataLocation(0, Pokemon.PC_SIZE, Source.PC);
+        public static DataLocation DefaultTeam = new DataLocation(0, Pokemon.TEAM_SIZE, Source.Team);
     }
     public class Pokemon : IDisposable
     {
@@ -127,7 +128,7 @@ namespace PokeGlitzer
         {
             if (Utils.IsNonTrivialReplacement<byte>(args))
             {
-                if (dataLocation.Intersect(new DataLocation(args.OldStartingIndex, args.NewItems!.Count, dataLocation.inTeam)))
+                if (dataLocation.Intersect(new DataLocation(args.OldStartingIndex, args.NewItems!.Count, dataLocation.src)))
                     UpdateViewFromSource(false);
             }
         }

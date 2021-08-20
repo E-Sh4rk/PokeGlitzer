@@ -30,12 +30,16 @@ namespace PokeGlitzer
             this.AttachDevTools();
 #endif
         }
-        public HexEditor(RangeObservableCollection<byte> data, bool inTeam)
+        public HexEditor(RangeObservableCollection<byte> data, Source src)
         {
             InitializeComponent();
             pkmn = null;
-            dataLocation = new DataLocation(0, data.Count, inTeam);
-            DataContext = new HexEditorModel(data, true, inTeam ? Pokemon.TEAM_SIZE : Pokemon.PC_SIZE);
+            dataLocation = new DataLocation(0, data.Count, src);
+            int lineSize = 0;
+            if (src == Source.Team) lineSize = Pokemon.TEAM_SIZE;
+            if (src == Source.PC) lineSize = Pokemon.PC_SIZE;
+            if (src == Source.BoxNames) lineSize = BoxNames.BOX_NAME_BYTE_SIZE;
+            DataContext = new HexEditorModel(data, true, lineSize);
 #if DEBUG
             this.AttachDevTools();
 #endif
@@ -56,14 +60,14 @@ namespace PokeGlitzer
     public class HexEditorModel : INotifyPropertyChanged
     {
         RangeObservableCollection<byte> data;
-        bool multiplePokemons;
-        int pkmnSize;
+        bool custom;
+        int lineSize;
 
-        public HexEditorModel(RangeObservableCollection<byte> data, bool multiplePokemons, int pkmnSize = 0)
+        public HexEditorModel(RangeObservableCollection<byte> data, bool custom, int lineSize = 0)
         {
             this.data = data;
-            this.multiplePokemons = multiplePokemons;
-            this.pkmnSize = pkmnSize;
+            this.custom = custom;
+            this.lineSize = lineSize;
             //view.Data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));
             Avalonia.Utilities.WeakEventHandlerManager.Subscribe<ObservableCollection<byte>, NotifyCollectionChangedEventArgs, HexEditorModel>(data,
                 nameof(ObservableCollection<byte>.CollectionChanged), (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text))));
@@ -78,10 +82,10 @@ namespace PokeGlitzer
                 foreach (byte b in data)
                 {
                     i++;
-                    if (multiplePokemons)
+                    if (custom)
                     {
-                        bool startOfPkmn = i % pkmnSize == 0;
-                        if (startOfPkmn) { if (i != 0) res.Append(Environment.NewLine); }
+                        bool startOfLine = i % lineSize == 0;
+                        if (startOfLine) { if (i != 0) res.Append(Environment.NewLine); }
                         else res.Append(" ");
                         res.Append(b.ToString("X").PadLeft(2, '0'));
                     }

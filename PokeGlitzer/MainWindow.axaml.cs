@@ -16,7 +16,7 @@ using MessageBox.Avalonia;
 
 namespace PokeGlitzer
 {
-    // TODO: Possibility to edit the box names
+    // TODO: Possibility to edit the box names individually
     // TODO: Synchronization of the box names
     // TODO: Normalize charset with the one of the code generator
     // TODO: Add more interpreted data
@@ -92,7 +92,7 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[BOX_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(data, new DataLocation(Pokemon.PC_SIZE * i + offset, Pokemon.PC_SIZE, false));
+                Pokemon pkmn = new Pokemon(data, new DataLocation(Pokemon.PC_SIZE * i + offset, Pokemon.PC_SIZE, Source.PC));
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
                 
@@ -110,7 +110,7 @@ namespace PokeGlitzer
             PokemonExt?[] pkmns = new PokemonExt?[TEAM_SIZE];
             for (int i = 0; i < pkmns.Length; i++)
             {
-                Pokemon pkmn = new Pokemon(teamData, new DataLocation(Pokemon.TEAM_SIZE * i, Pokemon.TEAM_SIZE, true));
+                Pokemon pkmn = new Pokemon(teamData, new DataLocation(Pokemon.TEAM_SIZE * i, Pokemon.TEAM_SIZE, Source.Team));
                 pkmns[i] = new PokemonExt(pkmn, IsSelected(pkmn));
             }
 
@@ -187,28 +187,32 @@ namespace PokeGlitzer
         public void OpenInterpretedEditor(DataLocation dl) { OpenInterpretedEditor(dl, null); }
         public void OpenInterpretedEditor(DataLocation dl, Window? parent)
         {
-            ShowWindow(new InterpretedEditor(dl.inTeam ? teamData : data, dl), parent);
+            ShowWindow(new InterpretedEditor(dl.src == Source.Team ? teamData : data, dl), parent);
         }
         public void OpenDataEditor(DataLocation dl) { OpenDataEditor(dl, null); }
         public void OpenDataEditor(DataLocation dl, Window? parent)
         {
             if (dl.size == Pokemon.TEAM_SIZE)
-                ShowWindow(new PokemonViewWindow100(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this), parent);
+                ShowWindow(new PokemonViewWindow100(dl.src == Source.Team ? teamData : data, dl.offset, dl.src, this), parent);
             else
-                ShowWindow(new PokemonViewWindow(dl.inTeam ? teamData : data, dl.offset, dl.inTeam, this), parent);
+                ShowWindow(new PokemonViewWindow(dl.src == Source.Team ? teamData : data, dl.offset, dl.src, this), parent);
         }
         public void OpenRawEditor(DataLocation dl) { OpenRawEditor(dl, null); }
         public void OpenRawEditor(DataLocation dl, Window? parent)
         {
-            ShowWindow(new HexEditor(dl.inTeam ? teamData : data, dl), parent);
+            ShowWindow(new HexEditor(dl.src == Source.Team ? teamData : data, dl), parent);
         }
         public void EditFullBoxes()
         {
-            ShowWindow(new HexEditor(data, false), null);
+            ShowWindow(new HexEditor(data, Source.PC), null);
         }
         public void EditFullParty()
         {
-            ShowWindow(new HexEditor(teamData, true), null);
+            ShowWindow(new HexEditor(teamData, Source.Team), null);
+        }
+        public void EditFullBoxNames()
+        {
+            ShowWindow(new HexEditor(boxNamesData, Source.BoxNames), null);
         }
         public void ShowWindow(IEditorWindow w, Window? parent)
         {
@@ -396,16 +400,16 @@ namespace PokeGlitzer
 
         public void RestoreInitialData(DataLocation dl)
         {
-            ArraySegment<byte> initial = new ArraySegment<byte>(dl.inTeam ? initialTeamData : initialData, dl.offset, dl.size);
-            Utils.UpdateCollectionRange(dl.inTeam ? teamData : data, initial, dl.offset);
+            ArraySegment<byte> initial = new ArraySegment<byte>(dl.src == Source.Team ? initialTeamData : initialData, dl.offset, dl.size);
+            Utils.UpdateCollectionRange(dl.src == Source.Team ? teamData : data, initial, dl.offset);
         }
         public void Delete(DataLocation dl)
         {
-            Utils.UpdateCollectionRange(dl.inTeam ? teamData : data, new byte[dl.size], dl.offset);
+            Utils.UpdateCollectionRange(dl.src == Source.Team ? teamData : data, new byte[dl.size], dl.offset);
         }
         public void Copy(DataLocation dl)
         {
-            CopiedData = Utils.ExtractCollectionRange(dl.inTeam ? teamData : data, dl.offset, dl.size);
+            CopiedData = Utils.ExtractCollectionRange(dl.src == Source.Team ? teamData : data, dl.offset, dl.size);
         }
         public void Cut(DataLocation dl)
         {
@@ -414,7 +418,8 @@ namespace PokeGlitzer
         public void Paste(DataLocation dl)
         {
             if (CopiedData != null)
-                Utils.UpdateCollectionRange(dl.inTeam ? teamData : data, new ArraySegment<byte>(CopiedData, 0, Math.Min(dl.size, CopiedData.Length)), dl.offset);
+                Utils.UpdateCollectionRange(dl.src == Source.Team ? teamData : data,
+                    new ArraySegment<byte>(CopiedData, 0, Math.Min(dl.size, CopiedData.Length)), dl.offset);
         }
         public void NextBox()
         {

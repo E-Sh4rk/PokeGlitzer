@@ -40,12 +40,12 @@ namespace PokeGlitzer
             // Simulate
             for (int i = 0; i < numberSlots; i++)
             {
-                Pokemon p = new Pokemon(data, new DataLocation(cur_offset, Pokemon.TEAM_SIZE, false));
+                Pokemon p = new Pokemon(data, new DataLocation(cur_offset, Pokemon.TEAM_SIZE, Source.PC));
                 p.FlagAsBaddEggIfInvalid();
                 p.Dispose();
                 cur_offset += Pokemon.TEAM_SIZE;
             }
-            DataLocation impactedArea = new DataLocation(minOffset, maxOffset - minOffset + 1, false);
+            DataLocation impactedArea = new DataLocation(minOffset, maxOffset - minOffset + 1, Source.PC);
             // Interpret and gather results
             cur_offset = 0;
             byte[] newData = data.ToArray();
@@ -53,7 +53,7 @@ namespace PokeGlitzer
             List<Corruption> res = new List<Corruption>();
             while (cur_offset + Pokemon.PC_SIZE <= newData.Length)
             {
-                DataLocation dl = new DataLocation(cur_offset, Pokemon.PC_SIZE, false);
+                DataLocation dl = new DataLocation(cur_offset, Pokemon.PC_SIZE, Source.PC);
                 if (impactedArea.Intersect(dl))
                 {
                     Pokemon p = new Pokemon(data, dl);
@@ -63,7 +63,7 @@ namespace PokeGlitzer
                         if (!Enumerable.SequenceEqual(new ArraySegment<byte>(newData, dl.offset, dl.size),
                             new ArraySegment<byte>(oldData, dl.offset, dl.size)))
                         {
-                            Pokemon op = new Pokemon(initialData, new DataLocation(cur_offset, Pokemon.PC_SIZE, false));
+                            Pokemon op = new Pokemon(initialData, new DataLocation(cur_offset, Pokemon.PC_SIZE, Source.PC));
                             type = CorruptionType.Other;
                             if (op.View.Interpreted.PID != p.View.Interpreted.PID) type = CorruptionType.PID;
                             else if (op.View.Interpreted.OTID != p.View.Interpreted.OTID) type = CorruptionType.TID;

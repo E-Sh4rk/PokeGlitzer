@@ -19,6 +19,7 @@
       <MenuItem Header="_Edit">
         <MenuItem Header="_Edit full boxes data" Command="{Binding EditFullBoxes}" />
         <MenuItem Header="_Edit full party data" Command="{Binding EditFullParty}" />
+        <MenuItem Header="_Edit full box names data" Command="{Binding EditFullBoxNames}" />
       </MenuItem>
       <MenuItem Header="_Sync">
         <MenuItem Header="_Start synchronization" Command="{Binding StartSync}" IsEnabled="{Binding !Sync.IsRunning}" />

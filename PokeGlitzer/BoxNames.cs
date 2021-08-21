@@ -84,8 +84,20 @@ namespace PokeGlitzer
             name = name.Replace("␣", " ");
             name = name.Replace("_", " ");
             name = name.Replace("'", "’");
-            name = name.Replace("–", "-");
-            name = name.Replace("—", "-");
+            if (Settings.Text_japaneseCharset)
+            {
+                name = name.Replace("-", "ー");
+                name = name.Replace("–", "ー");
+                name = name.Replace("—", "ー");
+                name = name.Replace("…", "⋯");
+            }
+            else
+            {
+                name = name.Replace("–", "-");
+                name = name.Replace("—", "-");
+                name = name.Replace("ー", "-");
+                name = name.Replace("⋯", "…");
+            }
             if (Settings.Text_quotationLang == Settings.Lang.FRA)
             {
                 name = name.Replace("«", "“");

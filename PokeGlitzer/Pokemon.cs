@@ -252,6 +252,47 @@ namespace PokeGlitzer
                 }
                 else if (!egg && !badEgg) eggType = EggType.None;
             }
+            Language lang = decoded.lang switch
+            {
+                1 => Language.Japanese,
+                2 => Language.English,
+                3 => Language.French,
+                4 => Language.Italian,
+                5 => Language.German,
+                7 => Language.Spanish,
+                _ => Language.Invalid
+            };
+            string nickname = StringConverter.GetString3(decoded.nickname, lang == Language.Japanese);
+            string otName = StringConverter.GetString3(decoded.originalTrainerName, lang == Language.Japanese);
+            Gender otGender = (sub3.origins & Substructure3.GENDER_MASK) == 0 ? Gender.Boy : Gender.Girl;
+            byte levelMet = (byte)(sub3.origins & Substructure3.LEVEL_MET_MASK);
+            Game game = sub3.GameOfOrigin switch
+            {
+                1 => Game.Sapphire,
+                2 => Game.Ruby,
+                3 => Game.Emerald,
+                4 => Game.FireRed,
+                5 => Game.LeafGreen,
+                15 => Game.ColosseumXD,
+                _ => Game.Invalid
+            };
+            Ball ball = sub3.Ball switch
+            {
+                1 => Ball.Master,
+                2 => Ball.Ultra,
+                3 => Ball.Great,
+                4 => Ball.Poke,
+                5 => Ball.Safari,
+                6 => Ball.Net,
+                7 => Ball.Dive,
+                8 => Ball.Nest,
+                9 => Ball.Repeat,
+                10 => Ball.Timer,
+                11 => Ball.Luxury,
+                12 => Ball.Premier,
+                _ => Ball.Invalid
+            };
+            Identity id = new Identity(lang, nickname, otGender, otName, sub3.metLocation, levelMet, game, ball);
             Battle b = new Battle(sub0.item, (sub3.ivEggAbility & Substructure3.ABILITY_MASK) == 0 ? (byte)0 : (byte)1, sub0.experience, sub0.friendship);
             Moves m = new Moves(sub1.move1, sub1.pp1, sub0.Ppb1, sub1.move2, sub1.pp2, sub0.Ppb2, sub1.move3, sub1.pp3, sub0.Ppb3, sub1.move4, sub1.pp4, sub0.Ppb4);
             EVsIVs evs = new EVsIVs(sub2.hpEV, sub2.atkEV, sub2.defEV, sub2.speedEV, sub2.spAtkEV, sub2.spDefEV);
@@ -259,7 +300,7 @@ namespace PokeGlitzer
             Condition c = new Condition(sub2.coolness, sub2.beauty, sub2.cuteness, sub2.smartness, sub2.toughness, sub2.feel);
             Misc misc = new Misc(sub3.PokerusDays, sub3.PokerusStrain, sub3.ribbonsObedience & Substructure3.RIBBONS_MASK,
                 (sub3.ribbonsObedience & Substructure3.OBEDIENCE_MASK) != 0);
-            interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType, b, m, evs, ivs, c, misc);
+            interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType, id, b, m, evs, ivs, c, misc);
             // Team Interpreted data
             if (dataLocation.size == TEAM_SIZE)
             {
@@ -305,6 +346,7 @@ namespace PokeGlitzer
                 default:
                     break;
             }
+            // TODO
             EVsIVs ivs = interpreted.IVs;
             sub3.SetIVs(ivs.hp, ivs.atk, ivs.def, ivs.speed, ivs.spe_atk, ivs.spe_def);
             EVsIVs evs = interpreted.EVs;

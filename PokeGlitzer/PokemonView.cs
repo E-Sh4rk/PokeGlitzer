@@ -140,7 +140,12 @@ namespace PokeGlitzer
     public enum Game { Invalid=0, Sapphire, Ruby, Emerald, FireRed, LeafGreen, ColosseumXD }
     public enum Ball { Invalid = 0, Master, Ultra, Great, Poke, Safari, Net, Dive, Nest, Repeat, Timer, Luxury, Premier }
 
-    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg, Battle battle, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition, Misc misc)
+    public record Identity(Language lang, string nickname, Gender otGender, string otName, byte metLocation, byte levelMet, Game gameOfOrigin, Ball ball)
+    {
+        public static Identity Dummy = new Identity(Language.Invalid, "", Gender.Boy, "", 0, 0, Game.Invalid, Ball.Invalid);
+    }
+
+    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg, Identity identity, Battle battle, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition, Misc misc)
     {
         public bool IsShiny
         {
@@ -150,7 +155,7 @@ namespace PokeGlitzer
                 return key < 8;
             }
         }
-        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, EggType.Invalid, Battle.Dummy, Moves.Dummy, EVsIVs.Dummy, EVsIVs.Dummy, Condition.Dummy, Misc.Dummy);
+        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, EggType.Invalid, Identity.Dummy, Battle.Dummy, Moves.Dummy, EVsIVs.Dummy, EVsIVs.Dummy, Condition.Dummy, Misc.Dummy);
     }
     public enum EggType
     {

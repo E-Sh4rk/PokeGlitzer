@@ -89,7 +89,8 @@ namespace PokeGlitzer
                 name = name.Replace("-", "ー");
                 name = name.Replace("–", "ー");
                 name = name.Replace("—", "ー");
-                name = name.Replace("…", "⋯");
+                name = name.Replace("⋯", "‥");
+                name = name.Replace("…", "‥");
             }
             else
             {
@@ -97,6 +98,7 @@ namespace PokeGlitzer
                 name = name.Replace("—", "-");
                 name = name.Replace("ー", "-");
                 name = name.Replace("⋯", "…");
+                name = name.Replace("‥", "…");
             }
             if (Settings.Text_quotationLang == Settings.Lang.FRA)
             {

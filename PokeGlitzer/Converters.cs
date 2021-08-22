@@ -151,6 +151,30 @@ namespace PokeGlitzer.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (EggType)value; }
     }
+    public class GenderTypeToIndex : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Gender)value; }
+    }
+    public class LanguageTypeToIndex : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Language)value; }
+    }
+    public class GameTypeToIndex : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Game)value; }
+    }
+    public class BallTypeToIndex : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Ball)value; }
+    }
 
     // ========== MAIN WINDOW ==========
     public class SelectionToColor : IValueConverter

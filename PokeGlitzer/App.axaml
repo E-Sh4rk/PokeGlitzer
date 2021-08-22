@@ -97,6 +97,10 @@
     <convert:PokemonToBitmap x:Key="p2b"/>
     <convert:NumberToStringConverter x:Key="n2s"/>
     <convert:EggTypeToIndex x:Key="egg2i"/>
+    <convert:GenderTypeToIndex x:Key="gender2i"/>
+    <convert:LanguageTypeToIndex x:Key="lang2i"/>
+    <convert:GameTypeToIndex x:Key="game2i"/>
+    <convert:BallTypeToIndex x:Key="ball2i"/>
     <convert:ByteStringConverter x:Key="bsc"/>
     <convert:SubstructureToColor x:Key="ss2c"/>
     <convert:SubstructureToText x:Key="s2t"/>

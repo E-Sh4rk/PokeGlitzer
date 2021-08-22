@@ -134,6 +134,12 @@ namespace PokeGlitzer
     {
         public static Misc Dummy = new Misc(0, 0, 0, false);
     }
+
+    public enum Gender { Boy=0, Girl }
+    public enum Language { Invalid=0, Japanese, English, French, Italian, German, Spanish }
+    public enum Game { Invalid=0, Sapphire, Ruby, Emerald, FireRed, LeafGreen, ColosseumXD }
+    public enum Ball { Invalid = 0, Master, Ultra, Great, Poke, Safari, Net, Dive, Nest, Repeat, Timer, Luxury, Premier }
+
     public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg, Battle battle, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition, Misc misc)
     {
         public bool IsShiny

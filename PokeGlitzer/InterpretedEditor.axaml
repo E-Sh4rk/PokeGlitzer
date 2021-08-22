@@ -37,6 +37,73 @@
 
       <TabItem>
         <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">Identity</TextBlock>
+        </TabItem.Header>
+        <Grid ColumnDefinitions="75,150,75,150" RowDefinitions="Auto,Auto,Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Language</TextBlock>
+          <ComboBox Grid.Row="0" Grid.Column="1" Margin="10,5" HorizontalAlignment="Stretch"
+                    SelectedIndex="{Binding Language, Converter={StaticResource lang2i}}">
+            <ComboBoxItem>-</ComboBoxItem>
+            <ComboBoxItem>Japanese</ComboBoxItem>
+            <ComboBoxItem>English</ComboBoxItem>
+            <ComboBoxItem>French</ComboBoxItem>
+            <ComboBoxItem>Italian</ComboBoxItem>
+            <ComboBoxItem>German</ComboBoxItem>
+            <ComboBoxItem>Spanish</ComboBoxItem>
+          </ComboBox>
+          
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Nickname</TextBlock>
+          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding Nickname}" />
+
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">OT Gender</TextBlock>
+          <ComboBox Grid.Row="1" Grid.Column="1" Margin="10,5" HorizontalAlignment="Stretch"
+                    SelectedIndex="{Binding OTGender, Converter={StaticResource gender2i}}">
+            <ComboBoxItem>Boy</ComboBoxItem>
+            <ComboBoxItem>Girl</ComboBoxItem>
+          </ComboBox>
+          
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">OT Name</TextBlock>
+          <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding OTName}" />
+
+          <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Met locat.</TextBlock>
+          <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5" Text="{Binding MetLocation, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">Level met</TextBlock>
+          <TextBox Grid.Row="2" Grid.Column="3" Margin="10,5" Text="{Binding LevelMet, Converter={StaticResource n2s}}" />
+
+          <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Game</TextBlock>
+          <ComboBox Grid.Row="3" Grid.Column="1" Margin="10,5" HorizontalAlignment="Stretch"
+                    SelectedIndex="{Binding GameOfOrigin, Converter={StaticResource game2i}}">
+            <ComboBoxItem>-</ComboBoxItem>
+            <ComboBoxItem>Sapphire</ComboBoxItem>
+            <ComboBoxItem>Ruby</ComboBoxItem>
+            <ComboBoxItem>Emerald</ComboBoxItem>
+            <ComboBoxItem>FireRed</ComboBoxItem>
+            <ComboBoxItem>LeafGreen</ComboBoxItem>
+            <ComboBoxItem>Colosseum/XD</ComboBoxItem>
+          </ComboBox>
+
+          <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center">Ball</TextBlock>
+          <ComboBox Grid.Row="3" Grid.Column="3" Margin="10,5" HorizontalAlignment="Stretch"
+                    SelectedIndex="{Binding Ball, Converter={StaticResource ball2i}}">
+            <ComboBoxItem>-</ComboBoxItem>
+            <ComboBoxItem>Master Ball</ComboBoxItem>
+            <ComboBoxItem>Ultra Ball</ComboBoxItem>
+            <ComboBoxItem>Great Ball</ComboBoxItem>
+            <ComboBoxItem>Poké Ball</ComboBoxItem>
+            <ComboBoxItem>Safari Ball</ComboBoxItem>
+            <ComboBoxItem>Net Ball</ComboBoxItem>
+            <ComboBoxItem>Dive Ball</ComboBoxItem>
+            <ComboBoxItem>Nest Ball</ComboBoxItem>
+            <ComboBoxItem>Repeat Ball</ComboBoxItem>
+            <ComboBoxItem>Timer Ball</ComboBoxItem>
+            <ComboBoxItem>Luxury Ball</ComboBoxItem>
+            <ComboBoxItem>Premier Ball</ComboBoxItem>
+          </ComboBox>
+        </Grid>
+      </TabItem>
+
+      <TabItem>
+        <TabItem.Header>
           <TextBlock VerticalAlignment="Center">Battle</TextBlock>
         </TabItem.Header>
         <Grid ColumnDefinitions="75,150,75,150" RowDefinitions="Auto,Auto">

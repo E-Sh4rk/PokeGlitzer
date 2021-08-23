@@ -220,7 +220,7 @@ namespace PokeGlitzer
         };
         static bool UseJP(Language l)
         {
-            if (l == Language.Invalid) return Settings.Text_japaneseCharset;
+            if (l == Language.Invalid) return Settings.Text_useJapanese;
             return l == Language.Japanese;
         }
         void UpdateFromData(byte[] dataArr, bool isDecoded)

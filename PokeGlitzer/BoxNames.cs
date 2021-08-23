@@ -64,7 +64,7 @@ namespace PokeGlitzer
             for (int i = 0; i < boxNames.Length; i++)
             {
                 int offset = BOX_NAME_BYTE_SIZE * i;
-                boxNames[i] = StringConverter.GetString3(data, offset, BOX_NAME_BYTE_SIZE, Settings.Text_japaneseCharset);
+                boxNames[i] = StringConverter.GetString3(data, offset, BOX_NAME_BYTE_SIZE, Settings.Text_useJapanese);
             }
             ForwardLocalData();
         }
@@ -74,7 +74,7 @@ namespace PokeGlitzer
             if (name.Length > BOX_NAME_BYTE_SIZE) return false;
             foreach (char c in name)
             {
-                if (!StringConverter.IsCharValid(c, Settings.Text_japaneseCharset))
+                if (!StringConverter.IsCharValid(c, Settings.Text_useJapanese))
                     return false;
             }
             return true;
@@ -84,7 +84,7 @@ namespace PokeGlitzer
             name = name.Replace("␣", " ");
             name = name.Replace("_", " ");
             name = name.Replace("'", "’");
-            if (Settings.Text_japaneseCharset)
+            if (Settings.Text_useJapanese)
             {
                 name = name.Replace("-", "ー");
                 name = name.Replace("–", "ー");
@@ -100,12 +100,12 @@ namespace PokeGlitzer
                 name = name.Replace("⋯", "…");
                 name = name.Replace("‥", "…");
             }
-            if (Settings.Text_quotationLang == Settings.Lang.FRA)
+            if (Settings.Text_lang == Settings.Lang.FRA)
             {
                 name = name.Replace("«", "“");
                 name = name.Replace("»", "”");
             }
-            if (Settings.Text_quotationLang == Settings.Lang.GER)
+            if (Settings.Text_lang == Settings.Lang.GER)
             {
                 name = name.Replace("“", "”");
                 name = name.Replace("„", "“");
@@ -115,12 +115,12 @@ namespace PokeGlitzer
         public static string MakeNameLookBetter(string name)
         {
             name = name.Replace(" ", "␣");
-            if (Settings.Text_quotationLang == Settings.Lang.FRA)
+            if (Settings.Text_lang == Settings.Lang.FRA)
             {
                 name = name.Replace("“", "«");
                 name = name.Replace("”", "»");
             }
-            if (Settings.Text_quotationLang == Settings.Lang.GER)
+            if (Settings.Text_lang == Settings.Lang.GER)
             {
                 name = name.Replace("“", "„");
                 name = name.Replace("”", "“");
@@ -134,7 +134,7 @@ namespace PokeGlitzer
             for (int i = 0; i < boxNames.Length; i++)
             {
                 int offset = BOX_NAME_BYTE_SIZE * i;
-                byte[] d = StringConverter.SetString3(names[i], BOX_NAME_BYTE_SIZE, Settings.Text_japaneseCharset, BOX_NAME_BYTE_SIZE, 0xFF);
+                byte[] d = StringConverter.SetString3(names[i], BOX_NAME_BYTE_SIZE, Settings.Text_useJapanese, BOX_NAME_BYTE_SIZE, 0xFF);
                 Array.Copy(d, 0, res, offset, d.Length);
             }
             UpdateFromData(res);

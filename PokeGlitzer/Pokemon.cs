@@ -341,10 +341,10 @@ namespace PokeGlitzer
             Language lang = pkmn.permanent.lang >= LANGS.Length ? Language.Invalid : LANGS[pkmn.permanent.lang];
             string nickname = StringConverter.GetString3(pkmn.permanent.nickname, UseJP(lang));
             if (nickname != id.nickname)
-                pkmn.permanent.nickname = StringConverter.SetString3(id.nickname, 10, UseJP(lang), 10, 0xFF);
+                pkmn.permanent.nickname = StringConverter.SetString3(id.nickname, PokemonStruct.NICKNAME_LEN, UseJP(lang), PokemonStruct.NICKNAME_LEN, 0xFF);
             string otName = StringConverter.GetString3(pkmn.permanent.originalTrainerName, UseJP(lang));
             if (otName != id.otName)
-                pkmn.permanent.originalTrainerName = StringConverter.SetString3(id.otName, 7, UseJP(lang), 7, 0xFF);
+                pkmn.permanent.originalTrainerName = StringConverter.SetString3(id.otName, PokemonStruct.OTNAME_LEN, UseJP(lang), PokemonStruct.OTNAME_LEN, 0xFF);
             if (id.otGender == Gender.Boy) sub3.origins = (ushort)(sub3.origins & ~Substructure3.GENDER_MASK);
             else sub3.origins = (ushort)(sub3.origins | Substructure3.GENDER_MASK);
             sub3.metLocation = id.metLocation;

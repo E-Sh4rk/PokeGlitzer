@@ -36,20 +36,22 @@ namespace PokeGlitzer
         public const byte IS_BAD_EGG_MASK = 0b0000_0001;
         public const byte HAS_SPECIES_MASK = 0b0000_0010;
         public const byte IS_EGG_MASK = 0b0000_0100;
+        public const int NICKNAME_LEN = 10;
+        public const int OTNAME_LEN = 7;
 
         //[FieldOffset(0)]
         public uint PID;
         //[FieldOffset(4)]
         public uint OTID;
         //[FieldOffset(8)]
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NICKNAME_LEN)]
         public byte[] nickname;
         //[FieldOffset(18)]
         public byte lang;
         //[FieldOffset(19)]
         public byte isEgg;
         //[FieldOffset(20)]
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 7)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = OTNAME_LEN)]
         public byte[] originalTrainerName;
         //[FieldOffset(27)]
         public byte markings;

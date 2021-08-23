@@ -69,9 +69,9 @@ namespace PokeGlitzer
             ForwardLocalData();
         }
 
-        public static bool IsValidName(string name)
+        public static bool IsValidName(string name, int maxLen = BOX_NAME_BYTE_SIZE)
         {
-            if (name.Length > BOX_NAME_BYTE_SIZE) return false;
+            if (name.Length > maxLen) return false;
             foreach (char c in name)
             {
                 if (!StringConverter.IsCharValid(c, Settings.Text_useJapanese))
@@ -79,12 +79,13 @@ namespace PokeGlitzer
             }
             return true;
         }
-        public static string NormalizeName(string name)
+        public static string NormalizeName(string name, Language language = Language.Invalid)
         {
             name = name.Replace("␣", " ");
             name = name.Replace("_", " ");
             name = name.Replace("'", "’");
-            if (Settings.Text_useJapanese)
+            if ((language == Language.Invalid && Settings.Text_useJapanese) ||
+                language == Language.Japanese)
             {
                 name = name.Replace("-", "ー");
                 name = name.Replace("–", "ー");
@@ -100,27 +101,31 @@ namespace PokeGlitzer
                 name = name.Replace("⋯", "…");
                 name = name.Replace("‥", "…");
             }
-            if (Settings.Text_lang == Settings.Lang.FRA)
+            if ((language == Language.Invalid && Settings.Text_lang == Settings.Lang.FRA) ||
+                language == Language.French)
             {
                 name = name.Replace("«", "“");
                 name = name.Replace("»", "”");
             }
-            if (Settings.Text_lang == Settings.Lang.GER)
+            if ((language == Language.Invalid && Settings.Text_lang == Settings.Lang.GER) ||
+                language == Language.German)
             {
                 name = name.Replace("“", "”");
                 name = name.Replace("„", "“");
             }
-            return name; // TODO
+            return name;
         }
-        public static string MakeNameLookBetter(string name)
+        public static string MakeNameLookBetter(string name, Language language = Language.Invalid)
         {
             name = name.Replace(" ", "␣");
-            if (Settings.Text_lang == Settings.Lang.FRA)
+            if ((language == Language.Invalid && Settings.Text_lang == Settings.Lang.FRA) ||
+                language == Language.French)
             {
                 name = name.Replace("“", "«");
                 name = name.Replace("”", "»");
             }
-            if (Settings.Text_lang == Settings.Lang.GER)
+            if ((language == Language.Invalid && Settings.Text_lang == Settings.Lang.GER) ||
+                language == Language.German)
             {
                 name = name.Replace("“", "„");
                 name = name.Replace("”", "“");

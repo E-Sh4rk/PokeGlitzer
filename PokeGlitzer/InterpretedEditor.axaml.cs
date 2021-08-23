@@ -146,12 +146,16 @@ namespace PokeGlitzer
         string nickname;
         public string Nickname
         {
-            get => nickname;
+            get => BoxNames.MakeNameLookBetter(nickname, Language);
             set
             {
-                // TODO: normalize, test validity and make display look better
-                nickname = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
+                string v = BoxNames.NormalizeName(value, Language);
+                if (BoxNames.IsValidName(v, PokemonStruct.NICKNAME_LEN))
+                {
+                    nickname = v;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
+                }
+                else throw new Avalonia.Data.DataValidationException(null);
             }
         }
         void SetNormalizedNickname(string v)
@@ -168,12 +172,16 @@ namespace PokeGlitzer
         string otName;
         public string OTName
         {
-            get => otName;
+            get => BoxNames.MakeNameLookBetter(otName, Language);
             set
             {
-                // TODO: normalize, test validity and make display look better
-                otName = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));
+                string v = BoxNames.NormalizeName(value, Language);
+                if (BoxNames.IsValidName(v, PokemonStruct.OTNAME_LEN))
+                {
+                    otName = v;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));
+                }
+                else throw new Avalonia.Data.DataValidationException(null);
             }
         }
         void SetNormalizedOTName(string v)

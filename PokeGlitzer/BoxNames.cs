@@ -69,18 +69,20 @@ namespace PokeGlitzer
             ForwardLocalData();
         }
 
-        public static bool IsValidName(string name, int maxLen = BOX_NAME_BYTE_SIZE)
+        public static bool IsValidName(string name, int maxLen = BOX_NAME_BYTE_SIZE, Language language = Language.Invalid)
         {
             if (name.Length > maxLen) return false;
             foreach (char c in name)
             {
-                if (!StringConverter.IsCharValid(c, Settings.Text_useJapanese))
+                if (!StringConverter.IsCharValid(c,
+                    (language == Language.Invalid && Settings.Text_useJapanese) || language == Language.Japanese))
                     return false;
             }
             return true;
         }
         public static string NormalizeName(string name, Language language = Language.Invalid)
         {
+            // TODO: Normalize wide chars (japanese charset)
             name = name.Replace("␣", " ");
             name = name.Replace("_", " ");
             name = name.Replace("'", "’");
@@ -92,6 +94,7 @@ namespace PokeGlitzer
                 name = name.Replace("—", "ー");
                 name = name.Replace("⋯", "‥");
                 name = name.Replace("…", "‥");
+                name = name.Replace(" ", "　");
             }
             else
             {
@@ -100,6 +103,7 @@ namespace PokeGlitzer
                 name = name.Replace("ー", "-");
                 name = name.Replace("⋯", "…");
                 name = name.Replace("‥", "…");
+                name = name.Replace("　", " ");
             }
             if ((language == Language.Invalid && Settings.Text_lang == Settings.Lang.FRA) ||
                 language == Language.French)
@@ -118,6 +122,7 @@ namespace PokeGlitzer
         public static string MakeNameLookBetter(string name, Language language = Language.Invalid)
         {
             name = name.Replace(" ", "␣");
+            name = name.Replace("　", "␣");
             if ((language == Language.Invalid && Settings.Text_lang == Settings.Lang.FRA) ||
                 language == Language.French)
             {

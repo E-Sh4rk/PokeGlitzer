@@ -53,7 +53,7 @@
           </ComboBox>
           
           <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Nickname</TextBlock>
-          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding Nickname}" />
+          <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Regular.ttf?assembly=PokeGlitzer#Cascadia Mono" Text="{Binding Nickname}" />
 
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">OT Gender</TextBlock>
           <ComboBox Grid.Row="1" Grid.Column="1" Margin="10,5" HorizontalAlignment="Stretch"
@@ -63,7 +63,7 @@
           </ComboBox>
           
           <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">OT Name</TextBlock>
-          <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding OTName}" />
+          <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Regular.ttf?assembly=PokeGlitzer#Cascadia Mono" Text="{Binding OTName}" />
 
           <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Met locat.</TextBlock>
           <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5" Text="{Binding MetLocation, Converter={StaticResource n2s}, ConverterParameter=X}" />

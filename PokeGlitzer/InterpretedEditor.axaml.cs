@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 namespace PokeGlitzer
 {
@@ -138,8 +139,20 @@ namespace PokeGlitzer
             get => language;
             set
             {
-                // TODO: update nickname and otname
                 language = value;
+                if (language == Language.Invalid)
+                {
+                    SetNormalizedNickname("");
+                    SetNormalizedOTName("");
+                }
+                else
+                {
+                    byte[] data = view.DecodedData.ToArray();
+                    SetNormalizedNickname(StringConverter.GetString3(data,
+                        PokemonStruct.NICKNAME_OFFSET, PokemonStruct.NICKNAME_LEN, language == Language.Japanese));
+                    SetNormalizedOTName(StringConverter.GetString3(data,
+                        PokemonStruct.OTNAME_OFFSET, PokemonStruct.OTNAME_LEN, language == Language.Japanese));
+                }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Language)));
             }
         }
@@ -150,7 +163,7 @@ namespace PokeGlitzer
             set
             {
                 string v = BoxNames.NormalizeName(value, Language);
-                if (BoxNames.IsValidName(v, PokemonStruct.NICKNAME_LEN))
+                if (BoxNames.IsValidName(v, PokemonStruct.NICKNAME_LEN, Language))
                 {
                     nickname = v;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
@@ -176,7 +189,7 @@ namespace PokeGlitzer
             set
             {
                 string v = BoxNames.NormalizeName(value, Language);
-                if (BoxNames.IsValidName(v, PokemonStruct.OTNAME_LEN))
+                if (BoxNames.IsValidName(v, PokemonStruct.OTNAME_LEN, Language))
                 {
                     otName = v;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));

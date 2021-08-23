@@ -37,7 +37,9 @@ namespace PokeGlitzer
         public const byte HAS_SPECIES_MASK = 0b0000_0010;
         public const byte IS_EGG_MASK = 0b0000_0100;
         public const int NICKNAME_LEN = 10;
+        public const int NICKNAME_OFFSET = 8;
         public const int OTNAME_LEN = 7;
+        public const int OTNAME_OFFSET = 20;
 
         //[FieldOffset(0)]
         public uint PID;

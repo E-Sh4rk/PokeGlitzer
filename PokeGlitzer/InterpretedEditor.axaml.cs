@@ -68,6 +68,10 @@ namespace PokeGlitzer
             Species = d.species;
             Egg = d.egg;
 
+            Language = d.identity.lang; SetNormalizedNickname(d.identity.nickname); OTGender = d.identity.otGender;
+            SetNormalizedOTName(d.identity.otName); MetLocation = d.identity.metLocation; LevelMet = d.identity.levelMet;
+            GameOfOrigin = d.identity.gameOfOrigin; Ball = d.identity.ball;
+
             Move1 = d.moves.m1; Move2 = d.moves.m2; Move3 = d.moves.m3; Move4 = d.moves.m4;
             PP1 = d.moves.pp1; PP2 = d.moves.pp2; PP3 = d.moves.pp3; PP4 = d.moves.pp4;
             PPb1 = d.moves.ppb1; PPb2 = d.moves.ppb2; PPb3 = d.moves.ppb3; PPb4 = d.moves.ppb4;
@@ -87,13 +91,14 @@ namespace PokeGlitzer
         }
         public void Save()
         {
+            Identity id = new Identity(Language, nickname, OTGender, otName, MetLocation, LevelMet, GameOfOrigin, Ball);
             Moves m = new Moves(Move1, PP1, PPb1, Move2, PP2, PPb2, Move3, PP3, PPb3, Move4, PP4, PPb4);
             EVsIVs evs = new EVsIVs(HpEV, AtkEV, DefEV, SpeedEV, SpeAtkEV, SpeDefEV);
             EVsIVs ivs = new EVsIVs(HpIV, AtkIV, DefIV, SpeedIV, SpeAtkIV, SpeDefIV);
             Condition c = new Condition(Coolness, Beauty, Cuteness, Smartness, Toughness, Feel);
             Battle b = new Battle(Item, Ability, Experience, Friendship);
             Misc misc = new Misc(PokerusDays, PokerusStrain, Ribbons, Obedient);
-            InterpretedData d = new InterpretedData(PID, OTID, Species, Egg, b, m, evs, ivs, c, misc);
+            InterpretedData d = new InterpretedData(PID, OTID, Species, Egg, id, b, m, evs, ivs, c, misc);
             view.Interpreted = d;
         }
         public void SaveAndClose()
@@ -125,6 +130,80 @@ namespace PokeGlitzer
         {
             get => egg;
             set { egg = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Egg))); }
+        }
+        // ========== Identity ==========
+        Language language;
+        public Language Language
+        {
+            get => language;
+            set
+            {
+                // TODO: update nickname and otname
+                language = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Language)));
+            }
+        }
+        string nickname;
+        public string Nickname
+        {
+            get => nickname;
+            set
+            {
+                // TODO: normalize, test validity and make display look better
+                nickname = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
+            }
+        }
+        void SetNormalizedNickname(string v)
+        {
+            nickname = v;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
+        }
+        Gender otGender;
+        public Gender OTGender
+        {
+            get => otGender;
+            set { otGender = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTGender))); }
+        }
+        string otName;
+        public string OTName
+        {
+            get => otName;
+            set
+            {
+                // TODO: normalize, test validity and make display look better
+                otName = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));
+            }
+        }
+        void SetNormalizedOTName(string v)
+        {
+            otName = v;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));
+        }
+        byte metLocation;
+        public byte MetLocation
+        {
+            get => metLocation;
+            set { metLocation = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MetLocation))); }
+        }
+        byte levelMet;
+        public byte LevelMet
+        {
+            get => levelMet;
+            set { levelMet = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LevelMet))); }
+        }
+        Game gameOfOrigin;
+        public Game GameOfOrigin
+        {
+            get => gameOfOrigin;
+            set { gameOfOrigin = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GameOfOrigin))); }
+        }
+        Ball ball;
+        public Ball Ball
+        {
+            get => ball;
+            set { ball = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Ball))); }
         }
         // ========== Battle ==========
         ushort item;

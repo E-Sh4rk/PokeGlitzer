@@ -73,7 +73,7 @@ namespace PokeGlitzer
             team = Utils.CollectionOfSize<PokemonExt?>(TEAM_SIZE);
             LoadTeam();
             sync = new MMFSync(data, teamData, boxNamesData);
-            BoxNames.Names.CollectionChanged += (_, _) => CurrentBoxName = BoxNames.Names[CurrentBoxNumber-1]; 
+            BoxNames.Names.CollectionChanged += (_, _) => SetNormalizedCurrentBoxName(BoxNames.Names[CurrentBoxNumber-1]); 
 
             if (args != null && args.Length == 1)
                 LoadSave(args[0]);
@@ -96,7 +96,7 @@ namespace PokeGlitzer
                 
             Utils.UpdateCollectionRange(CurrentBox, pkmns);
             CurrentBoxNumber = nb+1;
-            CurrentBoxName = BoxNames.Names[nb];
+            SetNormalizedCurrentBoxName(BoxNames.Names[nb]);
         }
         void LoadTeam()
         {
@@ -129,10 +129,9 @@ namespace PokeGlitzer
 
         BoxNames boxNames;
         public BoxNames BoxNames { get => boxNames; }
-        string curBoxName;
         public string CurrentBoxName
         {
-            get => BoxNames.MakeNameLookBetter(curBoxName);
+            get => BoxNames.MakeNameLookBetter(BoxNames.Names[CurrentBoxNumber - 1]);
             set
             {
                 try
@@ -140,7 +139,6 @@ namespace PokeGlitzer
                     string str = BoxNames.NormalizeName(value);
                     if (!BoxNames.IsValidName(str)) throw new Exception();
                     BoxNames.Names[CurrentBoxNumber - 1] = str;
-                    curBoxName = BoxNames.Names[CurrentBoxNumber - 1];
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxName)));
                 }
                 catch
@@ -148,6 +146,11 @@ namespace PokeGlitzer
                     throw new Avalonia.Data.DataValidationException(null);
                 }
             }
+        }
+        void SetNormalizedCurrentBoxName(string v)
+        {
+            BoxNames.Names[CurrentBoxNumber - 1] = v;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxName)));
         }
 
         RangeObservableCollection<PokemonExt?> currentBox;

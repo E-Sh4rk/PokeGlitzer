@@ -173,7 +173,7 @@ namespace PokeGlitzer
         {
             for (int i = 0; i < order.Length; i++)
             {
-                if (order[i] == sub) return i*PokemonStruct.SUBSTRUCTURE_SIZE;
+                if (order[i] == sub) return i * PokemonStruct.SUBSTRUCTURE_SIZE;
             }
             throw new ArgumentOutOfRangeException();
         }
@@ -184,13 +184,13 @@ namespace PokeGlitzer
             Array.Copy(pkmn.data, offset, res, 0, PokemonStruct.SUBSTRUCTURE_SIZE);
             return res;
         }
-        /*PokemonStruct GetPkmnStruct(byte[] dataArr)
+        PokemonStruct GetPkmnStruct(byte[] dataArr)
         {
             if (dataArr.Length == TEAM_SIZE)
                 return Utils.ByteToType<PokemonTeamStruct>(dataArr).permanent;
             else
                 return Utils.ByteToType<PokemonStruct>(dataArr);
-        }*/
+        }
         PokemonTeamStruct GetPkmnTeamStruct(byte[] dataArr)
         {
             if (dataArr.Length == TEAM_SIZE)
@@ -201,6 +201,27 @@ namespace PokeGlitzer
                 pt.permanent = Utils.ByteToType<PokemonStruct>(dataArr);
                 return pt;
             }
+        }
+        static Language[] LANGS = new Language[]
+        {
+            Language.Invalid, Language.Japanese, Language.English, Language.French, Language.Italian, Language.German,
+            Language.Invalid, Language.Spanish
+        };
+        static Game[] GAMES = new Game[]
+        {
+            Game.Invalid, Game.Sapphire, Game.Ruby, Game.Emerald, Game.FireRed, Game.LeafGreen,
+            Game.Invalid, Game.Invalid, Game.Invalid, Game.Invalid, Game.Invalid, Game.Invalid,
+            Game.Invalid, Game.Invalid, Game.Invalid, Game.ColosseumXD
+        };
+        static Ball[] BALLS = new Ball[]
+        {
+            Ball.Invalid, Ball.Master, Ball.Ultra, Ball.Great, Ball.Poke, Ball.Safari, Ball.Net, Ball.Dive, Ball.Nest,
+            Ball.Repeat, Ball.Timer, Ball.Luxury, Ball.Premier, Ball.Invalid, Ball.Invalid, Ball.Invalid
+        };
+        static bool UseJP(Language l)
+        {
+            if (l == Language.Invalid) return Settings.Text_japaneseCharset;
+            return l == Language.Japanese;
         }
         void UpdateFromData(byte[] dataArr, bool isDecoded)
         {
@@ -231,7 +252,7 @@ namespace PokeGlitzer
             UpdateViewCVHDAndLocalData(pkmn.permanent, dataArr, isDecoded);
             // Interpreted data
             // Retrieving substructures
-            PokemonStruct decoded = Utils.ByteToType<PokemonStruct>(decodedData);
+            PokemonStruct decoded = GetPkmnStruct(decodedData);
             Substructure0 sub0 = Utils.ByteToType<Substructure0>(GetSubstructure(decoded, 0));
             Substructure1 sub1 = Utils.ByteToType<Substructure1>(GetSubstructure(decoded, 1));
             Substructure2 sub2 = Utils.ByteToType<Substructure2>(GetSubstructure(decoded, 2));
@@ -252,46 +273,13 @@ namespace PokeGlitzer
                 }
                 else if (!egg && !badEgg) eggType = EggType.None;
             }
-            Language lang = decoded.lang switch
-            {
-                1 => Language.Japanese,
-                2 => Language.English,
-                3 => Language.French,
-                4 => Language.Italian,
-                5 => Language.German,
-                7 => Language.Spanish,
-                _ => Language.Invalid
-            };
-            string nickname = StringConverter.GetString3(decoded.nickname, lang == Language.Japanese);
-            string otName = StringConverter.GetString3(decoded.originalTrainerName, lang == Language.Japanese);
+            Language lang = decoded.lang >= LANGS.Length ? Language.Invalid : LANGS[decoded.lang];
+            string nickname = StringConverter.GetString3(decoded.nickname, UseJP(lang));
+            string otName = StringConverter.GetString3(decoded.originalTrainerName, UseJP(lang));
             Gender otGender = (sub3.origins & Substructure3.GENDER_MASK) == 0 ? Gender.Boy : Gender.Girl;
             byte levelMet = (byte)(sub3.origins & Substructure3.LEVEL_MET_MASK);
-            Game game = sub3.GameOfOrigin switch
-            {
-                1 => Game.Sapphire,
-                2 => Game.Ruby,
-                3 => Game.Emerald,
-                4 => Game.FireRed,
-                5 => Game.LeafGreen,
-                15 => Game.ColosseumXD,
-                _ => Game.Invalid
-            };
-            Ball ball = sub3.Ball switch
-            {
-                1 => Ball.Master,
-                2 => Ball.Ultra,
-                3 => Ball.Great,
-                4 => Ball.Poke,
-                5 => Ball.Safari,
-                6 => Ball.Net,
-                7 => Ball.Dive,
-                8 => Ball.Nest,
-                9 => Ball.Repeat,
-                10 => Ball.Timer,
-                11 => Ball.Luxury,
-                12 => Ball.Premier,
-                _ => Ball.Invalid
-            };
+            Game game = GAMES[sub3.GameOfOrigin];
+            Ball ball = BALLS[sub3.Ball];
             Identity id = new Identity(lang, nickname, otGender, otName, sub3.metLocation, levelMet, game, ball);
             Battle b = new Battle(sub0.item, (sub3.ivEggAbility & Substructure3.ABILITY_MASK) == 0 ? (byte)0 : (byte)1, sub0.experience, sub0.friendship);
             Moves m = new Moves(sub1.move1, sub1.pp1, sub0.Ppb1, sub1.move2, sub1.pp2, sub0.Ppb2, sub1.move3, sub1.pp3, sub0.Ppb3, sub1.move4, sub1.pp4, sub0.Ppb4);
@@ -346,7 +334,26 @@ namespace PokeGlitzer
                 default:
                     break;
             }
-            // TODO
+            
+            Identity id = interpreted.identity;
+            if (id.lang != Language.Invalid)
+                pkmn.permanent.lang = (byte)Array.IndexOf(LANGS, id.lang);
+            Language lang = pkmn.permanent.lang >= LANGS.Length ? Language.Invalid : LANGS[pkmn.permanent.lang];
+            string nickname = StringConverter.GetString3(pkmn.permanent.nickname, UseJP(lang));
+            if (nickname != id.nickname)
+                pkmn.permanent.nickname = StringConverter.SetString3(id.nickname, 10, UseJP(lang), 10, 0xFF);
+            string otName = StringConverter.GetString3(pkmn.permanent.originalTrainerName, UseJP(lang));
+            if (otName != id.otName)
+                pkmn.permanent.originalTrainerName = StringConverter.SetString3(id.otName, 7, UseJP(lang), 7, 0xFF);
+            if (id.otGender == Gender.Boy) sub3.origins = (ushort)(sub3.origins & ~Substructure3.GENDER_MASK);
+            else sub3.origins = (ushort)(sub3.origins | Substructure3.GENDER_MASK);
+            sub3.metLocation = id.metLocation;
+            sub3.origins = (ushort)((sub3.origins & ~Substructure3.LEVEL_MET_MASK) | (id.levelMet & Substructure3.LEVEL_MET_MASK));
+            if (id.gameOfOrigin != Game.Invalid)
+                sub3.GameOfOrigin = (byte)Array.IndexOf(GAMES, id.gameOfOrigin);
+            if (id.ball != Ball.Invalid)
+                sub3.Ball = (byte)Array.IndexOf(BALLS, id.ball);
+
             EVsIVs ivs = interpreted.IVs;
             sub3.SetIVs(ivs.hp, ivs.atk, ivs.def, ivs.speed, ivs.spe_atk, ivs.spe_def);
             EVsIVs evs = interpreted.EVs;
@@ -424,7 +431,7 @@ namespace PokeGlitzer
         {
             if (!view.ChecksumValid)
             {
-                ushort checksum = ComputeChecksum(Utils.ByteToType<PokemonStruct>(decodedData));
+                ushort checksum = ComputeChecksum(GetPkmnStruct(decodedData));
                 byte[] res = BitConverter.GetBytes(checksum);
                 int offset = Utils.OffsetOf<PokemonStruct>("checksum");
                 Array.Copy(res, 0, data, offset, res.Length);

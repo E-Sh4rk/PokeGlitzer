@@ -80,30 +80,43 @@ namespace PokeGlitzer
             }
             return true;
         }
+        const char ASCII_START = (char)0x0021;
+        const char ASCII_END = (char)0x007E;
+        const char FULLWIDTH_START = (char)0xFF01;
+        const char FULLWIDTH_END = (char)0xFF5E;
         public static string NormalizeName(string name, Language language = Language.Invalid)
         {
-            // TODO: Normalize wide chars (japanese charset)
             name = name.Replace("␣", " ");
             name = name.Replace("_", " ");
+            name = name.Replace("＿", " ");
             name = name.Replace("'", "’");
+            name = name.Replace("–", "-");
+            name = name.Replace("—", "-");
+            name = name.Replace("ー", "-");
             if ((language == Language.Invalid && Settings.Text_useJapanese) ||
                 language == Language.Japanese)
             {
-                name = name.Replace("-", "ー");
-                name = name.Replace("–", "ー");
-                name = name.Replace("—", "ー");
                 name = name.Replace("⋯", "‥");
                 name = name.Replace("…", "‥");
                 name = name.Replace(" ", "　");
+                char fw = FULLWIDTH_START;
+                for (char c = ASCII_START; c <= ASCII_END; c++)
+                {
+                    name = name.Replace(c, fw);
+                    fw++;
+                }
             }
             else
             {
-                name = name.Replace("–", "-");
-                name = name.Replace("—", "-");
-                name = name.Replace("ー", "-");
                 name = name.Replace("⋯", "…");
                 name = name.Replace("‥", "…");
                 name = name.Replace("　", " ");
+                char a = ASCII_START;
+                for (char c = FULLWIDTH_START; c <= FULLWIDTH_END; c++)
+                {
+                    name = name.Replace(c, a);
+                    a++;
+                }
             }
             if ((language == Language.Invalid && Settings.Text_lang == Settings.Lang.FRA) ||
                 language == Language.French)

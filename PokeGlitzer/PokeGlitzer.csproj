@@ -8,6 +8,9 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\Fonts\CascadiaMono-Ext.ttf" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.6" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
     <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
@@ -48,7 +51,7 @@
     <AvaloniaResource Include="Resources\b_none.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Fonts\CascadiaMono-Regular.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\CascadiaMono-Ext.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Update="config.ini">

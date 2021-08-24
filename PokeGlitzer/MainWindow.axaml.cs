@@ -16,7 +16,6 @@ using MessageBox.Avalonia;
 
 namespace PokeGlitzer
 {
-    // TODO: Find a font for japanese characters
     // TODO: Improve species field (show known species names), ribbons, etc.
 
     public partial class MainWindow : Window

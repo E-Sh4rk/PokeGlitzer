@@ -40,7 +40,7 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
           <TextBlock VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat=BOX {0}}" />
           <Separator Width="25" />
-          <TextBox FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Regular.ttf?assembly=PokeGlitzer#Cascadia Mono" TextAlignment="Center" Width="100" Text="{Binding CurrentBoxName}" />
+          <TextBox FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" TextAlignment="Center" Width="100" Text="{Binding CurrentBoxName}" />
         </StackPanel>
       </DockPanel>
       <Separator Height="10" />

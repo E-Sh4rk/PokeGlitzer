@@ -5,7 +5,7 @@
         mc:Ignorable="d" d:DesignWidth="425" d:DesignHeight="450"
         Width="425" Height="450"
         x:Class="PokeGlitzer.MainWindow"
-        Title="PokeGlitzer">
+        Title="PokeGlitzer" Icon="/Resources/icon.ico">
 
   <DockPanel Width="408" LastChildFill="True">
     <Menu DockPanel.Dock="Top">
@@ -38,9 +38,9 @@
         <Button Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
         <Button Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-          <TextBlock VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat=BOX {0}}" />
-          <Separator Width="25" />
-          <TextBox FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" TextAlignment="Center" Width="100" Text="{Binding CurrentBoxName}" />
+          <TextBlock VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat={}{0} :}" />
+          <Separator Width="5" />
+          <TextBox FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" TextAlignment="Center" Width="150" Text="{Binding CurrentBoxName}" />
         </StackPanel>
       </DockPanel>
       <Separator Height="10" />

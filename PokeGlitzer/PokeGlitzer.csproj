@@ -3,12 +3,14 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Resources\Fonts\CascadiaMono-Ext.ttf" />
+    <None Remove="Resources\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.6" />
@@ -49,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Resources\b_none.png" />
+    <AvaloniaResource Include="Resources\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Fonts\CascadiaMono-Ext.ttf" />

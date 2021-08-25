@@ -44,9 +44,8 @@ you have to build it from the [master](https://github.com/TASVideos/BizHawk/tree
 
 You can then synchronize the level editor with Bizhawk by doing the following:
 1. Open a Pokemon ROM (generation 3) with a recent version of Bizhawk
-2. Open the `LUA console` and load the script `Misc/bizhawk_synchronize_emerald_us.lua` (in this repo)  
-Note that this script only works with Emerald US for now, but you can easily adapt it to work with other
-versions.
+2. Open the `LUA console` and load the script `Misc/bizhawk_synchronize_*.lua` (in this repo) corresponding to your version.
+Note that this script is only available for Emerald US and JP for now, but you can easily adapt it to work with other versions.
 3. Open the save editor and click on `Sync -> Start synchronization`
 
 ## Building the app

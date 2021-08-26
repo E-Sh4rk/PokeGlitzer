@@ -98,6 +98,7 @@ namespace PokeGlitzer
                         res.Append(b.ToString("X").PadLeft(2, '0'));
                     }
                 }
+                res.AppendLine(Environment.NewLine);
                 return res.ToString();
             }
             set

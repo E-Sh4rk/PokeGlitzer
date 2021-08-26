@@ -421,6 +421,13 @@ namespace PokeGlitzer
         {
             Utils.UpdateCollectionRange(dl.src == Source.Team ? teamData : data, new byte[dl.size], dl.offset);
         }
+        public void ClearCurrentBox()
+        {
+            foreach (PokemonExt? p in CurrentBox)
+            {
+                if (p != null) Delete(p!.pkmn.DataLocation);
+            }
+        }
         public void Copy(DataLocation dl)
         {
             CopiedData = Utils.ExtractCollectionRange(dl.src == Source.Team ? teamData : data, dl.offset, dl.size);

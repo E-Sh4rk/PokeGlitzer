@@ -327,6 +327,7 @@ namespace PokeGlitzer
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filters.Add(new FileDialogFilter() { Name = "Save file", Extensions = { "sav" } });
+            dialog.Filters.Add(new FileDialogFilter() { Name = "All files", Extensions = { "*" } });
             dialog.AllowMultiple = false;
 
             string[] result = await dialog.ShowAsync(mw);
@@ -361,6 +362,7 @@ namespace PokeGlitzer
             {
                 SaveFileDialog dialog = new SaveFileDialog();
                 dialog.Filters.Add(new FileDialogFilter() { Name = "Save file", Extensions = { "sav" } });
+                dialog.Filters.Add(new FileDialogFilter() { Name = "All files", Extensions = { "*" } });
 
                 string result = await dialog.ShowAsync(mw);
                 if (result != null)

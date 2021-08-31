@@ -154,11 +154,15 @@ namespace PokeGlitzer
         void UpdateFromNames(string[] names)
         {
             byte[] res = new byte[data.Length];
+            Array.Copy(data, res, data.Length);
             for (int i = 0; i < boxNames.Length; i++)
             {
                 int offset = BOX_NAME_BYTE_SIZE * i;
-                byte[] d = StringConverter.SetString3(names[i], BOX_NAME_BYTE_SIZE, Settings.Text_useJapanese, BOX_NAME_BYTE_SIZE, 0xFF);
-                Array.Copy(d, 0, res, offset, d.Length);
+                if (StringConverter.GetString3(res, offset, BOX_NAME_BYTE_SIZE, Settings.Text_useJapanese) != names[i])
+                {
+                    byte[] d = StringConverter.SetString3(names[i], BOX_NAME_BYTE_SIZE, Settings.Text_useJapanese, BOX_NAME_BYTE_SIZE, 0xFF);
+                    Array.Copy(d, 0, res, offset, d.Length);
+                }
             }
             UpdateFromData(res);
         }

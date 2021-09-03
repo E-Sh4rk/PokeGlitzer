@@ -166,12 +166,12 @@ namespace PokeGlitzer
         public byte GameOfOrigin
         {
             get => (byte)((origins >> goo) & goo_mask);
-            set => origins = (byte)((origins & ~(goo_mask << goo)) | (value & goo_mask) << goo);
+            set => origins = (ushort)((origins & ~(goo_mask << goo)) | ((value & goo_mask) << goo));
         }
         public byte Ball
         {
             get => (byte)((origins >> ball) & ball_mask);
-            set => origins = (byte)((origins & ~(ball_mask << ball)) | (value & ball_mask) << ball);
+            set => origins = (ushort)((origins & ~(ball_mask << ball)) | ((value & ball_mask) << ball));
         }
         public void SetPokerus(byte days, byte strain)
         {

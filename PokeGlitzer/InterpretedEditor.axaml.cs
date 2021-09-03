@@ -69,7 +69,8 @@ namespace PokeGlitzer
             Species = d.species;
             Egg = d.egg;
 
-            Language = d.identity.lang; SetNormalizedNickname(d.identity.nickname); OTGender = d.identity.otGender;
+            _savedLanguage = d.identity.lang;
+            Language = _savedLanguage; SetNormalizedNickname(d.identity.nickname); OTGender = d.identity.otGender;
             SetNormalizedOTName(d.identity.otName); MetLocation = d.identity.metLocation; LevelMet = d.identity.levelMet;
             GameOfOrigin = d.identity.gameOfOrigin; Ball = d.identity.ball;
 
@@ -92,6 +93,7 @@ namespace PokeGlitzer
         }
         public void Save()
         {
+            _savedLanguage = Language;
             Identity id = new Identity(Language, nickname, OTGender, otName, MetLocation, LevelMet, GameOfOrigin, Ball);
             Moves m = new Moves(Move1, PP1, PPb1, Move2, PP2, PPb2, Move3, PP3, PPb3, Move4, PP4, PPb4);
             EVsIVs evs = new EVsIVs(HpEV, AtkEV, DefEV, SpeedEV, SpeAtkEV, SpeDefEV);
@@ -133,6 +135,7 @@ namespace PokeGlitzer
             set { egg = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Egg))); }
         }
         // ========== Identity ==========
+        Language _savedLanguage;
         Language language;
         public Language Language
         {
@@ -140,7 +143,7 @@ namespace PokeGlitzer
             set
             {
                 language = value;
-                if (language == Language.Invalid)
+                if (ResultingLanguage == Language.Invalid)
                 {
                     SetNormalizedNickname("");
                     SetNormalizedOTName("");
@@ -149,21 +152,22 @@ namespace PokeGlitzer
                 {
                     byte[] data = view.DecodedData.ToArray();
                     SetNormalizedNickname(StringConverter.GetString3(data,
-                        PokemonStruct.NICKNAME_OFFSET, PokemonStruct.NICKNAME_LEN, language == Language.Japanese));
+                        PokemonStruct.NICKNAME_OFFSET, PokemonStruct.NICKNAME_LEN, ResultingLanguage == Language.Japanese));
                     SetNormalizedOTName(StringConverter.GetString3(data,
-                        PokemonStruct.OTNAME_OFFSET, PokemonStruct.OTNAME_LEN, language == Language.Japanese));
+                        PokemonStruct.OTNAME_OFFSET, PokemonStruct.OTNAME_LEN, ResultingLanguage == Language.Japanese));
                 }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Language)));
             }
         }
+        Language ResultingLanguage { get => language == Language.Invalid ? _savedLanguage : language; }
         string nickname;
         public string Nickname
         {
-            get => BoxNames.MakeNameLookBetter(nickname, Language);
+            get => BoxNames.MakeNameLookBetter(nickname, ResultingLanguage);
             set
             {
-                string v = BoxNames.NormalizeName(value, Language);
-                if (BoxNames.IsValidName(v, PokemonStruct.NICKNAME_LEN, Language))
+                string v = BoxNames.NormalizeName(value, ResultingLanguage);
+                if (BoxNames.IsValidName(v, PokemonStruct.NICKNAME_LEN, ResultingLanguage))
                 {
                     nickname = v;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
@@ -185,11 +189,11 @@ namespace PokeGlitzer
         string otName;
         public string OTName
         {
-            get => BoxNames.MakeNameLookBetter(otName, Language);
+            get => BoxNames.MakeNameLookBetter(otName, ResultingLanguage);
             set
             {
-                string v = BoxNames.NormalizeName(value, Language);
-                if (BoxNames.IsValidName(v, PokemonStruct.OTNAME_LEN, Language))
+                string v = BoxNames.NormalizeName(value, ResultingLanguage);
+                if (BoxNames.IsValidName(v, PokemonStruct.OTNAME_LEN, ResultingLanguage))
                 {
                     otName = v;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));

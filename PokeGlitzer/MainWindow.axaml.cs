@@ -400,7 +400,6 @@ namespace PokeGlitzer
                 {
                     EggType.Egg => "egg",
                     EggType.Invalid => "inconsistent",
-                    EggType.None => "empty slot",
                     EggType.NotAnEgg => "not an egg",
                     EggType.BadEgg => "bad egg",
                     _ => throw new NotImplementedException(),

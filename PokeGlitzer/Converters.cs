@@ -200,8 +200,6 @@ namespace PokeGlitzer.Converters
                 InterpretedData data = (InterpretedData?)value!;
                 switch (data.egg)
                 {
-                    case EggType.None:
-                        return ResLoader.None;
                     case EggType.Invalid:
                         return ResLoader.Error;
                     case EggType.Egg:

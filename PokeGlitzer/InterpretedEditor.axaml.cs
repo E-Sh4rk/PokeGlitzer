@@ -67,6 +67,7 @@ namespace PokeGlitzer
             PID = d.PID;
             OTID = d.OTID;
             Species = d.species;
+            HasSpecies = d.hasSpecies;
             Egg = d.egg;
 
             _savedLanguage = d.identity.lang;
@@ -101,7 +102,7 @@ namespace PokeGlitzer
             Condition c = new Condition(Coolness, Beauty, Cuteness, Smartness, Toughness, Feel);
             Battle b = new Battle(Item, Ability, Experience, Friendship);
             Misc misc = new Misc(PokerusDays, PokerusStrain, Ribbons, Obedient);
-            InterpretedData d = new InterpretedData(PID, OTID, Species, Egg, id, b, m, evs, ivs, c, misc);
+            InterpretedData d = new InterpretedData(PID, OTID, Species, HasSpecies, Egg, id, b, m, evs, ivs, c, misc);
             view.Interpreted = d;
         }
         public void SaveAndClose()
@@ -127,6 +128,12 @@ namespace PokeGlitzer
         {
             get => species;
             set { species = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Species))); }
+        }
+        bool hasSpecies;
+        public bool HasSpecies
+        {
+            get => hasSpecies;
+            set { hasSpecies = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasSpecies))); }
         }
         EggType egg;
         public EggType Egg

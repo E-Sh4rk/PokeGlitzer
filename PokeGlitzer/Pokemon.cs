@@ -258,20 +258,16 @@ namespace PokeGlitzer
             Substructure2 sub2 = Utils.ByteToType<Substructure2>(GetSubstructure(decoded, 2));
             Substructure3 sub3 = Utils.ByteToType<Substructure3>(GetSubstructure(decoded, 3));
             // Extracting interpreted data
-            EggType eggType = EggType.Invalid;
             bool hasSpecies = (decoded.isEgg & PokemonStruct.HAS_SPECIES_MASK) != 0;
+            EggType eggType = EggType.Invalid;
             bool eggData = (sub3.ivEggAbility & Substructure3.EGG_MASK) != 0;
             bool egg = (decoded.isEgg & PokemonStruct.IS_EGG_MASK) != 0;
             bool badEgg = (decoded.isEgg & PokemonStruct.IS_BAD_EGG_MASK) != 0;
             if (eggData == egg)
             {
-                if (hasSpecies)
-                {
-                    if (!egg && !badEgg) eggType = EggType.NotAnEgg;
-                    else if (egg & badEgg) eggType = EggType.BadEgg;
-                    else if (egg) eggType = EggType.Egg;
-                }
-                else if (!egg && !badEgg) eggType = EggType.None;
+                if (badEgg && egg) eggType = EggType.BadEgg;
+                else if (!badEgg && egg) eggType = EggType.Egg;
+                else if (!badEgg && !egg) eggType = EggType.NotAnEgg;
             }
             Language lang = decoded.lang >= LANGS.Length ? Language.Invalid : LANGS[decoded.lang];
             string nickname = StringConverter.GetString3(decoded.nickname, UseJP(lang));
@@ -288,7 +284,7 @@ namespace PokeGlitzer
             Condition c = new Condition(sub2.coolness, sub2.beauty, sub2.cuteness, sub2.smartness, sub2.toughness, sub2.feel);
             Misc misc = new Misc(sub3.PokerusDays, sub3.PokerusStrain, sub3.ribbonsObedience & Substructure3.RIBBONS_MASK,
                 (sub3.ribbonsObedience & Substructure3.OBEDIENCE_MASK) != 0);
-            interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, eggType, id, b, m, evs, ivs, c, misc);
+            interpreted = new InterpretedData(pkmn.permanent.PID, pkmn.permanent.OTID, sub0.species, hasSpecies, eggType, id, b, m, evs, ivs, c, misc);
             // Team Interpreted data
             if (dataLocation.size == TEAM_SIZE)
             {
@@ -313,23 +309,21 @@ namespace PokeGlitzer
             pkmn.permanent.PID = interpreted.PID;
             pkmn.permanent.OTID = interpreted.OTID;
             sub0.species = interpreted.species;
+            if (interpreted.hasSpecies) pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK);
+            else pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg & ~PokemonStruct.HAS_SPECIES_MASK);
             switch (interpreted.egg)
             {
                 case EggType.Egg:
                     sub3.ivEggAbility |= Substructure3.EGG_MASK;
-                    pkmn.permanent.isEgg = (byte)((pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK) & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.permanent.isEgg = (byte)((pkmn.permanent.isEgg | PokemonStruct.IS_EGG_MASK) & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.BadEgg:
                     sub3.ivEggAbility |= Substructure3.EGG_MASK;
-                    pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg | PokemonStruct.IS_EGG_MASK | PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 case EggType.NotAnEgg:
                     sub3.ivEggAbility &= ~Substructure3.EGG_MASK;
-                    pkmn.permanent.isEgg = (byte)((pkmn.permanent.isEgg | PokemonStruct.HAS_SPECIES_MASK) & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
-                    break;
-                case EggType.None:
-                    sub3.ivEggAbility &= ~Substructure3.EGG_MASK;
-                    pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg & ~PokemonStruct.HAS_SPECIES_MASK & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
+                    pkmn.permanent.isEgg = (byte)(pkmn.permanent.isEgg & ~PokemonStruct.IS_EGG_MASK & ~PokemonStruct.IS_BAD_EGG_MASK);
                     break;
                 default:
                     break;

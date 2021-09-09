@@ -145,7 +145,7 @@ namespace PokeGlitzer
         public static Identity Dummy = new Identity(Language.Invalid, "", Gender.Boy, "", 0, 0, Game.Invalid, Ball.Invalid);
     }
 
-    public record InterpretedData(uint PID, uint OTID, ushort species, EggType egg, Identity identity, Battle battle, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition, Misc misc)
+    public record InterpretedData(uint PID, uint OTID, ushort species, bool hasSpecies, EggType egg, Identity identity, Battle battle, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition, Misc misc)
     {
         public bool IsShiny
         {
@@ -155,15 +155,14 @@ namespace PokeGlitzer
                 return key < 8;
             }
         }
-        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, EggType.Invalid, Identity.Dummy, Battle.Dummy, Moves.Dummy, EVsIVs.Dummy, EVsIVs.Dummy, Condition.Dummy, Misc.Dummy);
+        public static InterpretedData Dummy = new InterpretedData(0, 0, 0, false, EggType.Invalid, Identity.Dummy, Battle.Dummy, Moves.Dummy, EVsIVs.Dummy, EVsIVs.Dummy, Condition.Dummy, Misc.Dummy);
     }
     public enum EggType
     {
         Invalid = 0,
-        None = 1,
-        NotAnEgg = 2,
-        Egg = 3,
-        BadEgg = 4
+        NotAnEgg = 1,
+        Egg = 2,
+        BadEgg = 3
     }
 
     public record TeamInterpretedData(PkmnStatus status, byte level, byte pokerusRemaining, ushort currentHP, ushort maxHP, ushort attack,

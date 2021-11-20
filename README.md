@@ -38,8 +38,8 @@ It is possible to synchronize the save editor with Bizhawk in order see/modify i
 the content of your party/boxes. This feature is **only available on Windows** as Bizhawk does not
 support LUA scripting on Linux/MacOS.
 
-This feature requires a recent version of Bizhawk:
-you have to build it from the [master](https://github.com/TASVideos/BizHawk/tree/master) channel
+This feature requires a recent version of Bizhawk: at least version 2.7,
+or you can also build it from the [master](https://github.com/TASVideos/BizHawk/tree/master) channel
 (or any version after commit [e79d33bcfdd9dac596dce0d60bf7c8621d92ce62](https://github.com/TASVideos/BizHawk/tree/e79d33bcfdd9dac596dce0d60bf7c8621d92ce62)).
 
 You can then synchronize the level editor with Bizhawk by doing the following:

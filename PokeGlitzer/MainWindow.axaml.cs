@@ -385,6 +385,7 @@ namespace PokeGlitzer
             str.AppendLine();
             List<GlitzerSimulation.SimulationEntry> entries = res.obtained.Keys.ToList();
             entries.Sort(GlitzerSimulation.CompareEntries);
+            Converters.PokemonToStringConverter pts = new Converters.PokemonToStringConverter();
             foreach (GlitzerSimulation.SimulationEntry e in entries)
             {
                 List<GlitzerSimulation.OffsetASLR> o = res.obtained[e];
@@ -404,7 +405,8 @@ namespace PokeGlitzer
                     EggType.BadEgg => "bad egg",
                     _ => throw new NotImplementedException(),
                 };
-                str.AppendLine($"Species 0x{e.species:X} ({egg}) by {type} corruption:");
+                string species = (string)pts.Convert(e.species, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+                str.AppendLine($"Species {/*e.species:X*/species} ({egg}) by {type} corruption:");
                 foreach (GlitzerSimulation.OffsetASLR oa in o)
                     str.AppendLine($"    By corrupting from 0x{oa.startOffset:X} to 0x{oa.endOffset:X} (ASLR: +{oa.aslr})");
                 str.AppendLine($"    Total probability: {o.Count}/{res.nbTries}");

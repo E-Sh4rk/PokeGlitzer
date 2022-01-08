@@ -11,6 +11,16 @@ using System.Threading.Tasks;
 
 namespace PokeGlitzer
 {
+    public static class StringExtensions
+    {
+        public static string Capitalize(this string input) =>
+            input switch
+            {
+                null => throw new ArgumentNullException(nameof(input)),
+                "" => "",
+                _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
+            };
+    }
     static class Utils
     {
         public static T ToNumber<T>(string v)

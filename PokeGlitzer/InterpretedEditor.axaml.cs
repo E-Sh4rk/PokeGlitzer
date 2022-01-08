@@ -61,12 +61,13 @@ namespace PokeGlitzer
             RefreshControls();
         }
 
+        Converters.PokemonToStringConverter pts = new Converters.PokemonToStringConverter();
         public void RefreshControls()
         {
             InterpretedData d = view.Interpreted;
             PID = d.PID;
             OTID = d.OTID;
-            Species = d.species;
+            Species = (string)pts.Convert(d.species, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
             HasSpecies = d.hasSpecies;
             Egg = d.egg;
 
@@ -102,7 +103,8 @@ namespace PokeGlitzer
             Condition c = new Condition(Coolness, Beauty, Cuteness, Smartness, Toughness, Feel);
             Battle b = new Battle(Item, Ability, Experience, Friendship);
             Misc misc = new Misc(PokerusDays, PokerusStrain, Ribbons, Obedient);
-            InterpretedData d = new InterpretedData(PID, OTID, Species, HasSpecies, Egg, id, b, m, evs, ivs, c, misc);
+            object species = pts.ConvertBack(Species, typeof(UInt16), "X", System.Globalization.CultureInfo.CurrentCulture);
+            InterpretedData d = new InterpretedData(PID, OTID, species is ushort ? (ushort)species : (ushort)0, HasSpecies, Egg, id, b, m, evs, ivs, c, misc);
             view.Interpreted = d;
         }
         public void SaveAndClose()
@@ -123,8 +125,8 @@ namespace PokeGlitzer
             get => otid;
             set { otid = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTID))); }
         }
-        ushort species;
-        public ushort Species
+        string species;
+        public string Species
         {
             get => species;
             set { species = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Species))); }

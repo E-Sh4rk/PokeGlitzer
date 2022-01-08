@@ -175,6 +175,61 @@ namespace PokeGlitzer.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Ball)value; }
     }
+    public class PokemonToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType != typeof(string)) throw new NotImplementedException();
+
+            long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
+            int species = SpeciesConverter.SetG3Species(nb);
+            if (species == 0)
+            {
+                string format = (string)parameter;
+                if (format == "X" || format == "x")
+                {
+                    string prefix = nb >= 0 ? "" : "-";
+                    nb = Math.Abs(nb);
+                    return prefix + "0x" + nb.ToString(format);
+                }
+                else
+                    return nb.ToString();
+            }
+            else
+                return SpeciesConverter.SPECIES[species];
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+
+            string v = (string)value;
+            int i = Array.IndexOf(SpeciesConverter.SPECIES, v.ToLowerInvariant().Capitalize());
+            if (i >= 0)
+            {
+                int species = SpeciesConverter.GetG3Species(i);
+                if (species != 0)
+                    return System.Convert.ChangeType(species, targetType);
+            }
+
+            bool neg = false;
+            if (v.StartsWith("-"))
+            {
+                v = v.Substring(1);
+                neg = true;
+            }
+            try
+            {
+                checked
+                {
+                    long res = (long)(new Int64Converter().ConvertFromString(v));
+                    if (neg) res = -res;
+                    return System.Convert.ChangeType(res, targetType);
+                }
+            }
+            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
+        }
+    }
 
     // ========== MAIN WINDOW ==========
     public class SelectionToColor : IValueConverter

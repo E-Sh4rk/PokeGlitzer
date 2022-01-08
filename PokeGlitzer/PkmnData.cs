@@ -176,19 +176,21 @@ namespace PokeGlitzer
     /// <remarks>Generation 4+ always use the national dex ID. Prior generations do not.</remarks>
     public static class SpeciesConverter
         {
+        public static string[] SPECIES = Properties.Resources.species.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+
         /// <summary>
         /// Converts a National Dex ID to Generation 3 species ID.
         /// </summary>
         /// <param name="species">National Dex ID</param>
         /// <returns>Generation 3 species ID.</returns>
-        public static int GetG3Species(int species) => (uint)species >= table3_Internal.Length ? 0 : table3_Internal[species];
+        public static int GetG3Species(long species) => (ulong)species >= (ulong)table3_Internal.Length ? 0 : table3_Internal[species];
 
         /// <summary>
         /// Converts Generation 3 species ID to National Dex ID.
         /// </summary>
         /// <param name="raw">Generation 3 species ID.</param>
         /// <returns>National Dex ID.</returns>
-        public static int SetG3Species(int raw) => (uint)raw >= table3_National.Length ? 0 : table3_National[raw];
+        public static int SetG3Species(long raw) => (ulong)raw >= (ulong)table3_National.Length ? 0 : table3_National[raw];
 
         /// <summary>
         /// National Dex IDs (index) and the associated Gen3 Species IDs (value)

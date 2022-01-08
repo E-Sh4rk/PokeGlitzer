@@ -5,6 +5,7 @@
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400" Width="400" Height="400"
         SizeToContent="WidthAndHeight" CanResize="False"
         x:Class="PokeGlitzer.InterpretedEditor"
+        xmlns:local="clr-namespace:PokeGlitzer"
         Title="Pokemon Interpreted Data Editor">
 
   <StackPanel Orientation="Vertical" Margin="10,0,10,10">
@@ -23,7 +24,9 @@
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Species</TextBlock>
           <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
             <CheckBox VerticalAlignment="Center" Margin="10,5,0,5" IsChecked="{Binding HasSpecies}" />
-            <TextBox Margin="0,5" Width="100" Text="{Binding Species, Converter={StaticResource n2s}, ConverterParameter=X}" />
+            <AutoCompleteBox Items="{x:Static local:SpeciesConverter.SPECIES}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
+                             Margin="0,5" Width="100" Text="{Binding Species}" />
+            <!-- {Binding Species, Converter={StaticResource p2s}, ConverterParameter=X} -->
           </StackPanel>
 
           <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Egg type</TextBlock>

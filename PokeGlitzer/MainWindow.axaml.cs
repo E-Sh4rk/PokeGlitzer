@@ -231,7 +231,7 @@ namespace PokeGlitzer
         public void ShowWindow(IEditorWindow w, Window? parent)
         {
             openedEditors.Add(w);
-            w.Closed += (_, _) => { openedEditors.Remove(w); GC.Collect(); };
+            w.Closed += (_, _) => { Selection = null; openedEditors.Remove(w); GC.Collect(); };
             w.Activated += (_, _) => { Selection = w.DataLocation; };
             w.Deactivated += (_, _) => { Selection = null; };
             w.Show(parent == null ? mw : parent);
@@ -281,7 +281,7 @@ namespace PokeGlitzer
             GlitzerWindow gw = new GlitzerWindow(this, data, offset);
             openedGPs.Add(gw);
             GlitzerWindowViewModel gwvm = (GlitzerWindowViewModel)gw.DataContext!;
-            gw.Closed += (_, _) => { openedGPs.Remove(gw); GC.Collect(); };
+            gw.Closed += (_, _) => { Selection = null; openedGPs.Remove(gw); GC.Collect(); };
             gw.Activated += (_, _) => { Selection = gwvm.DataLocation; };
             gw.Deactivated += (_, _) => { Selection = null; };
             gwvm.PropertyChanged += (sender, args) => {

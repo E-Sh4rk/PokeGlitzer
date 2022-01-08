@@ -36,8 +36,8 @@
     <StackPanel Orientation="Vertical">
       <Separator Height="10" />
       <DockPanel Width="408" LastChildFill="True">
-        <Button Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
-        <Button Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
+        <Button FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
+        <Button FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
           <TextBlock VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat={}{0} :}" />
           <Separator Width="5" />

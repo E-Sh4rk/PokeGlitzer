@@ -294,14 +294,6 @@ namespace PokeGlitzer
         public void OpenGPBefore(DataLocation dl) { openGP(dl.offset + dl.size - GlitzerWindowViewModel.SIZE); }
         public void OpenGPAfter(DataLocation dl) { openGP(dl.offset); }
 
-        public void FlagBadEggs()
-        {
-            foreach (PokemonExt? p in CurrentBox)
-                if (p != null) p.pkmn.FlagAsBaddEggIfInvalid();
-            foreach (PokemonExt? p in Team)
-                if (p != null) p.pkmn.FlagAsBaddEggIfInvalid();
-        }
-
         public void Exit()
         {
             mw.Close();
@@ -427,9 +419,54 @@ namespace PokeGlitzer
         public void ClearCurrentBox()
         {
             foreach (PokemonExt? p in CurrentBox)
-            {
                 if (p != null) Delete(p!.pkmn.DataLocation);
-            }
+        }
+        public void FlagBadEggs()
+        {
+            foreach (PokemonExt? p in CurrentBox)
+                if (p != null) p.pkmn.FlagAsBaddEggIfInvalid();
+        }
+        public void RemoveBadEggs()
+        {
+            foreach (PokemonExt? p in CurrentBox)
+                if (p != null && p.pkmn.View.Interpreted.egg == EggType.BadEgg)
+                    Delete(p!.pkmn.DataLocation);
+        }
+        public void FixChecksums()
+        {
+            foreach (PokemonExt? p in CurrentBox)
+                if (p != null) p!.pkmn.FixChecksum();
+        }
+        void ChangeEggTypes(EggType from, EggType to)
+        {
+            foreach (PokemonExt? p in CurrentBox)
+                if (p != null && p.pkmn.View.Interpreted.egg == from)
+                    p!.pkmn.View.Interpreted = p!.pkmn.View.Interpreted with { egg = to };
+
+        }
+        public void InconsistentToBadEgg()
+        {
+            ChangeEggTypes(EggType.Invalid, EggType.BadEgg);
+        }
+        public void InconsistentToEgg()
+        {
+            ChangeEggTypes(EggType.Invalid, EggType.Egg);
+        }
+        public void InconsistentToHatched()
+        {
+            ChangeEggTypes(EggType.Invalid, EggType.NotAnEgg);
+        }
+        public void BadEggToEgg()
+        {
+            ChangeEggTypes(EggType.BadEgg, EggType.Egg);
+        }
+        public void BadEggToHatched()
+        {
+            ChangeEggTypes(EggType.BadEgg, EggType.NotAnEgg);
+        }
+        public void EggToHatched()
+        {
+            ChangeEggTypes(EggType.Egg, EggType.NotAnEgg);
         }
         public void Copy(DataLocation dl)
         {

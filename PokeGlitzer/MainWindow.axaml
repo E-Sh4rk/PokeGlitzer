@@ -21,6 +21,18 @@
         <MenuItem Header="_Edit full boxes data..." Command="{Binding EditFullBoxes}" />
         <MenuItem Header="_Edit full party data..." Command="{Binding EditFullParty}" />
         <MenuItem Header="_Edit full box names data..." Command="{Binding EditFullBoxNames}" />
+        <MenuItem Header="_Current box mass actions">
+          <MenuItem Header="_Fix checksums" Command="{Binding FixChecksums}" />
+          <MenuItem Header="_Flag invalid Pokemons as bad eggs" Command="{Binding FlagBadEggs}" />
+          <MenuItem Header="_Remove bad eggs" Command="{Binding RemoveBadEggs}" />
+          <Separator/>
+          <MenuItem Header="_Transform inconsistent to bad eggs" Command="{Binding InconsistentToBadEgg}" />
+          <MenuItem Header="_Transform inconsistent to eggs" Command="{Binding InconsistentToEgg}" />
+          <MenuItem Header="_Transform inconsistent to hatched" Command="{Binding InconsistentToHatched}" />
+          <MenuItem Header="_Transform bad eggs to eggs" Command="{Binding BadEggToEgg}" />
+          <MenuItem Header="_Transform bad eggs to hatched" Command="{Binding BadEggToHatched}" />
+          <MenuItem Header="_Transform eggs to hatched" Command="{Binding EggToHatched}" />
+        </MenuItem>
       </MenuItem>
       <MenuItem Header="_Sync">
         <MenuItem Header="_Start synchronization" Command="{Binding StartSync}" IsEnabled="{Binding !Sync.IsRunning}" />

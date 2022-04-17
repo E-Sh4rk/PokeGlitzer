@@ -22,12 +22,12 @@ namespace PokeGlitzer
         {
             InitializeComponent();
             DataContext = new GlitzerWindowViewModel(null, this,
-                Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE * MainWindowViewModel.BOX_SIZE * MainWindowViewModel.BOX_NUMBER), 0);
+                Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE * MainWindowViewModel.BOX_SIZE * MainWindowViewModel.BOX_NUMBER), 0, GlitzerWindowViewModel.OffsetType.Start);
         }
-        public GlitzerWindow(MainWindowViewModel mw, RangeObservableCollection<byte> data, int offset)
+        public GlitzerWindow(MainWindowViewModel mw, RangeObservableCollection<byte> data, int offset, GlitzerWindowViewModel.OffsetType type)
         {
             InitializeComponent();
-            DataContext = new GlitzerWindowViewModel(mw, this, data, offset);
+            DataContext = new GlitzerWindowViewModel(mw, this, data, offset, type);
 
 #if DEBUG
             this.AttachDevTools();
@@ -53,7 +53,8 @@ namespace PokeGlitzer
         public const int SIZE = NB_SLOTS * Pokemon.TEAM_SIZE;
         RangeObservableCollection<byte> data;
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        public GlitzerWindowViewModel(MainWindowViewModel? mw, GlitzerWindow parent, RangeObservableCollection<byte> data, int offset)
+        public enum OffsetType { Start, End, ASLR }
+        public GlitzerWindowViewModel(MainWindowViewModel? mw, GlitzerWindow parent, RangeObservableCollection<byte> data, int offset, OffsetType t)
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             this.mw = mw;
@@ -61,7 +62,14 @@ namespace PokeGlitzer
             this.data = data;
             
             glitzer = Utils.CollectionOfSize<PokemonExt?>(NB_SLOTS);
-            try { CurrentOffset = offset; } catch { CurrentOffset = 0; }
+            try {
+                if (t == OffsetType.Start)
+                    CurrentOffset = offset;
+                else if (t == OffsetType.End)
+                    CurrentEndOffset = offset;
+                else
+                    CurrentASLR = offset;
+            } catch { CurrentOffset = 0; }
 
             UpdateDataLocation();
         }
@@ -144,9 +152,21 @@ namespace PokeGlitzer
                     throw new Avalonia.Data.DataValidationException(null);*/
                 currentOffset = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentOffset)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentEndOffset)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentASLR)));
                 UpdateDataLocation();
                 ReloadGlitzer();
             }
+        }
+        public int CurrentEndOffset
+        {
+            get => CurrentOffset + SIZE;
+            set => CurrentOffset = value - SIZE;
+        }
+        public int CurrentASLR
+        {
+            get => GlitzerSimulation.EndOffset - CurrentEndOffset;
+            set => CurrentEndOffset = GlitzerSimulation.EndOffset - value;
         }
 
         public void OpenInterpretedEditor(DataLocation dl) { mw?.OpenInterpretedEditor(dl, parent); }

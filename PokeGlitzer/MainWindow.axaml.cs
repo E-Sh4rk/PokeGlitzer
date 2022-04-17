@@ -276,9 +276,9 @@ namespace PokeGlitzer
         }
 
         List<GlitzerWindow> openedGPs = new List<GlitzerWindow>();
-        public void openGP(int offset)
+        public void openGP(int offset, GlitzerWindowViewModel.OffsetType t)
         {
-            GlitzerWindow gw = new GlitzerWindow(this, data, offset);
+            GlitzerWindow gw = new GlitzerWindow(this, data, offset, t);
             openedGPs.Add(gw);
             GlitzerWindowViewModel gwvm = (GlitzerWindowViewModel)gw.DataContext!;
             gw.Closed += (_, _) => { Selection = null; openedGPs.Remove(gw); GC.Collect(); };
@@ -290,9 +290,9 @@ namespace PokeGlitzer
             };
             gw.Show(mw);
         }
-        public void OpenGP() { openGP(0); }
-        public void OpenGPBefore(DataLocation dl) { openGP(dl.offset + dl.size - GlitzerWindowViewModel.SIZE); }
-        public void OpenGPAfter(DataLocation dl) { openGP(dl.offset); }
+        public void OpenGP() { openGP(0, GlitzerWindowViewModel.OffsetType.ASLR); }
+        public void OpenGPBefore(DataLocation dl) { openGP(dl.offset + dl.size, GlitzerWindowViewModel.OffsetType.End); }
+        public void OpenGPAfter(DataLocation dl) { openGP(dl.offset, GlitzerWindowViewModel.OffsetType.Start); }
 
         public void Exit()
         {

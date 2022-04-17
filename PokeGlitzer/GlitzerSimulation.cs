@@ -11,14 +11,13 @@ namespace PokeGlitzer
     {
         const int BOX_DATA_OFFSET_FROM_STORAGE = 4;
         readonly RangeObservableCollection<byte> initialData;
-        readonly int minOffset;
-        readonly int baseOffset;
-        readonly int maxOffset;
-        readonly byte aslrMask;
-        readonly byte numberSlots;
-        public GlitzerSimulation(RangeObservableCollection<byte> data)
+        static int minOffset;
+        static int baseOffset;
+        static int maxOffset;
+        static byte aslrMask;
+        static byte numberSlots;
+        public static void Initialize()
         {
-            initialData = new RangeObservableCollection<byte>(data);
             numberSlots = Settings.Corruption_numberUpPresses;
             aslrMask = Settings.Corruption_aslrMask;
             uint gPokemonBox = Settings.Corruption_gPokemonStorage + BOX_DATA_OFFSET_FROM_STORAGE;
@@ -26,6 +25,15 @@ namespace PokeGlitzer
             baseOffset = (int)((gPlayerParty + (0x100 - numberSlots) * Pokemon.TEAM_SIZE) - gPokemonBox);
             maxOffset = (int)((gPlayerParty + 0x100 * Pokemon.TEAM_SIZE) - gPokemonBox - 1);
             minOffset = baseOffset - aslrMask;
+        }
+        public static int EndOffset
+        {
+            get { return maxOffset + 1; }
+        }
+
+        public GlitzerSimulation(RangeObservableCollection<byte> data)
+        {
+            initialData = new RangeObservableCollection<byte>(data);
         }
 
         public enum CorruptionType

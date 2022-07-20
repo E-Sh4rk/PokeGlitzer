@@ -174,12 +174,16 @@ namespace PokeGlitzer
     {
         const int MAX_MOVE_ID = 354;
         public static string[] MOVES = Properties.Resources.moves.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_MOVES = MOVES.Where((s, i) => i <= MAX_MOVE_ID && !string.IsNullOrEmpty(s)).ToArray();
         public static string[] MOVES_LOWERCASE = MOVES.Select(str => str.ToLowerInvariant()).ToArray();
         public static string[] NATURES = Properties.Resources.natures.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_NATURES = NATURES;
         public static string[] NATURES_LOWERCASE = NATURES.Select(str => str.ToLowerInvariant()).ToArray();
         public static string[] LOCATIONS = Properties.Resources.locations.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_LOCATIONS = LOCATIONS.Where(s => !string.IsNullOrEmpty(s)).ToArray();
         public static string[] LOCATIONS_LOWERCASE = LOCATIONS.Select(str => str.ToLowerInvariant()).ToArray();
         public static string[] ITEMS = Properties.Resources.items.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_ITEMS = ITEMS.Where(s => !string.IsNullOrEmpty(s)).ToArray();
         public static string[] ITEMS_LOWERCASE = ITEMS.Select(str => str.ToLowerInvariant()).ToArray();
 
         static int NormalizeElemID(long id, string[] elems)
@@ -213,9 +217,6 @@ namespace PokeGlitzer
     /// <remarks>Generation 4+ always use the national dex ID. Prior generations do not.</remarks>
     public static class SpeciesConverter
     {
-        public static string[] SPECIES = Properties.Resources.species.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-        public static string[] SPECIES_LOWERCASE = SPECIES.Select(str => str.ToLowerInvariant()).ToArray();
-
         /// <summary>
         /// Converts a National Dex ID to Generation 3 species ID.
         /// </summary>
@@ -284,6 +285,10 @@ namespace PokeGlitzer
             335, 369, 304, 305, 306, 351, 313, 314, 345, 346, 347, 348, 280, 281, 282, 371, 372, 373, 374, 375,
             376, 377, 378, 379, 382, 383, 384, 380, 381, 385, 386, 358,
         };
+
+        public static string[] SPECIES = Properties.Resources.species.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_SPECIES = SPECIES.Where((_, i) => i != 0 && Array.Exists(table3_National, j => i == j)).ToArray();
+        public static string[] SPECIES_LOWERCASE = SPECIES.Select(str => str.ToLowerInvariant()).ToArray();
     }
 
 }

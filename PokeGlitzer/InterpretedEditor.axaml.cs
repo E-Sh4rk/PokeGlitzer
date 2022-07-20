@@ -62,6 +62,9 @@ namespace PokeGlitzer
         }
 
         Converters.PokemonToStringConverter pts = new Converters.PokemonToStringConverter();
+        Converters.LocationToStringConverter lts = new Converters.LocationToStringConverter();
+        Converters.ItemToStringConverter its = new Converters.ItemToStringConverter();
+        Converters.MoveToStringConverter mts = new Converters.MoveToStringConverter();
         public void RefreshControls()
         {
             InterpretedData d = view.Interpreted;
@@ -73,10 +76,14 @@ namespace PokeGlitzer
 
             _savedLanguage = d.identity.lang;
             Language = _savedLanguage; SetNormalizedNickname(d.identity.nickname); OTGender = d.identity.otGender;
-            SetNormalizedOTName(d.identity.otName); MetLocation = d.identity.metLocation; LevelMet = d.identity.levelMet;
-            GameOfOrigin = d.identity.gameOfOrigin; Ball = d.identity.ball;
+            SetNormalizedOTName(d.identity.otName);
+            MetLocation = (string)lts.Convert(d.identity.metLocation, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+            LevelMet = d.identity.levelMet; GameOfOrigin = d.identity.gameOfOrigin; Ball = d.identity.ball;
 
-            Move1 = d.moves.m1; Move2 = d.moves.m2; Move3 = d.moves.m3; Move4 = d.moves.m4;
+            Move1 = (string)mts.Convert(d.moves.m1, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+            Move2 = (string)mts.Convert(d.moves.m2, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture); ;
+            Move3 = (string)mts.Convert(d.moves.m3, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture); ;
+            Move4 = (string)mts.Convert(d.moves.m4, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture); ;
             PP1 = d.moves.pp1; PP2 = d.moves.pp2; PP3 = d.moves.pp3; PP4 = d.moves.pp4;
             PPb1 = d.moves.ppb1; PPb2 = d.moves.ppb2; PPb3 = d.moves.ppb3; PPb4 = d.moves.ppb4;
 
@@ -89,21 +96,29 @@ namespace PokeGlitzer
             Coolness = d.condition.coolness; Beauty = d.condition.beauty; Cuteness = d.condition.cuteness;
             Smartness = d.condition.smartness; Toughness = d.condition.toughness; Feel = d.condition.feel;
 
-            Item = d.battle.item; Ability = d.battle.ability; Experience = d.battle.experience; Friendship = d.battle.friendship;
+            Item = (string)its.Convert(d.battle.item, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+            Ability = d.battle.ability; Experience = d.battle.experience; Friendship = d.battle.friendship;
 
             PokerusDays = d.misc.pokerus_days; PokerusStrain = d.misc.pokerus_strain; Ribbons = d.misc.ribbons; Obedient = d.misc.obedient;
         }
         public void Save()
         {
             _savedLanguage = Language;
-            Identity id = new Identity(Language, nickname, OTGender, otName, MetLocation, LevelMet, GameOfOrigin, Ball);
-            Moves m = new Moves(Move1, PP1, PPb1, Move2, PP2, PPb2, Move3, PP3, PPb3, Move4, PP4, PPb4);
+            object location = lts.ConvertBack(MetLocation, typeof(byte), "X", System.Globalization.CultureInfo.CurrentCulture);
+            Identity id = new Identity(Language, nickname, OTGender, otName, location is byte ? (byte)location : (byte)0, LevelMet, GameOfOrigin, Ball);
+            object m1 = mts.ConvertBack(Move1, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            object m2 = mts.ConvertBack(Move2, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            object m3 = mts.ConvertBack(Move3, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            object m4 = mts.ConvertBack(Move4, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            Moves m = new Moves(m1 is ushort ? (ushort)m1 : (ushort)0, PP1, PPb1, m2 is ushort ? (ushort)m2 : (ushort)0, PP2, PPb2,
+                m3 is ushort ? (ushort)m3 : (ushort)0, PP3, PPb3, m4 is ushort ? (ushort)m4 : (ushort)0, PP4, PPb4);
             EVsIVs evs = new EVsIVs(HpEV, AtkEV, DefEV, SpeedEV, SpeAtkEV, SpeDefEV);
             EVsIVs ivs = new EVsIVs(HpIV, AtkIV, DefIV, SpeedIV, SpeAtkIV, SpeDefIV);
             Condition c = new Condition(Coolness, Beauty, Cuteness, Smartness, Toughness, Feel);
-            Battle b = new Battle(Item, Ability, Experience, Friendship);
+            object item = its.ConvertBack(Item, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            Battle b = new Battle(item is ushort ? (ushort)item : (ushort)0, Ability, Experience, Friendship);
             Misc misc = new Misc(PokerusDays, PokerusStrain, Ribbons, Obedient);
-            object species = pts.ConvertBack(Species, typeof(UInt16), "X", System.Globalization.CultureInfo.CurrentCulture);
+            object species = pts.ConvertBack(Species, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
             InterpretedData d = new InterpretedData(PID, OTID, species is ushort ? (ushort)species : (ushort)0, HasSpecies, Egg, id, b, m, evs, ivs, c, misc);
             view.Interpreted = d;
         }
@@ -215,8 +230,8 @@ namespace PokeGlitzer
             otName = v;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));
         }
-        byte metLocation;
-        public byte MetLocation
+        string metLocation;
+        public string MetLocation
         {
             get => metLocation;
             set { metLocation = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MetLocation))); }
@@ -240,8 +255,8 @@ namespace PokeGlitzer
             set { ball = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Ball))); }
         }
         // ========== Battle ==========
-        ushort item;
-        public ushort Item
+        string item;
+        public string Item
         {
             get => item;
             set { item = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Item))); }
@@ -265,26 +280,26 @@ namespace PokeGlitzer
             set { friendship = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Friendship))); }
         }
         // ========== Moves ==========
-        ushort move1;
-        public ushort Move1
+        string move1;
+        public string Move1
         {
             get => move1;
             set { move1 = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Move1))); }
         }
-        ushort move2;
-        public ushort Move2
+        string move2;
+        public string Move2
         {
             get => move2;
             set { move2 = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Move2))); }
         }
-        ushort move3;
-        public ushort Move3
+        string move3;
+        public string Move3
         {
             get => move3;
             set { move3 = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Move3))); }
         }
-        ushort move4;
-        public ushort Move4
+        string move4;
+        public string Move4
         {
             get => move4;
             set { move4 = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Move4))); }

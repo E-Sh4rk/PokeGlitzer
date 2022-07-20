@@ -203,25 +203,25 @@ namespace PokeGlitzer.Converters
         {
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
 
-            string v = (string)value;
-            int i = Array.IndexOf(SpeciesConverter.SPECIES_LOWERCASE, v.ToLowerInvariant());
-            if (i >= 0)
-            {
-                int species = SpeciesConverter.GetG3Species(i);
-                if (species != 0)
-                    return System.Convert.ChangeType(species, targetType);
-            }
-
-            bool neg = false;
-            if (v.StartsWith("-"))
-            {
-                v = v.Substring(1);
-                neg = true;
-            }
             try
             {
                 checked
                 {
+                    string v = (string)value;
+                    int i = Array.IndexOf(SpeciesConverter.SPECIES_LOWERCASE, v.ToLowerInvariant());
+                    if (i >= 0)
+                    {
+                        int species = SpeciesConverter.GetG3Species(i);
+                        if (species != 0)
+                            return System.Convert.ChangeType(species, targetType);
+                    }
+
+                    bool neg = false;
+                    if (v.StartsWith("-"))
+                    {
+                        v = v.Substring(1);
+                        neg = true;
+                    }
                     long res = (long)(new Int64Converter().ConvertFromString(v));
                     if (neg) res = -res;
                     return System.Convert.ChangeType(res, targetType);
@@ -261,25 +261,25 @@ namespace PokeGlitzer.Converters
         {
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
 
-            string v = (string)value;
-            int i = Array.IndexOf(LowercaseData(), v.ToLowerInvariant());
-            if (i >= 0)
-            {
-                int id = NormalizeID(i);
-                if (id >= 0)
-                    return System.Convert.ChangeType(id, targetType);
-            }
-
-            bool neg = false;
-            if (v.StartsWith("-"))
-            {
-                v = v.Substring(1);
-                neg = true;
-            }
             try
             {
                 checked
                 {
+                    string v = (string)value;
+                    int i = Array.IndexOf(LowercaseData(), v.ToLowerInvariant());
+                    if (i >= 0)
+                    {
+                        int id = NormalizeID(i);
+                        if (id >= 0)
+                            return System.Convert.ChangeType(id, targetType);
+                    }
+
+                    bool neg = false;
+                    if (v.StartsWith("-"))
+                    {
+                        v = v.Substring(1);
+                        neg = true;
+                    }
                     long res = (long)(new Int64Converter().ConvertFromString(v));
                     if (neg) res = -res;
                     return System.Convert.ChangeType(res, targetType);

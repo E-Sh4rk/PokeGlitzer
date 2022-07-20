@@ -24,7 +24,7 @@
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Species</TextBlock>
           <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
             <CheckBox VerticalAlignment="Center" Margin="10,5,0,5" IsChecked="{Binding HasSpecies}" />
-            <AutoCompleteBox Items="{x:Static local:SpeciesConverter.SPECIES}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
+            <AutoCompleteBox Items="{x:Static local:SpeciesConverter.FILTERED_SPECIES}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
                              Margin="0,5" Width="100" Text="{Binding Species}" />
             <!-- {Binding Species, Converter={StaticResource p2s}, ConverterParameter=X} -->
           </StackPanel>
@@ -71,7 +71,9 @@
           <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Text="{Binding OTName}" />
 
           <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Met locat.</TextBlock>
-          <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5" Text="{Binding MetLocation, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <!-- <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5" Text="{Binding MetLocation, Converter={StaticResource n2s}, ConverterParameter=X}" /> -->
+          <AutoCompleteBox Items="{x:Static local:TextData.FILTERED_LOCATIONS}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
+                 Margin="10,5" Text="{Binding MetLocation}" Grid.Row="2" Grid.Column="1" />
           <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">Level met</TextBlock>
           <TextBox Grid.Row="2" Grid.Column="3" Margin="10,5" Text="{Binding LevelMet, Converter={StaticResource n2s}}" />
 
@@ -113,7 +115,9 @@
         </TabItem.Header>
         <Grid ColumnDefinitions="75,150,75,150" RowDefinitions="Auto,Auto">
           <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Item held</TextBlock>
-          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding Item, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <!-- <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding Item, Converter={StaticResource n2s}, ConverterParameter=X}" /> -->
+          <AutoCompleteBox Items="{x:Static local:TextData.FILTERED_ITEMS}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
+                 Margin="10,5" Text="{Binding Item}" Grid.Row="0" Grid.Column="1" />
           <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Ability</TextBlock>
           <ComboBox Grid.Row="0" Grid.Column="3" Margin="10,5" HorizontalAlignment="Stretch" SelectedIndex="{Binding Ability}">
             <ComboBoxItem>Primary</ComboBoxItem>
@@ -127,30 +131,38 @@
       </TabItem>
       
       <TabItem Header="Moves" VerticalContentAlignment="Center">
-        <Grid ColumnDefinitions="50,100,50,100,50,100" RowDefinitions="Auto,Auto,Auto,Auto">
+        <Grid ColumnDefinitions="50,150,40,85,40,85" RowDefinitions="Auto,Auto,Auto,Auto">
           <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Move 1</TextBlock>
-          <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding Move1, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <!-- <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding Move1, Converter={StaticResource n2s}, ConverterParameter=X}" />  -->
+          <AutoCompleteBox Items="{x:Static local:TextData.FILTERED_MOVES}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
+                 Margin="10,5" Text="{Binding Move1}" Grid.Row="0" Grid.Column="1" />
           <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">PP 1</TextBlock>
           <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding PP1, Converter={StaticResource n2s}}" />
           <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center">PP+ 1</TextBlock>
           <TextBox Grid.Row="0" Grid.Column="5" Margin="10,5" Text="{Binding PPb1, Converter={StaticResource n2s}}" />
 
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Move 2</TextBlock>
-          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Move2, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <!-- <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Move2, Converter={StaticResource n2s}, ConverterParameter=X}" />  -->
+          <AutoCompleteBox Items="{x:Static local:TextData.FILTERED_MOVES}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
+                 Margin="10,5" Text="{Binding Move2}" Grid.Row="1" Grid.Column="1" />
           <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">PP 2</TextBlock>
           <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding PP2, Converter={StaticResource n2s}}" />
           <TextBlock Grid.Row="1" Grid.Column="4" VerticalAlignment="Center">PP+ 2</TextBlock>
           <TextBox Grid.Row="1" Grid.Column="5" Margin="10,5" Text="{Binding PPb2, Converter={StaticResource n2s}}" />
 
           <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Move 3</TextBlock>
-          <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5" Text="{Binding Move3, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <!-- <TextBox Grid.Row="2" Grid.Column="1" Margin="10,5" Text="{Binding Move3, Converter={StaticResource n2s}, ConverterParameter=X}" />  -->
+          <AutoCompleteBox Items="{x:Static local:TextData.FILTERED_MOVES}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
+                 Margin="10,5" Text="{Binding Move3}" Grid.Row="2" Grid.Column="1" />
           <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">PP 3</TextBlock>
           <TextBox Grid.Row="2" Grid.Column="3" Margin="10,5" Text="{Binding PP3, Converter={StaticResource n2s}}" />
           <TextBlock Grid.Row="2" Grid.Column="4" VerticalAlignment="Center">PP+ 3</TextBlock>
           <TextBox Grid.Row="2" Grid.Column="5" Margin="10,5" Text="{Binding PPb3, Converter={StaticResource n2s}}" />
 
           <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Move 4</TextBlock>
-          <TextBox Grid.Row="3" Grid.Column="1" Margin="10,5" Text="{Binding Move4, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <!-- <TextBox Grid.Row="3" Grid.Column="1" Margin="10,5" Text="{Binding Move4, Converter={StaticResource n2s}, ConverterParameter=X}" /> -->
+          <AutoCompleteBox Items="{x:Static local:TextData.FILTERED_MOVES}" FilterMode="StartsWith" IsTextCompletionEnabled="False"
+                 Margin="10,5" Text="{Binding Move4}" Grid.Row="3" Grid.Column="1" />
           <TextBlock Grid.Row="3" Grid.Column="2" VerticalAlignment="Center">PP 4</TextBlock>
           <TextBox Grid.Row="3" Grid.Column="3" Margin="10,5" Text="{Binding PP4, Converter={StaticResource n2s}}" />
           <TextBlock Grid.Row="3" Grid.Column="4" VerticalAlignment="Center">PP+ 4</TextBlock>

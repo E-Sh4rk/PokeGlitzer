@@ -16,7 +16,8 @@ using MessageBox.Avalonia;
 
 namespace PokeGlitzer
 {
-    // TODO: Improve species field (show known species names), ribbons, etc.
+    // TODO: Improve ribbons field.
+    // TODO: Add nature/shininess/gender/ability fields (it will change PID and vice versa)
 
     public partial class MainWindow : Window
     {

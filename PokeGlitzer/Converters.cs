@@ -204,7 +204,7 @@ namespace PokeGlitzer.Converters
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
 
             string v = (string)value;
-            int i = Array.IndexOf(SpeciesConverter.SPECIES, v.ToLowerInvariant().Capitalize());
+            int i = Array.IndexOf(SpeciesConverter.SPECIES_LOWERCASE, v.ToLowerInvariant());
             if (i >= 0)
             {
                 int species = SpeciesConverter.GetG3Species(i);
@@ -229,6 +229,88 @@ namespace PokeGlitzer.Converters
             }
             catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
+    }
+    public abstract class TextDataToStringConverter : IValueConverter
+    {
+        protected abstract string[] Data();
+        protected abstract string[] LowercaseData();
+        protected abstract int NormalizeID(long _);
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (targetType != typeof(string)) throw new NotImplementedException();
+
+            long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
+            int id = NormalizeID(nb);
+            if (id < 0)
+            {
+                string format = (string)parameter;
+                if (format == "X" || format == "x")
+                {
+                    string prefix = nb >= 0 ? "" : "-";
+                    nb = Math.Abs(nb);
+                    return prefix + "0x" + nb.ToString(format);
+                }
+                else
+                    return nb.ToString();
+            }
+            else
+                return Data()[id];
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+
+            string v = (string)value;
+            int i = Array.IndexOf(LowercaseData(), v.ToLowerInvariant());
+            if (i >= 0)
+            {
+                int id = NormalizeID(i);
+                if (id >= 0)
+                    return System.Convert.ChangeType(id, targetType);
+            }
+
+            bool neg = false;
+            if (v.StartsWith("-"))
+            {
+                v = v.Substring(1);
+                neg = true;
+            }
+            try
+            {
+                checked
+                {
+                    long res = (long)(new Int64Converter().ConvertFromString(v));
+                    if (neg) res = -res;
+                    return System.Convert.ChangeType(res, targetType);
+                }
+            }
+            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
+        }
+    }
+    public class ItemToStringConverter : TextDataToStringConverter
+    {
+        protected override string[] Data() { return TextData.ITEMS; }
+        protected override string[] LowercaseData() { return TextData.ITEMS_LOWERCASE; }
+        protected override int NormalizeID(long id) { return TextData.NormalizeItem(id); }
+    }
+    public class NatureToStringConverter : TextDataToStringConverter
+    {
+        protected override string[] Data() { return TextData.NATURES; }
+        protected override string[] LowercaseData() { return TextData.NATURES_LOWERCASE; }
+        protected override int NormalizeID(long id) { return TextData.NormalizeNature(id); }
+    }
+    public class LocationToStringConverter : TextDataToStringConverter
+    {
+        protected override string[] Data() { return TextData.LOCATIONS; }
+        protected override string[] LowercaseData() { return TextData.LOCATIONS_LOWERCASE; }
+        protected override int NormalizeID(long id) { return TextData.NormalizeLocation(id); }
+    }
+    public class MoveToStringConverter : TextDataToStringConverter
+    {
+        protected override string[] Data() { return TextData.MOVES; }
+        protected override string[] LowercaseData() { return TextData.MOVES_LOWERCASE; }
+        protected override int NormalizeID(long id) { return TextData.NormalizeMove(id); }
     }
 
     // ========== MAIN WINDOW ==========

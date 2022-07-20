@@ -170,13 +170,51 @@ namespace PokeGlitzer
         }
     }
 
+    public static class TextData
+    {
+        const int MAX_MOVE_ID = 354;
+        public static string[] MOVES = Properties.Resources.moves.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] MOVES_LOWERCASE = MOVES.Select(str => str.ToLowerInvariant()).ToArray();
+        public static string[] NATURES = Properties.Resources.natures.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] NATURES_LOWERCASE = NATURES.Select(str => str.ToLowerInvariant()).ToArray();
+        public static string[] LOCATIONS = Properties.Resources.locations.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] LOCATIONS_LOWERCASE = LOCATIONS.Select(str => str.ToLowerInvariant()).ToArray();
+        public static string[] ITEMS = Properties.Resources.items.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] ITEMS_LOWERCASE = ITEMS.Select(str => str.ToLowerInvariant()).ToArray();
+
+        static int NormalizeElemID(long id, string[] elems)
+        {
+            if (id >= elems.Length) return -1;
+            if (string.IsNullOrEmpty(elems[id])) return -1;
+            return (int)id;
+        }
+        public static int NormalizeItem(long id)
+        {
+            return NormalizeElemID(id, ITEMS);
+        }
+        public static int NormalizeNature(long id)
+        {
+            return NormalizeElemID(id, NATURES);
+        }
+        public static int NormalizeLocation(long id)
+        {
+            return NormalizeElemID(id, LOCATIONS);
+        }
+        public static int NormalizeMove(long id)
+        {
+            if (id > MAX_MOVE_ID) return -1;
+            return NormalizeElemID(id, MOVES);
+        }
+    }
+
     /// <summary>
     /// Logic for converting a National Pokédex Species ID to/from generation specific values.
     /// </summary>
     /// <remarks>Generation 4+ always use the national dex ID. Prior generations do not.</remarks>
     public static class SpeciesConverter
-        {
+    {
         public static string[] SPECIES = Properties.Resources.species.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] SPECIES_LOWERCASE = SPECIES.Select(str => str.ToLowerInvariant()).ToArray();
 
         /// <summary>
         /// Converts a National Dex ID to Generation 3 species ID.

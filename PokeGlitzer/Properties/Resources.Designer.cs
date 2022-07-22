@@ -253,6 +253,16 @@ namespace PokeGlitzer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] personal_e {
+            get {
+                object obj = ResourceManager.GetObject("personal_e", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Egg
         ///Bulbasaur
         ///Ivysaur

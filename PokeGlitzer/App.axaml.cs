@@ -12,6 +12,7 @@ namespace PokeGlitzer
             ResLoader.Initialize();
             Settings.Initialize();
             GlitzerSimulation.Initialize();
+            PersonalInfo.Initialize();
         }
 
         public override void OnFrameworkInitializationCompleted()

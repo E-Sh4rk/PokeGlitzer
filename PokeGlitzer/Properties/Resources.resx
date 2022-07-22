@@ -130,6 +130,9 @@
   <data name="natures" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\natures.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="personal_e" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\personal_e.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="species" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\species.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

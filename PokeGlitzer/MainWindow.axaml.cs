@@ -17,7 +17,7 @@ using MessageBox.Avalonia;
 namespace PokeGlitzer
 {
     // TODO: Improve ribbons field.
-    // TODO: Add nature/shininess/gender/ability fields (it will change PID and vice versa)
+    // TODO: Add item sprites
 
     public partial class MainWindow : Window
     {

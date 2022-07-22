@@ -7,14 +7,14 @@ you should use [PKHeX](https://github.com/kwsch/PKHeX).
 
 The following dependencies are required in order to run this application:
 
-- Windows (recommended), or MacOS/Linux (not tested yet)
+- Windows (recommended), or MacOS/Linux
 - .NET Runtime 5.0: https://dotnet.microsoft.com/download/dotnet/5.0
 
 You can then download the last version of this app in the [release section](https://github.com/E-Sh4rk/PokeGlitzer/releases).
 
 To run this app:
 - On Windows, just open `PokeGlitzer.exe`
-- On Linux/MacOS, you can use the command `dotnet PokeGlitzer.dll` (not tested yet)
+- On Linux/MacOS, you can use the command `dotnet PokeGlitzer.dll`
 
 ## Features
 
@@ -23,7 +23,7 @@ The following ROMs are compatible with this save editor:
 - Ruby/Sapphire (any language, not tested yet)
 - RedFire/LeafGreen (any language)
 
-In any case, **please backup your save before using this save editor** as it has not been tested extensively yet.
+In any case, **please backup your save before using this save editor**.
 
 The following features are implemented:
 - Viewing and editing Pokemons in the party

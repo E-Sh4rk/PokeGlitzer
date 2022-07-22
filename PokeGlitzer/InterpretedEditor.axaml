@@ -42,6 +42,31 @@
 
       <TabItem>
         <TabItem.Header>
+          <TextBlock VerticalAlignment="Center">PID</TextBlock>
+        </TabItem.Header>
+        <Grid ColumnDefinitions="75,150,75,150" RowDefinitions="Auto,Auto">
+          <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Nature</TextBlock>
+          <ComboBox Items="{x:Static local:TextData.FILTERED_NATURES}" Margin="10,5" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1"
+                    SelectedIndex="{Binding PidNature}" />
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Ability</TextBlock>
+          <ComboBox Grid.Row="0" Grid.Column="3" Margin="10,5" HorizontalAlignment="Stretch" SelectedIndex="{Binding PidAbility}">
+            <ComboBoxItem>Primary</ComboBoxItem>
+            <ComboBoxItem>Secondary</ComboBoxItem>
+          </ComboBox>
+          <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Gender</TextBlock>
+          <ComboBox Grid.Row="1" Grid.Column="1" Margin="10,5" HorizontalAlignment="Stretch"
+                    SelectedIndex="{Binding PidGender, Converter={StaticResource pgender2i}}">
+            <ComboBoxItem>Unknown</ComboBoxItem>
+            <ComboBoxItem>Male</ComboBoxItem>
+            <ComboBoxItem>Female</ComboBoxItem>
+          </ComboBox>
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Shiny</TextBlock>
+          <CheckBox  Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Margin="10,5" IsChecked="{Binding PidShiny}" />
+        </Grid>
+      </TabItem>
+
+      <TabItem>
+        <TabItem.Header>
           <TextBlock VerticalAlignment="Center">Identity</TextBlock>
         </TabItem.Header>
         <Grid ColumnDefinitions="75,150,75,150" RowDefinitions="Auto,Auto,Auto,Auto">

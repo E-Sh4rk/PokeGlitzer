@@ -157,6 +157,12 @@ namespace PokeGlitzer.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Gender)value; }
     }
+    public class PkmnGenderTypeToIndex : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (PidCalculator.PkmnGender)value; }
+    }
     public class LanguageTypeToIndex : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }

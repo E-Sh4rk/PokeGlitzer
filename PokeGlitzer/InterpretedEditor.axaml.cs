@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -68,9 +69,10 @@ namespace PokeGlitzer
         public void RefreshControls()
         {
             InterpretedData d = view.Interpreted;
-            PID = d.PID;
-            OTID = d.OTID;
-            Species = (string)pts.Convert(d.species, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+            pid = d.PID;
+            otid = d.OTID;
+            species = (string)pts.Convert(d.species, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+            UpdatePidFields(false);
             HasSpecies = d.hasSpecies;
             Egg = d.egg;
 
@@ -118,8 +120,7 @@ namespace PokeGlitzer
             object item = its.ConvertBack(Item, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
             Battle b = new Battle(item is ushort ? (ushort)item : (ushort)0, Ability, Experience, Friendship);
             Misc misc = new Misc(PokerusDays, PokerusStrain, Ribbons, Obedient);
-            object species = pts.ConvertBack(Species, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
-            InterpretedData d = new InterpretedData(PID, OTID, species is ushort ? (ushort)species : (ushort)0, HasSpecies, Egg, id, b, m, evs, ivs, c, misc);
+            InterpretedData d = new InterpretedData(PID, OTID, SpeciesU16(), HasSpecies, Egg, id, b, m, evs, ivs, c, misc);
             view.Interpreted = d;
         }
         public void SaveAndClose()
@@ -132,19 +133,24 @@ namespace PokeGlitzer
         public uint PID
         {
             get => pid;
-            set { pid = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PID))); }
+            set { pid = value; UpdatePidFields(false); }
         }
         uint otid;
         public uint OTID
         {
             get => otid;
-            set { otid = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTID))); }
+            set { otid = value; UpdatePidFields(false); }
         }
         string species;
         public string Species
         {
             get => species;
-            set { species = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Species))); }
+            set { species = value; UpdatePidFields(false); }
+        }
+        public ushort SpeciesU16()
+        {
+            object species = pts.ConvertBack(Species, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            return species is ushort ? (ushort)species : (ushort)0;
         }
         bool hasSpecies;
         public bool HasSpecies
@@ -487,6 +493,61 @@ namespace PokeGlitzer
         {
             get => obedient;
             set { obedient = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Obedient))); }
+        }
+
+        // PID fields
+        bool pidShiny;
+        public bool PidShiny
+        {
+            get => pidShiny;
+            set { pidShiny = value; UpdatePidFromPidFields(); }
+        }
+        byte pidNature;
+        public byte PidNature
+        {
+            get => pidNature;
+            set { pidNature = value; UpdatePidFromPidFields(); }
+        }
+        byte pidAbility;
+        public byte PidAbility
+        {
+            get => pidAbility;
+            set { pidAbility = value; UpdatePidFromPidFields(); }
+        }
+        PidCalculator.PkmnGender pidGender;
+        public PidCalculator.PkmnGender PidGender
+        {
+            get => pidGender;
+            set { pidGender = value; UpdatePidFromPidFields(); }
+        }
+        void RefreshPidFields()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidShiny)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidAbility)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidGender)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidNature)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PID)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTID)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Species)));
+        }
+        void UpdatePidFields(bool refreshLater)
+        {
+            ushort species = SpeciesU16();
+            uint otid = OTID; uint pid = PID;
+            pidShiny = PidCalculator.ShinyOfPID(pid, otid);
+            pidAbility = PidCalculator.AbilityOfPID(pid, species);
+            pidGender = PidCalculator.GenderOfPID(pid, species);
+            pidNature = PidCalculator.NatureOfPID(pid);
+            if (refreshLater)
+                Dispatcher.UIThread.InvokeAsync(() => RefreshPidFields());
+            else
+                RefreshPidFields();
+        }
+        void UpdatePidFromPidFields()
+        {
+            uint? npid = PidCalculator.GenerateNewPID(OTID, SpeciesU16(), PidShiny, PidGender, PidNature, PidAbility);
+            if (npid.HasValue) { pid = npid.Value; UpdatePidFields(false); }
+            else { UpdatePidFields(true); throw new Avalonia.Data.DataValidationException(null); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -17,7 +17,7 @@ using MessageBox.Avalonia;
 namespace PokeGlitzer
 {
     // TODO: Improve ribbons field.
-    // TODO: Add item sprites
+    // TODO: Add item sprites for "unholdable" objects.
 
     public partial class MainWindow : Window
     {

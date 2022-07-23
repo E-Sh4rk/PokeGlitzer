@@ -14,7 +14,8 @@ namespace PokeGlitzer
 {
     static class ResLoader
     {
-        public const int MAX_SPECIES = 386;
+        const int MAX_SPECIES = 386;
+        const int MAX_ITEMS = 264;
         static string? imgdir;
         public static void Initialize()
         {
@@ -22,10 +23,13 @@ namespace PokeGlitzer
             imgdir = Path.Combine(imgdir, "Images");
             var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
             none = new Bitmap(assets.Open(new Uri("avares://PokeGlitzer/Resources/b_none.png")));
+            none_item = new Bitmap(assets.Open(new Uri("avares://PokeGlitzer/Resources/bitem_none.png")));
             try { special[0] = new Bitmap(Path.Combine(imgdir, "b_unknown.png")); } catch { special[0] = none; }
             try { special[1] = new Bitmap(Path.Combine(imgdir, "b_unknown_alt.png")); } catch { special[1] = none; }
             try { special[2] = new Bitmap(Path.Combine(imgdir, "b_egg.png")); } catch { special[2] = none; }
             try { special[3] = new Bitmap(Path.Combine(imgdir, "b_bad_egg.png")); } catch { special[3] = none; }
+            try { special[4] = new Bitmap(Path.Combine(imgdir, "bitem_tm.png")); } catch { special[4] = none_item; }
+            try { special[5] = new Bitmap(Path.Combine(imgdir, "bitem_unk.png")); } catch { special[5] = none_item; }
         }
         static void InitializeSpecies(int i)
         {
@@ -49,17 +53,47 @@ namespace PokeGlitzer
                 shiny_species[i] = Species(i);
             }
         }
+        static void InitializeItem(int i)
+        {
+            try
+            {
+                items[i] = new Bitmap(Path.Combine(imgdir!, string.Format("items/bitem_{0}.png", i)));
+            }
+            catch
+            {
+                items[i] = special[5];
+            }
+        }
 
         static Bitmap? none = null;
-        static Bitmap?[] special = new Bitmap[4];
+        static Bitmap? none_item = null;
+        static Bitmap?[] special = new Bitmap[6];
         static Bitmap?[] species = new Bitmap[MAX_SPECIES + 1];
         static Bitmap?[] shiny_species = new Bitmap[MAX_SPECIES + 1];
+        static Bitmap?[] items = new Bitmap[MAX_ITEMS + 1];
         public static Bitmap None { get => none!; }
-        public static Bitmap Species(int i) { if (species[i] == null) InitializeSpecies(i); return species[i]!; }
-        public static Bitmap ShinySpecies(int i) { if (shiny_species[i] == null) InitializeShinySpecies(i); return shiny_species[i]!; }
+        public static Bitmap NoneItem { get => none_item!; }
+        public static Bitmap Species(int i) {
+            if (i > MAX_SPECIES)
+                return Unknown;
+            if (species[i] == null) InitializeSpecies(i); return species[i]!;
+        }
+        public static Bitmap ShinySpecies(int i) {
+            if (i > MAX_SPECIES)
+                return Unknown;
+            if (shiny_species[i] == null) InitializeShinySpecies(i); return shiny_species[i]!;
+        }
+        public static Bitmap Items(int i)
+        {
+            if (i > MAX_ITEMS)
+                return UnknownItem;
+            if (items[i] == null) InitializeItem(i); return items[i]!;
+        }
         public static Bitmap Egg { get => special[2]!; }
         public static Bitmap BadEgg { get => special[3]!; }
         public static Bitmap Unknown { get => special[1]!; }
         public static Bitmap Error { get => special[0]!; }
+        public static Bitmap TM { get => special[4]!; }
+        public static Bitmap UnknownItem { get => special[5]!; }
     }
 }

@@ -352,8 +352,6 @@ namespace PokeGlitzer.Converters
                         return ResLoader.BadEgg;
                     case EggType.NotAnEgg:
                         int species = SpeciesConverter.SetG3Species(data.species);
-                        if (species > ResLoader.MAX_SPECIES)
-                            return ResLoader.Unknown;
                         if (data.IsShiny)
                             return ResLoader.ShinySpecies(species);
                         else
@@ -380,6 +378,26 @@ namespace PokeGlitzer.Converters
             }
             catch { }
             return "ERR";
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+        }
+    }
+    public class ItemToBitmap : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            try
+            {
+                InterpretedData data = (InterpretedData?)value!;
+                if (data.battle.item == 0) return ResLoader.NoneItem;
+                if (ItemConverter.IsItemTM(data.battle.item)) return ResLoader.TM;
+                int id = ItemConverter.GetItemFuture3(data.battle.item);
+                return ResLoader.Items(id);
+            }
+            catch { }
+            return ResLoader.NoneItem;
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="Resources\b_none.png" />
+    <AvaloniaResource Include="Resources\bitem_none.png" />
     <AvaloniaResource Include="Resources\icon.ico" />
   </ItemGroup>
   <ItemGroup>

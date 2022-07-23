@@ -341,6 +341,7 @@ namespace PokeGlitzer.Converters
             try
             {
                 InterpretedData data = (InterpretedData?)value!;
+                if (data.species == 0) return ResLoader.None;
                 switch (data.egg)
                 {
                     case EggType.Invalid:
@@ -361,6 +362,24 @@ namespace PokeGlitzer.Converters
             }
             catch { }
             return ResLoader.None;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
+        }
+    }
+    public class PokemonToShortLabel : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            try
+            {
+                InterpretedData data = (InterpretedData?)value!;
+                if (data.hasSpecies) return data.species.ToString("x");
+                else return "(" + data.species.ToString("x") + ")";
+            }
+            catch { }
+            return "ERR";
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

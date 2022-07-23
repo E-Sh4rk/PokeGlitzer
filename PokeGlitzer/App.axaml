@@ -95,6 +95,7 @@
   <Application.Resources>
     <convert:SelectionToColor x:Key="s2c"/>
     <convert:PokemonToBitmap x:Key="p2b"/>
+    <convert:PokemonToShortLabel x:Key="p2sl"/>
     <convert:NumberToStringConverter x:Key="n2s"/>
     <convert:EggTypeToIndex x:Key="egg2i"/>
     <convert:GenderTypeToIndex x:Key="gender2i"/>
@@ -138,7 +139,7 @@
         <Rectangle ZIndex="0" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />
         <Rectangle ZIndex="1" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="200" Fill="Red" IsVisible="{Binding !pkmn.View.ChecksumValid}" />
         <Image ZIndex="2" Source="{Binding pkmn.View.Interpreted, Converter={StaticResource p2b}}" IsVisible="{Binding pkmn.View.HasData}" />
-        <TextBlock ZIndex="3" Canvas.Left="2" Canvas.Top="2" Text="{Binding pkmn.View.Interpreted.species, StringFormat={}{0:x}}" IsVisible="{Binding pkmn.View.HasData}"/>
+        <TextBlock ZIndex="3" Canvas.Left="2" Canvas.Top="2" Text="{Binding pkmn.View.Interpreted, Converter={StaticResource p2sl}}" IsVisible="{Binding pkmn.View.HasData}"/>
         <Button ZIndex="4" Width="67" Height="55" Foreground="Transparent" Opacity="0" Command="{Binding $parent[Window].DataContext.SelectSlot}" CommandParameter="{Binding pkmn.DataLocation}" />
       </Canvas>
     </DataTemplate>

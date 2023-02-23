@@ -8,7 +8,7 @@ you should use [PKHeX](https://github.com/kwsch/PKHeX).
 The following dependencies are required in order to run this application:
 
 - Windows (recommended), or MacOS/Linux
-- .NET Runtime 5.0: https://dotnet.microsoft.com/download/dotnet/5.0
+- .NET Runtime 7.0: https://dotnet.microsoft.com/download/dotnet/7.0
 
 You can then download the last version of this app in the [release section](https://github.com/E-Sh4rk/PokeGlitzer/releases).
 
@@ -56,4 +56,3 @@ If you want to build the app yourself, you should first clone this repo
 Then:
 - On Windows, just open `PokeGlitzer.sln` using Visual Studio 2019
 - On Linux/MacOS, you should be able to build it with the command `dotnet build PokeGlitzer.sln -c Release`
-(not tested yet)

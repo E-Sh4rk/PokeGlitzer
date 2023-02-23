@@ -13,11 +13,15 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using MessageBox.Avalonia;
+using System.Xml.Linq;
 
 namespace PokeGlitzer
 {
     // TODO: Improve ribbons field.
     // TODO: Add item sprites for "unholdable" objects.
+    // TODO: Ability fields: show ability name (when available)
+    // TODO: Nickname field: button to set to default (when available)
+    // TODO: Experience field: show level + remaining (when available)
 
     public partial class MainWindow : Window
     {

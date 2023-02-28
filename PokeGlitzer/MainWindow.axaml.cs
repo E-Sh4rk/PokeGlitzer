@@ -17,11 +17,13 @@ using System.Xml.Linq;
 
 namespace PokeGlitzer
 {
+    // TODO: Fix party count not set properly in the save.
     // TODO: Improve ribbons field.
     // TODO: Add item sprites for "unholdable" objects.
     // TODO: Ability fields: show ability name (when available)
     // TODO: Nickname field: button to set to default (when available)
     // TODO: Experience field: show level + remaining (when available)
+    // TODO: Allow to view and edit other save data (https://github.com/pret/pokeemerald/blob/master/src/save.c : gRamSaveSectorLocations)
 
     public partial class MainWindow : Window
     {

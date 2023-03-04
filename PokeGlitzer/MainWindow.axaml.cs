@@ -17,7 +17,6 @@ using System.Xml.Linq;
 
 namespace PokeGlitzer
 {
-    // TODO: Fix party count not set properly in the save.
     // TODO: Improve ribbons field.
     // TODO: Add item sprites for "unholdable" objects.
     // TODO: Ability fields: show ability name (when available)
@@ -345,6 +344,7 @@ namespace PokeGlitzer
                     CurrentSave.SetPCData(pcd);
                     TeamItemsData tid = CurrentSave.RetrieveTeamData();
                     tid.pokemonList = teamData.ToArray();
+                    tid.teamSize = CalculatePlayerPartyCount();
                     CurrentSave.SetTeamData(tid);
                     CurrentSave.SaveToFile();
                     initialData = pcd.pokemonList;
@@ -354,6 +354,12 @@ namespace PokeGlitzer
                     MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while saving.").ShowDialog(mw);
                 }
             }
+        }
+        uint CalculatePlayerPartyCount()
+        {
+            uint i = 0;
+            while (i < Team.Count && Team[(int)i] != null && Team[(int)i]!.pkmn.View.Interpreted.species != 0) i++;
+            return i;
         }
         public async void SaveAs()
         {

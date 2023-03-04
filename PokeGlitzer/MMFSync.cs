@@ -200,6 +200,7 @@ namespace PokeGlitzer
                     byte[] new_data = Utils.ExtractCollectionRange(teamData, i, c);
                     if (!Enumerable.SequenceEqual(new_data, emu_data))*/
                     WriteChannel(TEAM_OUT, teamData.ToArray());
+                    // NOTE: The partyCount field (just before teamData) will not be set
                 }
             }
         }

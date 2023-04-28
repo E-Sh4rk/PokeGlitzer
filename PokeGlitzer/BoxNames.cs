@@ -57,6 +57,7 @@ namespace PokeGlitzer
             if (force || !Enumerable.SequenceEqual(dataArr, data))
                 UpdateFromData(dataArr);
         }
+        public void Refresh() { UpdateViewFromSource(true); }
 
         void UpdateFromData(byte[] dataArr)
         {

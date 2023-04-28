@@ -43,6 +43,42 @@
         <MenuItem Header="_Flag invalid Pokemons as bad eggs" Command="{Binding FlagBadEggs}" />
         <MenuItem Header="_Run GP simulation..." Command="{Binding RunGPSimulation}" />
       </MenuItem>
+      <MenuItem Header="_Settings">
+        <MenuItem Header="_English" Command="{Binding SetEnglishLang}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding EnglishLang}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_Japanese" Command="{Binding SetJapaneseLang}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding JapaneseLang}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_French" Command="{Binding SetFrenchLang}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding FrenchLang}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_German" Command="{Binding SetGermanLang}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding GermanLang}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_Italian" Command="{Binding SetItalianLang}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding ItalianLang}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_Spanish" Command="{Binding SetSpanishLang}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding SpanishLang}"/></MenuItem.Icon>
+        </MenuItem>
+        <Separator/>
+        <MenuItem Header="_Emerald" Command="{Binding SetEmeraldGame}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding EmeraldGame}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_Fire Red" Command="{Binding SetFireRedGame}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding FireRedGame}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_Leaf Green" Command="{Binding SetLeafGreenGame}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding LeafGreenGame}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_Ruby" Command="{Binding SetRubyGame}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding RubyGame}"/></MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Header="_Sapphire" Command="{Binding SetSapphireGame}">
+          <MenuItem.Icon><CheckBox Width="20" IsChecked="{Binding SapphireGame}"/></MenuItem.Icon>
+        </MenuItem>
+      </MenuItem>
     </Menu>
 
     <StackPanel Orientation="Vertical">

@@ -10,12 +10,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static PokeGlitzer.Settings;
 
 namespace PokeGlitzer
 {
     static class Settings
     {
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public static GameVersion Game_version { get; private set; }
+        public static GameLang Game_lang { get; private set; }
+
         public static bool Text_useJapanese { get => Text_lang == Lang.JAP; }
         public static Lang Text_lang { get; private set; }
 
@@ -31,6 +35,17 @@ namespace PokeGlitzer
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public enum Lang { ENG, GER, FRA, SPA, ITA, JAP };
+        public enum GameVersion { Sapphire, Ruby, Emerald, FireRed, LeafGreen };
+        public enum GameLang { ENG, GER, FRA, SPA, ITA, JAP };
+        public static void SetLang(GameLang gl, Lang l)
+        {
+            Game_lang = gl;
+            Text_lang = l;
+        }
+        public static void SetVersion(GameVersion v)
+        {
+            Game_version = v;
+        }
         public static void Initialize()
         {
             NumberToStringConverter conv = new NumberToStringConverter();
@@ -40,8 +55,29 @@ namespace PokeGlitzer
             src.FileProvider = new PhysicalFileProvider(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!);
             IniConfigurationProvider prov = new IniConfigurationProvider(src);
             prov.Load();
+            // Game
+            prov.TryGet("Game:version", out string game_version);
+            Game_version = game_version switch
+            {
+                "ruby" => GameVersion.Ruby,
+                "sapphire" => GameVersion.Sapphire,
+                "emerald" => GameVersion.Emerald,
+                "firered" => GameVersion.FireRed,
+                "leafgreen" => GameVersion.LeafGreen,
+                _ => GameVersion.Emerald
+            };
+            prov.TryGet("Game:lang", out string game_lang);
+            Game_lang = game_lang switch
+            {
+                "english" => GameLang.ENG,
+                "japanese" => GameLang.JAP,
+                "german" => GameLang.GER,
+                "french" => GameLang.FRA,
+                "italian" => GameLang.ITA,
+                "spanish" => GameLang.SPA,
+                _ => GameLang.ENG
+            };
             // Text
-            prov.TryGet("Text:japaneseCharset", out string text_japanese);
             prov.TryGet("Text:lang", out string text_lang);
             Text_lang = text_lang switch
             {

@@ -514,5 +514,94 @@ namespace PokeGlitzer
                 MessageBoxManager.GetMessageBoxStandardWindow("Error", "Please run the synchronization LUA script in Bizhawk first.").ShowDialog(mw);
         }
         public void StopSync() { sync.Stop(); }
+
+        public bool EnglishLang
+        {
+            get => Settings.Text_lang == Settings.Lang.ENG && Settings.Game_lang == Settings.GameLang.ENG;
+            set { SetLang(Settings.GameLang.ENG, Settings.Lang.ENG); }
+        }
+        public void SetEnglishLang() { EnglishLang = true; }
+        public bool JapaneseLang
+        {
+            get => Settings.Text_lang == Settings.Lang.JAP && Settings.Game_lang == Settings.GameLang.JAP;
+            set { SetLang(Settings.GameLang.JAP, Settings.Lang.JAP); }
+        }
+        public void SetJapaneseLang() { JapaneseLang = true; }
+        public bool FrenchLang
+        {
+            get => Settings.Text_lang == Settings.Lang.FRA && Settings.Game_lang == Settings.GameLang.FRA;
+            set { SetLang(Settings.GameLang.FRA, Settings.Lang.FRA); }
+        }
+        public void SetFrenchLang() { FrenchLang = true; }
+        public bool GermanLang
+        {
+            get => Settings.Text_lang == Settings.Lang.GER && Settings.Game_lang == Settings.GameLang.GER;
+            set { SetLang(Settings.GameLang.GER, Settings.Lang.GER); }
+        }
+        public void SetGermanLang() { GermanLang = true; }
+        public bool ItalianLang
+        {
+            get => Settings.Text_lang == Settings.Lang.ITA && Settings.Game_lang == Settings.GameLang.ITA;
+            set { SetLang(Settings.GameLang.ITA, Settings.Lang.ITA); }
+        }
+        public void SetItalianLang() { ItalianLang = true; }
+        public bool SpanishLang
+        {
+            get => Settings.Text_lang == Settings.Lang.SPA && Settings.Game_lang == Settings.GameLang.SPA;
+            set { SetLang(Settings.GameLang.SPA, Settings.Lang.SPA); }
+        }
+        public void SetSpanishLang() { SpanishLang = true; }
+        void SetLang (Settings.GameLang gl, Settings.Lang l)
+        {
+            Settings.SetLang(gl, l);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnglishLang)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(JapaneseLang)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FrenchLang)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GermanLang)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ItalianLang)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SpanishLang)));
+            boxNames.Refresh();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentBoxName)));
+        }
+
+        public bool EmeraldGame
+        {
+            get => Settings.Game_version == Settings.GameVersion.Emerald;
+            set { SetVersion(Settings.GameVersion.Emerald); }
+        }
+        public void SetEmeraldGame() { EmeraldGame = true; }
+        public bool FireRedGame
+        {
+            get => Settings.Game_version == Settings.GameVersion.FireRed;
+            set { SetVersion(Settings.GameVersion.FireRed); }
+        }
+        public void SetFireRedGame() { FireRedGame = true; }
+        public bool LeafGreenGame
+        {
+            get => Settings.Game_version == Settings.GameVersion.LeafGreen;
+            set { SetVersion(Settings.GameVersion.LeafGreen); }
+        }
+        public void SetLeafGreenGame() { LeafGreenGame = true; }
+        public bool RubyGame
+        {
+            get => Settings.Game_version == Settings.GameVersion.Ruby;
+            set { SetVersion(Settings.GameVersion.Ruby); }
+        }
+        public void SetRubyGame() { RubyGame = true; }
+        public bool SapphireGame
+        {
+            get => Settings.Game_version == Settings.GameVersion.Sapphire;
+            set { SetVersion(Settings.GameVersion.Sapphire); }
+        }
+        public void SetSapphireGame() { SapphireGame = true; }
+        void SetVersion(Settings.GameVersion v)
+        {
+            Settings.SetVersion(v);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EmeraldGame)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FireRedGame)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LeafGreenGame)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RubyGame)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SapphireGame)));
+        }
     }
 }

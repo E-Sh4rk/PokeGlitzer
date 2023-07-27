@@ -37,7 +37,7 @@ namespace PokeGlitzer
             this.data = data;
         }
         public byte Gender { get => data[0x10]; }
-        public int EXPGrowth { get => data[0x13]; }
+        public byte EXPGrowth { get => data[0x13]; }
         public int Ability1 { get => data[0x16]; }
         public int Ability2 { get => data[0x17]; }
         public bool HasSecondAbility { get => Ability1 != Ability2; }

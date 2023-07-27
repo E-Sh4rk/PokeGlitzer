@@ -383,7 +383,7 @@ namespace PokeGlitzer
     /// <summary>
     /// Calculations for <see cref="PKM.EXP"/> and <see cref="PKM.CurrentLevel"/>.
     /// </summary>
-    public static class Experience
+    public static class ExperienceConverter
     {
         /// <summary>
         /// Gets the current level of a species.
@@ -391,12 +391,12 @@ namespace PokeGlitzer
         /// <param name="exp">Experience points</param>
         /// <param name="growth">Experience growth rate</param>
         /// <returns>Current level of the species.</returns>
-        public static int GetLevel(uint exp, byte growth)
+        public static byte GetLevel(uint exp, byte growth)
         {
             var table = GetTable(growth);
             if (exp >= table[^1])
                 return 100;
-            int tl = 1; // Initial Level. Iterate upwards to find the level
+            byte tl = 1; // Initial Level. Iterate upwards to find the level
             while (exp >= table[tl])
                 ++tl;
             return tl;

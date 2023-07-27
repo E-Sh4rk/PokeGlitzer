@@ -149,7 +149,10 @@
             <ComboBoxItem>Secondary</ComboBoxItem>
           </ComboBox>
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Experience</TextBlock>
-          <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Experience, Converter={StaticResource n2s}}" />
+          <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="10,5">
+            <TextBox Text="{Binding Level, Converter={StaticResource n2s}}" Width="45" MinWidth="45" DockPanel.Dock="Left" />
+            <TextBox Text="{Binding RemainingExperience, Converter={StaticResource n2s}}" Margin="5,0,0,0" />
+          </DockPanel>
           <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Friendship</TextBlock>
           <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding Friendship, Converter={StaticResource n2s}}" />
         </Grid>
@@ -262,7 +265,7 @@
         <TabItem.Header>
           <TextBlock VerticalAlignment="Center">Misc</TextBlock>
         </TabItem.Header>
-        <Grid ColumnDefinitions="100,125,100,125" RowDefinitions="Auto,Auto">
+        <Grid ColumnDefinitions="100,125,125,100" RowDefinitions="Auto,Auto">
           <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Pokérus days</TextBlock>
           <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding PokerusDays, Converter={StaticResource n2s}}" />
           <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Pokérus strain</TextBlock>
@@ -270,7 +273,7 @@
 
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Ribbons</TextBlock>
           <TextBox Grid.Row="1" Grid.Column="1" Margin="10,5" Text="{Binding Ribbons, Converter={StaticResource n2s}, ConverterParameter=X}" />
-          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Obedient</TextBlock>
+          <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Fateful encounter</TextBlock>
           <CheckBox  Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Margin="10,5" IsChecked="{Binding Obedient}" />
         </Grid>
       </TabItem>

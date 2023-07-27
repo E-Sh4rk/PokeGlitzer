@@ -6,6 +6,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using static PokeGlitzer.PidCalculator;
 
 namespace PokeGlitzer
 {
@@ -145,7 +146,7 @@ namespace PokeGlitzer
         public string Species
         {
             get => species;
-            set { species = value; UpdatePidFields(false); }
+            set { species = value; UpdatePidFields(false); UpdateExperienceFields(); }
         }
         public ushort SpeciesU16()
         {
@@ -277,7 +278,49 @@ namespace PokeGlitzer
         public uint Experience
         {
             get => experience;
-            set { experience = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Experience))); }
+            set { experience = value; UpdateExperienceFields(); }
+        }
+        uint remainingExperience;
+        public uint RemainingExperience
+        {
+            get => remainingExperience;
+            set { remainingExperience = value; UpdateExpFromExpFields(); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RemainingExperience))); }
+        }
+        byte level;
+        public byte Level
+        {
+            get => level;
+            set { level = value; UpdateExpFromExpFields(); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Level))); }
+        }
+        void UpdateExperienceFields()
+        {
+            ushort species = SpeciesU16();
+            uint exp = Experience;
+            int s = SpeciesConverter.SetG3Species(species);
+            if (s == 0)
+            {
+                Level = 0; RemainingExperience = exp;
+            }
+            else
+            {
+                byte growth = PersonalInfo.Table[s].EXPGrowth;
+                byte lvl = ExperienceConverter.GetLevel(exp, growth);
+                uint remExp = exp - ExperienceConverter.GetEXP(lvl, growth);
+                Level = lvl; RemainingExperience = remExp;
+            }
+        }
+        void UpdateExpFromExpFields()
+        {
+            ushort species = SpeciesU16();
+            uint expRem = RemainingExperience; byte lvl = Level;
+            int s = SpeciesConverter.SetG3Species(species);
+            uint exp = expRem;
+            if (s != 0)
+            {
+                byte growth = PersonalInfo.Table[s].EXPGrowth;
+                exp += ExperienceConverter.GetEXP(lvl, growth);
+            }
+            experience = exp;
         }
         byte friendship;
         public byte Friendship

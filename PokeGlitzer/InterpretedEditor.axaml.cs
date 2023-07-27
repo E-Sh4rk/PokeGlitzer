@@ -72,7 +72,7 @@ namespace PokeGlitzer
             InterpretedData d = view.Interpreted;
             pid = d.PID;
             otid = d.OTID;
-            species = (string)pts.Convert(d.species, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+            species = (string)pts.Convert(d.species, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
             UpdatePidFields(false);
             HasSpecies = d.hasSpecies;
             Egg = d.egg;
@@ -80,13 +80,13 @@ namespace PokeGlitzer
             _savedLanguage = d.identity.lang;
             Language = _savedLanguage; SetNormalizedNickname(d.identity.nickname); OTGender = d.identity.otGender;
             SetNormalizedOTName(d.identity.otName);
-            MetLocation = (string)lts.Convert(d.identity.metLocation, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+            MetLocation = (string)lts.Convert(d.identity.metLocation, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
             LevelMet = d.identity.levelMet; GameOfOrigin = d.identity.gameOfOrigin; Ball = d.identity.ball;
 
-            Move1 = (string)mts.Convert(d.moves.m1, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
-            Move2 = (string)mts.Convert(d.moves.m2, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture); ;
-            Move3 = (string)mts.Convert(d.moves.m3, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture); ;
-            Move4 = (string)mts.Convert(d.moves.m4, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture); ;
+            Move1 = (string)mts.Convert(d.moves.m1, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
+            Move2 = (string)mts.Convert(d.moves.m2, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture); ;
+            Move3 = (string)mts.Convert(d.moves.m3, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture); ;
+            Move4 = (string)mts.Convert(d.moves.m4, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture); ;
             PP1 = d.moves.pp1; PP2 = d.moves.pp2; PP3 = d.moves.pp3; PP4 = d.moves.pp4;
             PPb1 = d.moves.ppb1; PPb2 = d.moves.ppb2; PPb3 = d.moves.ppb3; PPb4 = d.moves.ppb4;
 
@@ -99,7 +99,7 @@ namespace PokeGlitzer
             Coolness = d.condition.coolness; Beauty = d.condition.beauty; Cuteness = d.condition.cuteness;
             Smartness = d.condition.smartness; Toughness = d.condition.toughness; Feel = d.condition.feel;
 
-            Item = (string)its.Convert(d.battle.item, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+            Item = (string)its.Convert(d.battle.item, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
             Ability = d.battle.ability; Experience = d.battle.experience; Friendship = d.battle.friendship;
 
             PokerusDays = d.misc.pokerus_days; PokerusStrain = d.misc.pokerus_strain; Ribbons = d.misc.ribbons; Obedient = d.misc.obedient;
@@ -107,18 +107,18 @@ namespace PokeGlitzer
         public void Save()
         {
             _savedLanguage = Language;
-            object location = lts.ConvertBack(MetLocation, typeof(byte), "X", System.Globalization.CultureInfo.CurrentCulture);
+            object location = lts.ConvertBack(MetLocation, typeof(byte), "x", System.Globalization.CultureInfo.CurrentCulture);
             Identity id = new Identity(Language, nickname, OTGender, otName, location is byte ? (byte)location : (byte)0, LevelMet, GameOfOrigin, Ball);
-            object m1 = mts.ConvertBack(Move1, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
-            object m2 = mts.ConvertBack(Move2, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
-            object m3 = mts.ConvertBack(Move3, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
-            object m4 = mts.ConvertBack(Move4, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            object m1 = mts.ConvertBack(Move1, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
+            object m2 = mts.ConvertBack(Move2, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
+            object m3 = mts.ConvertBack(Move3, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
+            object m4 = mts.ConvertBack(Move4, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
             Moves m = new Moves(m1 is ushort ? (ushort)m1 : (ushort)0, PP1, PPb1, m2 is ushort ? (ushort)m2 : (ushort)0, PP2, PPb2,
                 m3 is ushort ? (ushort)m3 : (ushort)0, PP3, PPb3, m4 is ushort ? (ushort)m4 : (ushort)0, PP4, PPb4);
             EVsIVs evs = new EVsIVs(HpEV, AtkEV, DefEV, SpeedEV, SpeAtkEV, SpeDefEV);
             EVsIVs ivs = new EVsIVs(HpIV, AtkIV, DefIV, SpeedIV, SpeAtkIV, SpeDefIV);
             Condition c = new Condition(Coolness, Beauty, Cuteness, Smartness, Toughness, Feel);
-            object item = its.ConvertBack(Item, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            object item = its.ConvertBack(Item, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
             Battle b = new Battle(item is ushort ? (ushort)item : (ushort)0, Ability, Experience, Friendship);
             Misc misc = new Misc(PokerusDays, PokerusStrain, Ribbons, Obedient);
             InterpretedData d = new InterpretedData(PID, OTID, SpeciesU16(), HasSpecies, Egg, id, b, m, evs, ivs, c, misc);
@@ -150,7 +150,7 @@ namespace PokeGlitzer
         }
         public ushort SpeciesU16()
         {
-            object species = pts.ConvertBack(Species, typeof(ushort), "X", System.Globalization.CultureInfo.CurrentCulture);
+            object species = pts.ConvertBack(Species, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
             return species is ushort ? (ushort)species : (ushort)0;
         }
         bool hasSpecies;

@@ -408,7 +408,7 @@ namespace PokeGlitzer
                     EggType.BadEgg => "bad egg",
                     _ => throw new NotImplementedException(),
                 };
-                string species = (string)pts.Convert(e.species, typeof(String), "X", System.Globalization.CultureInfo.CurrentCulture);
+                string species = (string)pts.Convert(e.species, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
                 str.AppendLine($"Species {/*e.species:X*/species} ({egg}) by {type} corruption:");
                 foreach (GlitzerSimulation.OffsetASLR oa in o)
                     str.AppendLine($"    By corrupting from 0x{oa.startOffset:X} to 0x{oa.endOffset:X} (ASLR: +{oa.aslr})");

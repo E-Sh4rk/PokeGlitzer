@@ -14,11 +14,11 @@
         <Button FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Content="🡸" Command="{Binding Prev}" DockPanel.Dock="Left"/>
         <Button FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Content="🡺" Command="{Binding Next}" DockPanel.Dock="Right"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-          <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentOffset, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentOffset, Converter={StaticResource n2s}, ConverterParameter=x}" />
           <Separator Width="10" />
           <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentASLR, Converter={StaticResource n2s}}" />
           <Separator Width="10" />
-          <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentEndOffset, Converter={StaticResource n2s}, ConverterParameter=X}" />
+          <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentEndOffset, Converter={StaticResource n2s}, ConverterParameter=x}" />
         </StackPanel>
       </DockPanel>
       <Separator Height="10" />

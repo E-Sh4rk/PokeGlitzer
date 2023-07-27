@@ -21,11 +21,11 @@ namespace PokeGlitzer.Converters
 
             long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
             string format = (string)parameter;
-            if (format == "X" || format == "x")
+            if (format == "X" || format == "x" || format == "B" || format == "b")
             {
                 string prefix = nb >= 0 ? "" : "-";
                 nb = Math.Abs(nb);
-                return prefix + "0x" + nb.ToString(format);
+                return prefix + "0" + format + nb.ToString(format);
             }
             else
                 return nb.ToString();
@@ -192,11 +192,11 @@ namespace PokeGlitzer.Converters
             if (species == 0)
             {
                 string format = (string)parameter;
-                if (format == "X" || format == "x")
+                if (format == "X" || format == "x" || format == "B" || format == "b")
                 {
                     string prefix = nb >= 0 ? "" : "-";
                     nb = Math.Abs(nb);
-                    return prefix + "0x" + nb.ToString(format);
+                    return prefix + "0" + format + nb.ToString(format);
                 }
                 else
                     return nb.ToString();
@@ -250,11 +250,11 @@ namespace PokeGlitzer.Converters
             if (id < 0)
             {
                 string format = (string)parameter;
-                if (format == "X" || format == "x")
+                if (format == "X" || format == "x" || format == "B" || format == "b")
                 {
                     string prefix = nb >= 0 ? "" : "-";
                     nb = Math.Abs(nb);
-                    return prefix + "0x" + nb.ToString(format);
+                    return prefix + "0" + format + nb.ToString(format);
                 }
                 else
                     return nb.ToString();

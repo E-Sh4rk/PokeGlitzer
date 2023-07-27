@@ -61,6 +61,63 @@ namespace PokeGlitzer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to —
+        ///Stench
+        ///Drizzle
+        ///Speed Boost
+        ///Battle Armor
+        ///Sturdy
+        ///Damp
+        ///Limber
+        ///Sand Veil
+        ///Static
+        ///Volt Absorb
+        ///Water Absorb
+        ///Oblivious
+        ///Cloud Nine
+        ///Compound Eyes
+        ///Insomnia
+        ///Color Change
+        ///Immunity
+        ///Flash Fire
+        ///Shield Dust
+        ///Own Tempo
+        ///Suction Cups
+        ///Intimidate
+        ///Shadow Tag
+        ///Rough Skin
+        ///Wonder Guard
+        ///Levitate
+        ///Effect Spore
+        ///Synchronize
+        ///Clear Body
+        ///Natural Cure
+        ///Lightning Rod
+        ///Serene Grace
+        ///Swift Swim
+        ///Chlorophyll
+        ///Illuminate
+        ///Trace
+        ///Huge Power
+        ///Poison Point
+        ///Inner Focus
+        ///Magma Armor
+        ///Water Veil
+        ///Magnet Pull
+        ///Soundproof
+        ///Rain Dish
+        ///Sand Stream
+        ///Pressure
+        ///Thick Fat
+        ///Ear [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string abilities {
+            get {
+                return ResourceManager.GetString("abilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (None)
         ///Master Ball
         ///Ultra Ball

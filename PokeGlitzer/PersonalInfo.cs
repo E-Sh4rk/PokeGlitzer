@@ -25,6 +25,7 @@ namespace PokeGlitzer
                 table[i] = new PersonalInfo(data.Slice(SIZE * i, SIZE).ToArray());
             Table = table;
         }
+        public static string[] ABILITIES = Properties.Resources.abilities.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public static PersonalInfo[] Table { get; private set; }

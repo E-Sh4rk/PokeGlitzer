@@ -28,7 +28,7 @@ namespace PokeGlitzer
         public static byte AbilityOfPID(uint PID, ushort species)
         {
             int s = SpeciesConverter.SetG3Species(species);
-            if (s != 0 && !PersonalInfo.Table[s].HasSecondAbility) return 0;
+            if (!PersonalInfo.Table[s].HasSecondAbility) return 0;
             return (byte)(PID & 0x1);
         }
         public static bool ShinyOfPID(uint pid, uint otid)

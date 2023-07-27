@@ -563,8 +563,16 @@ namespace PokeGlitzer
             get => pidGender;
             set { pidGender = value; UpdatePidFromPidFields(); }
         }
+        string[] abilities = { };
+        public string[] Abilities
+        {
+            get => abilities;
+        }
+        bool pausePIDChanges = false;
         void RefreshPidFields()
         {
+            pausePIDChanges = true;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Abilities)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidShiny)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidAbility)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidGender)));
@@ -572,11 +580,23 @@ namespace PokeGlitzer
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PID)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTID)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Species)));
+            pausePIDChanges = false;
         }
         void UpdatePidFields(bool refreshLater)
         {
             ushort species = SpeciesU16();
             uint otid = OTID; uint pid = PID;
+            // Load abilities names
+            int s = SpeciesConverter.SetG3Species(species);
+            if (s == 0) abilities = new string[]{ "-" };
+            else
+            {
+                string a1 = PersonalInfo.ABILITIES[PersonalInfo.Table[s].Ability1];
+                string a2 = PersonalInfo.ABILITIES[PersonalInfo.Table[s].Ability2];
+                if (PersonalInfo.Table[s].HasSecondAbility) abilities = new string[] { "1. " + a1, "2. " + a2 };
+                else abilities = new string[] { "1. " + a1 };
+            }
+            // Load values
             pidShiny = PidCalculator.ShinyOfPID(pid, otid);
             pidAbility = PidCalculator.AbilityOfPID(pid, species);
             pidGender = PidCalculator.GenderOfPID(pid, species);
@@ -588,6 +608,7 @@ namespace PokeGlitzer
         }
         void UpdatePidFromPidFields()
         {
+            if (pausePIDChanges) return;
             uint? npid = PidCalculator.GenerateNewPID(OTID, SpeciesU16(), PidShiny, PidGender, PidNature, PidAbility);
             if (npid.HasValue) { pid = npid.Value; UpdatePidFields(false); }
             else { UpdatePidFields(true); throw new Avalonia.Data.DataValidationException(null); }

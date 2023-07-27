@@ -45,6 +45,7 @@ namespace PokeGlitzer
         public static void SetVersion(GameVersion v)
         {
             Game_version = v;
+            PersonalInfo.Initialize();
         }
         public static void Initialize()
         {

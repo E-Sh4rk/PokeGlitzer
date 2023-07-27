@@ -133,6 +133,15 @@
   <data name="personal_e" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\personal_e.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="personal_fr" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\personal_fr.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="personal_lg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\personal_lg.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="personal_rs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\personal_rs.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="species" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\species.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

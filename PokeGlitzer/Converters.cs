@@ -18,39 +18,14 @@ namespace PokeGlitzer.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (targetType != typeof(string)) throw new NotImplementedException();
-
             long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
-            string format = (string)parameter;
-            if (format == "X" || format == "x" || format == "B" || format == "b")
-            {
-                string prefix = nb >= 0 ? "" : "-";
-                nb = Math.Abs(nb);
-                return prefix + "0" + format + nb.ToString(format);
-            }
-            else
-                return nb.ToString();
+            return Utils.NumberToString(nb, (string)parameter);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
-
-            string v = (string)value;
-            bool neg = false;
-            if (v.StartsWith("-"))
-            {
-                v = v.Substring(1);
-                neg = true;
-            }
-            try
-            {
-                checked
-                {
-                    long res = (long)(new Int64Converter().ConvertFromString(v));
-                    if (neg) res = -res;
-                    return System.Convert.ChangeType(res, targetType);
-                }
-            }
+            try { return Utils.ToNumber((string)value, targetType); }
             catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
     }
@@ -190,17 +165,7 @@ namespace PokeGlitzer.Converters
             long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
             int species = SpeciesConverter.SetG3Species(nb);
             if (species == 0)
-            {
-                string format = (string)parameter;
-                if (format == "X" || format == "x" || format == "B" || format == "b")
-                {
-                    string prefix = nb >= 0 ? "" : "-";
-                    nb = Math.Abs(nb);
-                    return prefix + "0" + format + nb.ToString(format);
-                }
-                else
-                    return nb.ToString();
-            }
+                return Utils.NumberToString(nb, (string)parameter);
             else
                 return SpeciesConverter.SPECIES[species];
         }
@@ -208,30 +173,16 @@ namespace PokeGlitzer.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
-
-            try
-            {
-                checked
+            try {
+                string v = (string)value;
+                int i = Array.IndexOf(SpeciesConverter.SPECIES_LOWERCASE, v.ToLowerInvariant());
+                if (i >= 0)
                 {
-                    string v = (string)value;
-                    int i = Array.IndexOf(SpeciesConverter.SPECIES_LOWERCASE, v.ToLowerInvariant());
-                    if (i >= 0)
-                    {
-                        int species = SpeciesConverter.GetG3Species(i);
-                        if (species != 0)
-                            return System.Convert.ChangeType(species, targetType);
-                    }
-
-                    bool neg = false;
-                    if (v.StartsWith("-"))
-                    {
-                        v = v.Substring(1);
-                        neg = true;
-                    }
-                    long res = (long)(new Int64Converter().ConvertFromString(v));
-                    if (neg) res = -res;
-                    return System.Convert.ChangeType(res, targetType);
+                    int species = SpeciesConverter.GetG3Species(i);
+                    if (species != 0)
+                        return System.Convert.ChangeType(species, targetType);
                 }
+                return Utils.ToNumber(v, targetType);
             }
             catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
@@ -248,17 +199,7 @@ namespace PokeGlitzer.Converters
             long nb = (long)System.Convert.ChangeType(value, typeof(Int64));
             int id = NormalizeID(nb);
             if (id < 0)
-            {
-                string format = (string)parameter;
-                if (format == "X" || format == "x" || format == "B" || format == "b")
-                {
-                    string prefix = nb >= 0 ? "" : "-";
-                    nb = Math.Abs(nb);
-                    return prefix + "0" + format + nb.ToString(format);
-                }
-                else
-                    return nb.ToString();
-            }
+                return Utils.NumberToString(nb, (string)parameter);
             else
                 return Data()[id];
         }
@@ -266,30 +207,16 @@ namespace PokeGlitzer.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
-
-            try
-            {
-                checked
+            try {
+                string v = (string)value;
+                int i = Array.IndexOf(LowercaseData(), v.ToLowerInvariant());
+                if (i >= 0)
                 {
-                    string v = (string)value;
-                    int i = Array.IndexOf(LowercaseData(), v.ToLowerInvariant());
-                    if (i >= 0)
-                    {
-                        int id = NormalizeID(i);
-                        if (id >= 0)
-                            return System.Convert.ChangeType(id, targetType);
-                    }
-
-                    bool neg = false;
-                    if (v.StartsWith("-"))
-                    {
-                        v = v.Substring(1);
-                        neg = true;
-                    }
-                    long res = (long)(new Int64Converter().ConvertFromString(v));
-                    if (neg) res = -res;
-                    return System.Convert.ChangeType(res, targetType);
+                    int id = NormalizeID(i);
+                    if (id >= 0)
+                        return System.Convert.ChangeType(id, targetType);
                 }
+                return Utils.ToNumber(v, targetType);
             }
             catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
         }

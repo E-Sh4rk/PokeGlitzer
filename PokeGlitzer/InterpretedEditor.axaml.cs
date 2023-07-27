@@ -563,7 +563,7 @@ namespace PokeGlitzer
             get => pidGender;
             set { pidGender = value; UpdatePidFromPidFields(); }
         }
-        string[] abilities = { };
+        string[] abilities = { "-" };
         public string[] Abilities
         {
             get => abilities;

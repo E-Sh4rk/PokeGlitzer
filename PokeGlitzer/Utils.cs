@@ -39,23 +39,52 @@ namespace PokeGlitzer
     {
         public static T ToNumber<T>(string v)
         {
+            try { checked { return (T)ToNumber(v, typeof(T)); } }
+            catch { throw new FormatException(); }
+        }
+        public static object ToNumber(string v, Type type)
+        {
             bool neg = false;
+            v = v.Trim();
             if (v.StartsWith("-"))
             {
                 v = v.Substring(1);
+                v = v.Trim();
                 neg = true;
+            }
+            int b = 10;
+            if (v.StartsWith("0x") || v.StartsWith("0X"))
+            {
+                b = 16; v = v.Substring(2); v = v.Trim();
+            }
+            else if (v.StartsWith("0b") || v.StartsWith("0B"))
+            {
+                b = 2; v = v.Substring(2); v = v.Trim();
+            }
+            else if (v.StartsWith("0d") || v.StartsWith("0D"))
+            {
+                b = 10; v = v.Substring(2); v = v.Trim();
             }
             try
             {
-                checked
-                {
-                    long res = (long)(new Int64Converter().ConvertFromString(v));
-                    if (neg) res = -res;
-                    return (T)Convert.ChangeType(res, typeof(T));
-                }
+                long res = Convert.ToInt64(v, b);
+                if (neg) res = -res;
+                return Convert.ChangeType(res, type);
             }
             catch { throw new FormatException(); }
         }
+        public static string NumberToString(long nb, string format)
+        {
+            if (format == "X" || format == "x" || format == "B" || format == "b")
+            {
+                string prefix = nb >= 0 ? "" : "-";
+                nb = Math.Abs(nb);
+                return prefix + "0" + format + nb.ToString(format);
+            }
+            else
+                return nb.ToString();
+        }
+
         public static RangeObservableCollection<T> CollectionOfSize<T>(int size)
         {
             return new RangeObservableCollection<T>(new T[size]);

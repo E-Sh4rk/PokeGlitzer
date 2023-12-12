@@ -8,7 +8,7 @@ you should use [PKHeX](https://github.com/kwsch/PKHeX).
 The following dependencies are required in order to run this application:
 
 - Windows (recommended), or MacOS/Linux
-- .NET Runtime 7.0: https://dotnet.microsoft.com/download/dotnet/7.0
+- .NET Runtime 8.0: https://dotnet.microsoft.com/download/dotnet/8.0
 
 You can then download the last version of this app in the [release section](https://github.com/E-Sh4rk/PokeGlitzer/releases).
 

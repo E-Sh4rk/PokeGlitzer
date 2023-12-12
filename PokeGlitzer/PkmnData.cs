@@ -419,7 +419,7 @@ namespace PokeGlitzer
             return table[level - 1];
         }
 
-        private static ReadOnlySpan<uint> GetTable(byte growth) => growth switch
+        private static uint[] GetTable(byte growth) => growth switch
         {
             0 => Growth0,
             1 => Growth1,
@@ -468,7 +468,7 @@ namespace PokeGlitzer
 
         #region ExpTable
 
-        private static ReadOnlySpan<uint> Growth0 => new uint[]
+        private static uint[] Growth0 => new uint[]
         {
         0000000, 0000008, 0000027, 0000064, 0000125, 0000216, 0000343, 0000512, 0000729, 0001000,
         0001331, 0001728, 0002197, 0002744, 0003375, 0004096, 0004913, 0005832, 0006859, 0008000,
@@ -482,7 +482,7 @@ namespace PokeGlitzer
         0753571, 0778688, 0804357, 0830584, 0857375, 0884736, 0912673, 0941192, 0970299, 1000000,
         };
 
-        private static ReadOnlySpan<uint> Growth1 => new uint[]
+        private static uint[] Growth1 => new uint[]
         {
         0000000, 0000015, 0000052, 0000122, 0000237, 0000406, 0000637, 0000942, 0001326, 0001800,
         0002369, 0003041, 0003822, 0004719, 0005737, 0006881, 0008155, 0009564, 0011111, 0012800,
@@ -496,7 +496,7 @@ namespace PokeGlitzer
         0501878, 0513934, 0526049, 0536557, 0548720, 0560922, 0571333, 0583539, 0591882, 0600000,
         };
 
-        private static ReadOnlySpan<uint> Growth2 => new uint[]
+        private static uint[] Growth2 => new uint[]
         {
         0000000, 0000004, 0000013, 0000032, 0000065, 0000112, 0000178, 0000276, 0000393, 0000540,
         0000745, 0000967, 0001230, 0001591, 0001957, 0002457, 0003046, 0003732, 0004526, 0005440,
@@ -510,7 +510,7 @@ namespace PokeGlitzer
         1160499, 1214753, 1254796, 1312322, 1354652, 1415577, 1460276, 1524731, 1571884, 1640000,
         };
 
-        private static ReadOnlySpan<uint> Growth3 => new uint[]
+        private static uint[] Growth3 => new uint[]
         {
         0000000, 0000009, 0000057, 0000096, 0000135, 0000179, 0000236, 0000314, 0000419, 0000560,
         0000742, 0000973, 0001261, 0001612, 0002035, 0002535, 0003120, 0003798, 0004575, 0005460,
@@ -524,7 +524,7 @@ namespace PokeGlitzer
         0789030, 0816525, 0844653, 0873420, 0902835, 0932903, 0963632, 0995030, 1027103, 1059860,
         };
 
-        private static ReadOnlySpan<uint> Growth4 => new uint[]
+        private static uint[] Growth4 => new uint[]
         {
         0000000, 0000006, 0000021, 0000051, 0000100, 0000172, 0000274, 0000409, 0000583, 0000800,
         0001064, 0001382, 0001757, 0002195, 0002700, 0003276, 0003930, 0004665, 0005487, 0006400,
@@ -538,7 +538,7 @@ namespace PokeGlitzer
         0602856, 0622950, 0643485, 0664467, 0685900, 0707788, 0730138, 0752953, 0776239, 0800000,
         };
 
-        private static ReadOnlySpan<uint> Growth5 => new uint[]
+        private static uint[] Growth5 => new uint[]
         {
         0000000, 0000010, 0000033, 0000080, 0000156, 0000270, 0000428, 0000640, 0000911, 0001250,
         0001663, 0002160, 0002746, 0003430, 0004218, 0005120, 0006141, 0007290, 0008573, 0010000,

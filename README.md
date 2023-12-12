@@ -20,7 +20,7 @@ To run this app:
 
 The following ROMs are compatible with this save editor:
 - Emerald (any language)
-- Ruby/Sapphire (any language, not tested yet)
+- Ruby/Sapphire (any language)
 - RedFire/LeafGreen (any language)
 
 In any case, **please backup your save before using this save editor**.
@@ -54,5 +54,5 @@ If you want to build the app yourself, you should first clone this repo
 (`git clone https://github.com/E-Sh4rk/PokeGlitzer.git`).
 
 Then:
-- On Windows, just open `PokeGlitzer.sln` using Visual Studio 2019
+- On Windows, just open `PokeGlitzer.sln` using Visual Studio 2022
 - On Linux/MacOS, you should be able to build it with the command `dotnet build PokeGlitzer.sln -c Release`

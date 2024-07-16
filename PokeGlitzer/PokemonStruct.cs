@@ -124,8 +124,6 @@ namespace PokeGlitzer
     [StructLayout(LayoutKind.Sequential, Size = 12, Pack = 1)]
     struct Substructure3
     {
-        public const ushort GENDER_MASK = 0b1000_0000_0000_0000;
-        public const ushort LEVEL_MET_MASK = 0b0000_0000_0111_1111;
         public const uint EGG_MASK = 0b0100_0000_0000_0000_0000_0000_0000_0000;
         public const uint ABILITY_MASK = 0b1000_0000_0000_0000_0000_0000_0000_0000;
         public const uint OBEDIENCE_MASK = 0b1000_0000_0000_0000_0000_0000_0000_0000;
@@ -138,13 +136,18 @@ namespace PokeGlitzer
         const int iv_speed = 15;
         const int iv_sp_atk = 20;
         const int iv_sp_def = 25;
-        const byte pokerus_mask = 0b00001111;
+        const byte pokerus_mask = 0b1111;
         const int pokerus_days = 0;
         const int pokerus_strain = 4;
         const ushort goo_mask = 0b1111;
         const int goo = 7;
         const ushort ball_mask = 0b1111;
         const int ball = 11;
+        const ushort gender_mask = 0b1;
+        const int gender = 15;
+        const ushort level_met_mask = 0b111_1111;
+        const int level_met = 0;
+
         public byte IV_hp { get => (byte)((ivEggAbility >> iv_hp) & iv_mask); }
         public byte IV_atk { get => (byte)((ivEggAbility >> iv_atk) & iv_mask); }
         public byte IV_def { get => (byte)((ivEggAbility >> iv_def) & iv_mask); }
@@ -161,8 +164,15 @@ namespace PokeGlitzer
             ivEggAbility |= (sp_atk & iv_mask) << iv_sp_atk;
             ivEggAbility |= (sp_def & iv_mask) << iv_sp_def;
         }
-        public byte PokerusDays { get => (byte)((pokerus >> pokerus_days) & pokerus_mask); }
-        public byte PokerusStrain { get => (byte)((pokerus >> pokerus_strain) & pokerus_mask); }
+        public byte PokerusDays
+        {
+            get => (byte)((pokerus >> pokerus_days) & pokerus_mask);
+            set => pokerus = (byte)((pokerus & ~(pokerus_mask << pokerus_days)) | ((value & pokerus_mask) << pokerus_days));
+        }
+        public byte PokerusStrain {
+            get => (byte)((pokerus >> pokerus_strain) & pokerus_mask);
+            set => pokerus = (byte)((pokerus & ~(pokerus_mask << pokerus_strain)) | ((value & pokerus_mask) << pokerus_strain));
+        }
         public byte GameOfOrigin
         {
             get => (byte)((origins >> goo) & goo_mask);
@@ -173,10 +183,15 @@ namespace PokeGlitzer
             get => (byte)((origins >> ball) & ball_mask);
             set => origins = (ushort)((origins & ~(ball_mask << ball)) | ((value & ball_mask) << ball));
         }
-        public void SetPokerus(byte days, byte strain)
+        public byte LevelMet
         {
-            pokerus  = (byte)((days & pokerus_mask) << pokerus_days);
-            pokerus |= (byte)((strain & pokerus_mask) << pokerus_strain);
+            get => (byte)((origins >> level_met) & level_met_mask);
+            set => origins = (ushort)((origins & ~(level_met_mask << level_met)) | ((value & level_met_mask) << level_met));
+        }
+        public byte OtGender
+        {
+            get => (byte)((origins >> gender) & gender_mask);
+            set => origins = (ushort)((origins & ~(gender_mask << gender)) | ((value & gender_mask) << gender));
         }
 
         public byte pokerus;

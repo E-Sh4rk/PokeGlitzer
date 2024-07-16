@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -126,23 +127,24 @@ namespace PokeGlitzer
     {
         public static Moves Dummy = new Moves(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
-    public record Battle(ushort item, byte ability, uint experience, byte friendship)
+    public record Battle(ushort item, bool ability, uint experience, byte friendship)
     {
-        public static Battle Dummy = new Battle(0, 0, 0, 0);
+        public static Battle Dummy = new Battle(0, false, 0, 0);
     }
     public record Misc(byte pokerus_days, byte pokerus_strain, uint ribbons, bool obedient)
     {
         public static Misc Dummy = new Misc(0, 0, 0, false);
     }
 
-    public enum Gender { Boy=0, Girl }
-    public enum Language { Invalid=0, Japanese, English, French, Italian, German, Spanish }
-    public enum Game { Invalid=0, Sapphire, Ruby, Emerald, FireRed, LeafGreen, ColosseumXD }
-    public enum Ball { Invalid = 0, Master, Ultra, Great, Poke, Safari, Net, Dive, Nest, Repeat, Timer, Luxury, Premier }
-
-    public record Identity(Language lang, string nickname, Gender otGender, string otName, byte metLocation, byte levelMet, Game gameOfOrigin, Ball ball)
+    public enum Language { Invalid=0, Japanese=1, English=2, French=3, Italian=4, German=5, Spanish=7 }
+    public record Identity(byte lang, string nickname, byte otGender, string otName, byte metLocation, byte levelMet, byte gameOfOrigin, byte ball)
     {
-        public static Identity Dummy = new Identity(Language.Invalid, "", Gender.Boy, "", 0, 0, Game.Invalid, Ball.Invalid);
+        public static Identity Dummy = new Identity(0, "", 0, "", 0, 0, 0, 0);
+        public static Language LanguageFromByte(byte b)
+        {
+            return Enum.IsDefined(typeof(Language), (int)b) ? (Language)b : Language.Invalid;
+        }
+        public Language Language { get { return LanguageFromByte(lang); } }
     }
 
     public record InterpretedData(uint PID, uint OTID, ushort species, bool hasSpecies, EggType egg, Identity identity, Battle battle, Moves moves, EVsIVs EVs, EVsIVs IVs, Condition condition, Misc misc)

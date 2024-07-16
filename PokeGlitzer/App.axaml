@@ -99,11 +99,7 @@
     <convert:PokemonToShortLabel x:Key="p2sl"/>
     <convert:NumberToStringConverter x:Key="n2s"/>
     <convert:EggTypeToIndex x:Key="egg2i"/>
-    <convert:GenderTypeToIndex x:Key="gender2i"/>
     <convert:PkmnGenderTypeToIndex x:Key="pgender2i"/>
-    <convert:LanguageTypeToIndex x:Key="lang2i"/>
-    <convert:GameTypeToIndex x:Key="game2i"/>
-    <convert:BallTypeToIndex x:Key="ball2i"/>
     <convert:PokemonToStringConverter x:Key="p2s"/>
     <convert:ByteStringConverter x:Key="bsc"/>
     <convert:SubstructureToColor x:Key="ss2c"/>

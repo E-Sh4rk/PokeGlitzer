@@ -202,23 +202,7 @@ namespace PokeGlitzer
                 return pt;
             }
         }
-        static Language[] LANGS = new Language[]
-        {
-            Language.Invalid, Language.Japanese, Language.English, Language.French, Language.Italian, Language.German,
-            Language.Invalid, Language.Spanish
-        };
-        static Game[] GAMES = new Game[]
-        {
-            Game.Invalid, Game.Sapphire, Game.Ruby, Game.Emerald, Game.FireRed, Game.LeafGreen,
-            Game.Invalid, Game.Invalid, Game.Invalid, Game.Invalid, Game.Invalid, Game.Invalid,
-            Game.Invalid, Game.Invalid, Game.Invalid, Game.ColosseumXD
-        };
-        static Ball[] BALLS = new Ball[]
-        {
-            Ball.Invalid, Ball.Master, Ball.Ultra, Ball.Great, Ball.Poke, Ball.Safari, Ball.Net, Ball.Dive, Ball.Nest,
-            Ball.Repeat, Ball.Timer, Ball.Luxury, Ball.Premier, Ball.Invalid, Ball.Invalid, Ball.Invalid
-        };
-        static bool UseJP(Language l)
+        public static bool UseJP(Language l)
         {
             if (l == Language.Invalid) return Settings.Text_useJapanese;
             return l == Language.Japanese;
@@ -269,15 +253,11 @@ namespace PokeGlitzer
                 else if (!badEgg && egg) eggType = EggType.Egg;
                 else if (!badEgg && !egg) eggType = EggType.NotAnEgg;
             }
-            Language lang = decoded.lang >= LANGS.Length ? Language.Invalid : LANGS[decoded.lang];
+            Language lang = Identity.LanguageFromByte(decoded.lang);
             string nickname = StringConverter.GetString3(decoded.nickname, UseJP(lang));
             string otName = StringConverter.GetString3(decoded.originalTrainerName, UseJP(lang));
-            Gender otGender = (sub3.origins & Substructure3.GENDER_MASK) == 0 ? Gender.Boy : Gender.Girl;
-            byte levelMet = (byte)(sub3.origins & Substructure3.LEVEL_MET_MASK);
-            Game game = GAMES[sub3.GameOfOrigin];
-            Ball ball = BALLS[sub3.Ball];
-            Identity id = new Identity(lang, nickname, otGender, otName, sub3.metLocation, levelMet, game, ball);
-            Battle b = new Battle(sub0.item, (sub3.ivEggAbility & Substructure3.ABILITY_MASK) == 0 ? (byte)0 : (byte)1, sub0.experience, sub0.friendship);
+            Identity id = new Identity(decoded.lang, nickname, sub3.OtGender, otName, sub3.metLocation, sub3.LevelMet, sub3.GameOfOrigin, sub3.Ball);
+            Battle b = new Battle(sub0.item, (sub3.ivEggAbility & Substructure3.ABILITY_MASK) != 0, sub0.experience, sub0.friendship);
             Moves m = new Moves(sub1.move1, sub1.pp1, sub0.Ppb1, sub1.move2, sub1.pp2, sub0.Ppb2, sub1.move3, sub1.pp3, sub0.Ppb3, sub1.move4, sub1.pp4, sub0.Ppb4);
             EVsIVs evs = new EVsIVs(sub2.hpEV, sub2.atkEV, sub2.defEV, sub2.speedEV, sub2.spAtkEV, sub2.spDefEV);
             EVsIVs ivs = new EVsIVs(sub3.IV_hp, sub3.IV_atk, sub3.IV_def, sub3.IV_speed, sub3.IV_sp_atk, sub3.IV_sp_def);
@@ -330,23 +310,19 @@ namespace PokeGlitzer
             }
             
             Identity id = interpreted.identity;
-            if (id.lang != Language.Invalid)
-                pkmn.permanent.lang = (byte)Array.IndexOf(LANGS, id.lang);
-            Language lang = pkmn.permanent.lang >= LANGS.Length ? Language.Invalid : LANGS[pkmn.permanent.lang];
-            string nickname = StringConverter.GetString3(pkmn.permanent.nickname, UseJP(lang));
+            pkmn.permanent.lang = id.lang;
+            bool useJP = UseJP(id.Language);
+            string nickname = StringConverter.GetString3(pkmn.permanent.nickname, useJP);
             if (nickname != id.nickname)
-                pkmn.permanent.nickname = StringConverter.SetString3(id.nickname, PokemonStruct.NICKNAME_LEN, UseJP(lang), PokemonStruct.NICKNAME_LEN, 0xFF);
-            string otName = StringConverter.GetString3(pkmn.permanent.originalTrainerName, UseJP(lang));
+                pkmn.permanent.nickname = StringConverter.SetString3(id.nickname, PokemonStruct.NICKNAME_LEN, useJP, PokemonStruct.NICKNAME_LEN, 0xFF);
+            string otName = StringConverter.GetString3(pkmn.permanent.originalTrainerName, useJP);
             if (otName != id.otName)
-                pkmn.permanent.originalTrainerName = StringConverter.SetString3(id.otName, PokemonStruct.OTNAME_LEN, UseJP(lang), PokemonStruct.OTNAME_LEN, 0xFF);
-            if (id.otGender == Gender.Boy) sub3.origins = (ushort)(sub3.origins & ~Substructure3.GENDER_MASK);
-            else sub3.origins = (ushort)(sub3.origins | Substructure3.GENDER_MASK);
+                pkmn.permanent.originalTrainerName = StringConverter.SetString3(id.otName, PokemonStruct.OTNAME_LEN, useJP, PokemonStruct.OTNAME_LEN, 0xFF);
             sub3.metLocation = id.metLocation;
-            sub3.origins = (ushort)((sub3.origins & ~Substructure3.LEVEL_MET_MASK) | (id.levelMet & Substructure3.LEVEL_MET_MASK));
-            if (id.gameOfOrigin != Game.Invalid)
-                sub3.GameOfOrigin = (byte)Array.IndexOf(GAMES, id.gameOfOrigin);
-            if (id.ball != Ball.Invalid)
-                sub3.Ball = (byte)Array.IndexOf(BALLS, id.ball);
+            sub3.OtGender = id.otGender;
+            sub3.LevelMet = id.levelMet;
+            sub3.GameOfOrigin = id.gameOfOrigin;
+            sub3.Ball = id.ball;
 
             EVsIVs ivs = interpreted.IVs;
             sub3.SetIVs(ivs.hp, ivs.atk, ivs.def, ivs.speed, ivs.spe_atk, ivs.spe_def);
@@ -362,12 +338,13 @@ namespace PokeGlitzer
             sub2.smartness = c.smartness; sub2.toughness = c.toughness; sub2.feel = c.feel;
             Battle b = interpreted.battle;
             sub0.item = b.item;
-            if (b.ability == 0) sub3.ivEggAbility &= ~Substructure3.ABILITY_MASK;
+            if (b.ability) sub3.ivEggAbility &= ~Substructure3.ABILITY_MASK;
             else sub3.ivEggAbility |= Substructure3.ABILITY_MASK;
             sub0.experience = b.experience;
             sub0.friendship = b.friendship;
             Misc misc = interpreted.misc;
-            sub3.SetPokerus(misc.pokerus_days, misc.pokerus_strain);
+            sub3.PokerusDays = misc.pokerus_days;
+            sub3.PokerusStrain = misc.pokerus_strain;
             sub3.ribbonsObedience = (sub3.ribbonsObedience & ~Substructure3.RIBBONS_MASK) | (misc.ribbons & Substructure3.RIBBONS_MASK);
             if (misc.obedient) sub3.ribbonsObedience |= Substructure3.OBEDIENCE_MASK;
             else sub3.ribbonsObedience &= ~Substructure3.OBEDIENCE_MASK;

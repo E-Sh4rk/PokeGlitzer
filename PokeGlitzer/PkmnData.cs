@@ -174,6 +174,18 @@ namespace PokeGlitzer
     public static class TextData
     {
         const int MAX_MOVE_ID = 354;
+        public static string[] BALLS = Properties.Resources.balls.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_BALLS = BALLS.Where((s, i) => i <= MAX_MOVE_ID && !string.IsNullOrEmpty(s)).ToArray();
+        public static string[] BALLS_LOWERCASE = BALLS.Select(str => str.ToLowerInvariant()).ToArray();
+        public static string[] GAMES = Properties.Resources.games.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_GAMES = GAMES.Where((s, i) => i <= MAX_MOVE_ID && !string.IsNullOrEmpty(s)).ToArray();
+        public static string[] GAMES_LOWERCASE = GAMES.Select(str => str.ToLowerInvariant()).ToArray();
+        public static string[] GENDERS = Properties.Resources.genders.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_GENDERS = GENDERS.Where((s, i) => i <= MAX_MOVE_ID && !string.IsNullOrEmpty(s)).ToArray();
+        public static string[] GENDERS_LOWERCASE = GENDERS.Select(str => str.ToLowerInvariant()).ToArray();
+        public static string[] LANGUAGES = Properties.Resources.languages.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+        public static string[] FILTERED_LANGUAGES = LANGUAGES.Where((s, i) => i <= MAX_MOVE_ID && !string.IsNullOrEmpty(s)).ToArray();
+        public static string[] LANGUAGES_LOWERCASE = LANGUAGES.Select(str => str.ToLowerInvariant()).ToArray();
         public static string[] MOVES = Properties.Resources.moves.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
         public static string[] FILTERED_MOVES = MOVES.Where((s, i) => i <= MAX_MOVE_ID && !string.IsNullOrEmpty(s)).ToArray();
         public static string[] MOVES_LOWERCASE = MOVES.Select(str => str.ToLowerInvariant()).ToArray();
@@ -193,6 +205,18 @@ namespace PokeGlitzer
             if (string.IsNullOrEmpty(elems[id])) return -1;
             return (int)id;
         }
+        public static int NormalizeBall(long id)
+        {
+            return NormalizeElemID(id, BALLS);
+        }
+        public static int NormalizeGame(long id)
+        {
+            return NormalizeElemID(id, GAMES);
+        }
+        public static int NormalizeGender(long id)
+        {
+            return NormalizeElemID(id, GENDERS);
+        }
         public static int NormalizeItem(long id)
         {
             return NormalizeElemID(id, ITEMS);
@@ -204,6 +228,10 @@ namespace PokeGlitzer
         public static int NormalizeLocation(long id)
         {
             return NormalizeElemID(id, LOCATIONS);
+        }
+        public static int NormalizeLanguage(long id)
+        {
+            return NormalizeElemID(id, LANGUAGES);
         }
         public static int NormalizeMove(long id)
         {

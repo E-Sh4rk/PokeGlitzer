@@ -116,6 +116,24 @@ namespace PokeGlitzer.Properties {
                 return ResourceManager.GetString("abilities", resourceCulture);
             }
         }
+
+        internal static string balls {
+            get {
+                return ResourceManager.GetString("balls", resourceCulture);
+            }
+        }
+
+        internal static string games {
+            get {
+                return ResourceManager.GetString("games", resourceCulture);
+            }
+        }
+
+        internal static string genders {
+            get {
+                return ResourceManager.GetString("genders", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to (None)
@@ -166,6 +184,12 @@ namespace PokeGlitzer.Properties {
         internal static string items {
             get {
                 return ResourceManager.GetString("items", resourceCulture);
+            }
+        }
+
+        internal static string languages {
+            get {
+                return ResourceManager.GetString("languages", resourceCulture);
             }
         }
         

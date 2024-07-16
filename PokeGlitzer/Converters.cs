@@ -126,35 +126,11 @@ namespace PokeGlitzer.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (EggType)value; }
     }
-    public class GenderTypeToIndex : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Gender)value; }
-    }
     public class PkmnGenderTypeToIndex : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (PidCalculator.PkmnGender)value; }
-    }
-    public class LanguageTypeToIndex : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Language)value; }
-    }
-    public class GameTypeToIndex : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Game)value; }
-    }
-    public class BallTypeToIndex : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) { return (int)value; }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) { return (Ball)value; }
     }
     public class PokemonToStringConverter : IValueConverter
     {
@@ -220,6 +196,30 @@ namespace PokeGlitzer.Converters
             }
             catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
+    }
+    public class BallToStringConverter : TextDataToStringConverter
+    {
+        protected override string[] Data() { return TextData.BALLS; }
+        protected override string[] LowercaseData() { return TextData.BALLS_LOWERCASE; }
+        protected override int NormalizeID(long id) { return TextData.NormalizeBall(id); }
+    }
+    public class GameToStringConverter : TextDataToStringConverter
+    {
+        protected override string[] Data() { return TextData.GAMES; }
+        protected override string[] LowercaseData() { return TextData.GAMES_LOWERCASE; }
+        protected override int NormalizeID(long id) { return TextData.NormalizeGame(id); }
+    }
+    public class GenderToStringConverter : TextDataToStringConverter
+    {
+        protected override string[] Data() { return TextData.GENDERS; }
+        protected override string[] LowercaseData() { return TextData.GENDERS_LOWERCASE; }
+        protected override int NormalizeID(long id) { return TextData.NormalizeGender(id); }
+    }
+    public class LanguageToStringConverter : TextDataToStringConverter
+    {
+        protected override string[] Data() { return TextData.LANGUAGES; }
+        protected override string[] LowercaseData() { return TextData.LANGUAGES_LOWERCASE; }
+        protected override int NormalizeID(long id) { return TextData.NormalizeLanguage(id); }
     }
     public class ItemToStringConverter : TextDataToStringConverter
     {

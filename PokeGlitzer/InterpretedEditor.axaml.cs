@@ -6,7 +6,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using static PokeGlitzer.PidCalculator;
 
 namespace PokeGlitzer
 {
@@ -63,8 +62,12 @@ namespace PokeGlitzer
             RefreshControls();
         }
 
+        Converters.BallToStringConverter bts = new Converters.BallToStringConverter();
+        Converters.GameToStringConverter gats = new Converters.GameToStringConverter();
+        Converters.GenderToStringConverter gets = new Converters.GenderToStringConverter();
+        Converters.LanguageToStringConverter lats = new Converters.LanguageToStringConverter();
         Converters.PokemonToStringConverter pts = new Converters.PokemonToStringConverter();
-        Converters.LocationToStringConverter lts = new Converters.LocationToStringConverter();
+        Converters.LocationToStringConverter lots = new Converters.LocationToStringConverter();
         Converters.ItemToStringConverter its = new Converters.ItemToStringConverter();
         Converters.MoveToStringConverter mts = new Converters.MoveToStringConverter();
         public void RefreshControls()
@@ -77,11 +80,13 @@ namespace PokeGlitzer
             HasSpecies = d.hasSpecies;
             Egg = d.egg;
 
-            _savedLanguage = d.identity.lang;
-            Language = _savedLanguage; SetNormalizedNickname(d.identity.nickname); OTGender = d.identity.otGender;
-            SetNormalizedOTName(d.identity.otName);
-            MetLocation = (string)lts.Convert(d.identity.metLocation, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
-            LevelMet = d.identity.levelMet; GameOfOrigin = d.identity.gameOfOrigin; Ball = d.identity.ball;
+            Language = (string)lats.Convert(d.identity.lang, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
+            SetNormalizedNickname(d.identity.nickname); SetNormalizedOTName(d.identity.otName);
+            MetLocation = (string)lots.Convert(d.identity.metLocation, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
+            LevelMet = d.identity.levelMet;
+            GameOfOrigin = (string)gats.Convert(d.identity.gameOfOrigin, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
+            Ball = (string)bts.Convert(d.identity.ball, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
+            OTGender = (string)gets.Convert(d.identity.otGender, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
 
             Move1 = (string)mts.Convert(d.moves.m1, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
             Move2 = (string)mts.Convert(d.moves.m2, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture); ;
@@ -100,15 +105,19 @@ namespace PokeGlitzer
             Smartness = d.condition.smartness; Toughness = d.condition.toughness; Feel = d.condition.feel;
 
             Item = (string)its.Convert(d.battle.item, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
-            Ability = d.battle.ability; Experience = d.battle.experience; Friendship = d.battle.friendship;
+            Ability = d.battle.ability ? (byte)1 : (byte)0; Experience = d.battle.experience; Friendship = d.battle.friendship;
 
             PokerusDays = d.misc.pokerus_days; PokerusStrain = d.misc.pokerus_strain; Ribbons = d.misc.ribbons; Obedient = d.misc.obedient;
         }
         public void Save()
         {
-            _savedLanguage = Language;
-            object location = lts.ConvertBack(MetLocation, typeof(byte), "x", System.Globalization.CultureInfo.CurrentCulture);
-            Identity id = new Identity(Language, nickname, OTGender, otName, location is byte ? (byte)location : (byte)0, LevelMet, GameOfOrigin, Ball);
+            object language = lats.ConvertBack(Language, typeof(byte), "x", System.Globalization.CultureInfo.CurrentCulture);
+            object location = lots.ConvertBack(MetLocation, typeof(byte), "x", System.Globalization.CultureInfo.CurrentCulture);
+            object gender = gets.ConvertBack(OTGender, typeof(byte), "x", System.Globalization.CultureInfo.CurrentCulture);
+            object game = gats.ConvertBack(GameOfOrigin, typeof(byte), "x", System.Globalization.CultureInfo.CurrentCulture);
+            object ball = bts.ConvertBack(Ball, typeof(byte), "x", System.Globalization.CultureInfo.CurrentCulture);
+            Identity id = new Identity(language is byte ? (byte)language : (byte)0, nickname, gender is byte ? (byte)gender : (byte)0, otName,
+                location is byte ? (byte)location : (byte)0, LevelMet, game is byte ? (byte)game : (byte)0, ball is byte ? (byte)ball : (byte)0);
             object m1 = mts.ConvertBack(Move1, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
             object m2 = mts.ConvertBack(Move2, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
             object m3 = mts.ConvertBack(Move3, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
@@ -119,7 +128,7 @@ namespace PokeGlitzer
             EVsIVs ivs = new EVsIVs(HpIV, AtkIV, DefIV, SpeedIV, SpeAtkIV, SpeDefIV);
             Condition c = new Condition(Coolness, Beauty, Cuteness, Smartness, Toughness, Feel);
             object item = its.ConvertBack(Item, typeof(ushort), "x", System.Globalization.CultureInfo.CurrentCulture);
-            Battle b = new Battle(item is ushort ? (ushort)item : (ushort)0, Ability, Experience, Friendship);
+            Battle b = new Battle(item is ushort ? (ushort)item : (ushort)0, Ability != 0, Experience, Friendship);
             Misc misc = new Misc(PokerusDays, PokerusStrain, Ribbons, Obedient);
             InterpretedData d = new InterpretedData(PID, OTID, SpeciesU16(), HasSpecies, Egg, id, b, m, evs, ivs, c, misc);
             view.Interpreted = d;
@@ -166,39 +175,35 @@ namespace PokeGlitzer
             set { egg = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Egg))); }
         }
         // ========== Identity ==========
-        Language _savedLanguage;
-        Language language;
-        public Language Language
+        string language;
+        Language GetInterpretedLanguage() {
+            object l = lats.ConvertBack(language, typeof(byte), "x", System.Globalization.CultureInfo.CurrentCulture);
+            byte lb = l is byte ? (byte)l : (byte)0;
+            return Identity.LanguageFromByte(lb);
+        }
+        public string Language
         {
             get => language;
             set
             {
                 language = value;
-                if (ResultingLanguage == Language.Invalid)
-                {
-                    SetNormalizedNickname("");
-                    SetNormalizedOTName("");
-                }
-                else
-                {
-                    byte[] data = view.DecodedData.ToArray();
-                    SetNormalizedNickname(StringConverter.GetString3(data,
-                        PokemonStruct.NICKNAME_OFFSET, PokemonStruct.NICKNAME_LEN, ResultingLanguage == Language.Japanese));
-                    SetNormalizedOTName(StringConverter.GetString3(data,
-                        PokemonStruct.OTNAME_OFFSET, PokemonStruct.OTNAME_LEN, ResultingLanguage == Language.Japanese));
-                }
+                byte[] data = view.DecodedData.ToArray();
+                bool useJP = Pokemon.UseJP(GetInterpretedLanguage());
+                SetNormalizedNickname(StringConverter.GetString3(data,
+                    PokemonStruct.NICKNAME_OFFSET, PokemonStruct.NICKNAME_LEN, useJP));
+                SetNormalizedOTName(StringConverter.GetString3(data,
+                    PokemonStruct.OTNAME_OFFSET, PokemonStruct.OTNAME_LEN, useJP));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Language)));
             }
         }
-        Language ResultingLanguage { get => language == Language.Invalid ? _savedLanguage : language; }
         string nickname;
         public string Nickname
         {
-            get => BoxNames.MakeNameLookBetter(nickname, ResultingLanguage);
+            get => BoxNames.MakeNameLookBetter(nickname, GetInterpretedLanguage());
             set
             {
-                string v = BoxNames.NormalizeName(value, ResultingLanguage);
-                if (BoxNames.IsValidName(v, PokemonStruct.NICKNAME_LEN, ResultingLanguage))
+                string v = BoxNames.NormalizeName(value, GetInterpretedLanguage());
+                if (BoxNames.IsValidName(v, PokemonStruct.NICKNAME_LEN, GetInterpretedLanguage()))
                 {
                     nickname = v;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
@@ -211,8 +216,8 @@ namespace PokeGlitzer
             nickname = v;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
         }
-        Gender otGender;
-        public Gender OTGender
+        string otGender;
+        public string OTGender
         {
             get => otGender;
             set { otGender = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTGender))); }
@@ -220,11 +225,11 @@ namespace PokeGlitzer
         string otName;
         public string OTName
         {
-            get => BoxNames.MakeNameLookBetter(otName, ResultingLanguage);
+            get => BoxNames.MakeNameLookBetter(otName, GetInterpretedLanguage());
             set
             {
-                string v = BoxNames.NormalizeName(value, ResultingLanguage);
-                if (BoxNames.IsValidName(v, PokemonStruct.OTNAME_LEN, ResultingLanguage))
+                string v = BoxNames.NormalizeName(value, GetInterpretedLanguage());
+                if (BoxNames.IsValidName(v, PokemonStruct.OTNAME_LEN, GetInterpretedLanguage()))
                 {
                     otName = v;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));
@@ -249,14 +254,14 @@ namespace PokeGlitzer
             get => levelMet;
             set { levelMet = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LevelMet))); }
         }
-        Game gameOfOrigin;
-        public Game GameOfOrigin
+        string gameOfOrigin;
+        public string GameOfOrigin
         {
             get => gameOfOrigin;
             set { gameOfOrigin = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GameOfOrigin))); }
         }
-        Ball ball;
-        public Ball Ball
+        string ball;
+        public string Ball
         {
             get => ball;
             set { ball = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Ball))); }

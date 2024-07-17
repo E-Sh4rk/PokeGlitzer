@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Text;
 using MessageBox.Avalonia;
 using System.Xml.Linq;
+using System.IO;
 
 namespace PokeGlitzer
 {
@@ -298,11 +299,62 @@ namespace PokeGlitzer
         public void OpenGPBefore(DataLocation dl) { openGP(dl.offset + dl.size, GlitzerWindowViewModel.OffsetType.End); }
         public void OpenGPAfter(DataLocation dl) { openGP(dl.offset, GlitzerWindowViewModel.OffsetType.Start); }
 
+        public async void ImportPk3Ek3(DataLocation dl) {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filters.Add(new FileDialogFilter() { Name = "Pk3 file", Extensions = { "pk3" } });
+            dialog.Filters.Add(new FileDialogFilter() { Name = "Ek3 file", Extensions = { "ek3" } });
+            dialog.AllowMultiple = false;
+
+            string[] result = await dialog.ShowAsync(mw);
+            if (result != null && result.Length >= 1) {
+                try {
+                    string path = result[0];
+                    byte[] fileData = File.ReadAllBytes(path);
+                    RangeObservableCollection<byte> dest = dl.src == Source.Team ? teamData : data;
+                    ArraySegment<byte> src = new ArraySegment<byte>(fileData, 0, Math.Min(dl.size, fileData.Length));
+                    if (Path.GetExtension(path).ToLowerInvariant() == ".ek3") {
+                        Utils.UpdateCollectionRange(dest, src, dl.offset);
+                    }
+                    else {
+                        Pokemon p = new Pokemon(dest, dl);
+                        Utils.UpdateCollectionRange(p.View.DecodedData, src);
+                    }
+                }
+                catch {
+                    MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while importing the file.").ShowDialog(mw);
+                }
+            }
+        }
+        public async void ExportPk3Ek3(DataLocation dl) {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filters.Add(new FileDialogFilter() { Name = "Pk3 file", Extensions = { "pk3" } });
+            dialog.Filters.Add(new FileDialogFilter() { Name = "Ek3 file", Extensions = { "ek3" } });
+
+            string result = await dialog.ShowAsync(mw);
+            if (result != null) {
+                try {
+                    RangeObservableCollection<byte> src = dl.src == Source.Team ? teamData : data;
+                    byte[] srcData;
+                    if (Path.GetExtension(result).ToLowerInvariant() == ".ek3") {
+                        srcData = Utils.ExtractCollectionRange(src, dl.offset, dl.size);
+                    }
+                    else {
+                        Pokemon p = new Pokemon(src, dl);
+                        srcData = Utils.ExtractCollectionRange(p.View.DecodedData, 0, dl.size);
+                    }
+                    File.WriteAllBytes(result, srcData);
+                }
+                catch {
+                    MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while exporting the file.").ShowDialog(mw);
+                }
+            }
+        }
+
         public void Exit()
         {
             mw.Close();
         }
-        void LoadSave(string path)
+        async void LoadSave(string path)
         {
             try
             {

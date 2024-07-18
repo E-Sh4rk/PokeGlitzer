@@ -338,7 +338,7 @@ namespace PokeGlitzer
             sub2.smartness = c.smartness; sub2.toughness = c.toughness; sub2.feel = c.feel;
             Battle b = interpreted.battle;
             sub0.item = b.item;
-            if (b.ability) sub3.ivEggAbility &= ~Substructure3.ABILITY_MASK;
+            if (!b.ability) sub3.ivEggAbility &= ~Substructure3.ABILITY_MASK;
             else sub3.ivEggAbility |= Substructure3.ABILITY_MASK;
             sub0.experience = b.experience;
             sub0.friendship = b.friendship;

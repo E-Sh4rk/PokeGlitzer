@@ -18,7 +18,7 @@
           <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">PID</TextBlock>
           <TextBox Grid.Row="0" Grid.Column="1" Margin="10,5" Text="{Binding PID, Converter={StaticResource n2s}, ConverterParameter=x}" />
 
-          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">OTID</TextBlock>
+          <TextBlock Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" ToolTip.Tip="If you are the original trainer, the OTID is 65536*SID + TID">OTID (?)</TextBlock>
           <TextBox Grid.Row="0" Grid.Column="3" Margin="10,5" Text="{Binding OTID, Converter={StaticResource n2s}, ConverterParameter=x}" />
 
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Species</TextBlock>

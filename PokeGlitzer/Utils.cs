@@ -164,6 +164,11 @@ namespace PokeGlitzer
             handle.Free();
             return arr;
         }
+        // Only for blittable types
+        public static T MarshalCopy<T>(T structure)
+        {
+            return ByteToType<T>(TypeToByte(structure));
+        }
 
         public static int OffsetOf<T>(string field)
         {

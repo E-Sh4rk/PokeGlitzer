@@ -317,7 +317,7 @@ namespace PokeGlitzer
                     }
                     else {
                         Pokemon p = new Pokemon(dest, dl);
-                        Utils.UpdateCollectionRange(p.View.DecodedData, src);
+                        Utils.UpdateCollectionRange(p.View.Pk3Data, src);
                     }
                 }
                 catch {
@@ -340,7 +340,7 @@ namespace PokeGlitzer
                     }
                     else {
                         Pokemon p = new Pokemon(src, dl);
-                        srcData = Utils.ExtractCollectionRange(p.View.DecodedData, 0, dl.size);
+                        srcData = Utils.ExtractCollectionRange(p.View.Pk3Data, 0, dl.size);
                     }
                     File.WriteAllBytes(result, srcData);
                 }

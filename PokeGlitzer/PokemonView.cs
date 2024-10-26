@@ -18,17 +18,21 @@ namespace PokeGlitzer
     {
         RangeObservableCollection<byte> data;
         RangeObservableCollection<byte> decodedData;
+        RangeObservableCollection<byte> pk3Data;
         public PokemonView(int size)
         {
             data = Utils.CollectionOfSize<byte>(size);
             decodedData = Utils.CollectionOfSize<byte>(size);
+            pk3Data = Utils.CollectionOfSize<byte>(size);
             interpreted = InterpretedData.Dummy;
             //data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Data)));
             //decodedData.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DecodedData)));
+            //pk3Data.CollectionChanged += (_, _) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Pk3Data)));
         }
 
         public RangeObservableCollection<byte> Data { get => data; }
         public RangeObservableCollection<byte> DecodedData { get => decodedData; }
+        public RangeObservableCollection<byte> Pk3Data { get => pk3Data; }
 
         InterpretedData interpreted;
         public InterpretedData Interpreted {

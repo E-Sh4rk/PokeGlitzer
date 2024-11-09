@@ -15,6 +15,7 @@ using System.Text;
 using System.Xml.Linq;
 using System.IO;
 using MsBox.Avalonia;
+using Avalonia.Platform.Storage;
 
 namespace PokeGlitzer
 {
@@ -290,17 +291,29 @@ namespace PokeGlitzer
         public void OpenGPBefore(object dl) { openGP(((DataLocation)dl).offset + ((DataLocation)dl).size, GlitzerWindowViewModel.OffsetType.End); }
         public void OpenGPAfter(object dl) { openGP(((DataLocation)dl).offset, GlitzerWindowViewModel.OffsetType.Start); }
 
+        public static FilePickerFileType Pk3File { get; } = new("Pk3 files")
+        {
+            Patterns = new[] { "*.pk3" }
+        };
+        public static FilePickerFileType Ek3File { get; } = new("Ek3 files")
+        {
+            Patterns = new[] { "*.ek3" }
+        };
+        public static FilePickerFileType SaveFile { get; } = new("Save files")
+        {
+            Patterns = new[] { "*.sav" }
+        };
+
         public async void ImportPk3Ek3(object dlo) {
             DataLocation dl = (DataLocation)dlo;
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filters.Add(new FileDialogFilter() { Name = "Pk3 file", Extensions = { "pk3" } });
-            dialog.Filters.Add(new FileDialogFilter() { Name = "Ek3 file", Extensions = { "ek3" } });
-            dialog.AllowMultiple = false;
-
-            string[] result = await dialog.ShowAsync(mw);
-            if (result != null && result.Length >= 1) {
+            var result = await mw.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                FileTypeFilter = new[] { Pk3File, Ek3File },
+                AllowMultiple = false
+            });
+            if (result != null && result.Count >= 1) {
                 try {
-                    string path = result[0];
+                    string path = result[0].Path.LocalPath;
                     byte[] fileData = File.ReadAllBytes(path);
                     RangeObservableCollection<byte> dest = dl.src == Source.Team ? teamData : data;
                     ArraySegment<byte> src = new ArraySegment<byte>(fileData, 0, Math.Min(dl.size, fileData.Length));
@@ -319,23 +332,23 @@ namespace PokeGlitzer
         }
         public async void ExportPk3Ek3(object dlo) {
             DataLocation dl = (DataLocation)dlo;
-            SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filters.Add(new FileDialogFilter() { Name = "Pk3 file", Extensions = { "pk3" } });
-            dialog.Filters.Add(new FileDialogFilter() { Name = "Ek3 file", Extensions = { "ek3" } });
-
-            string result = await dialog.ShowAsync(mw);
-            if (result != null) {
+            var result = await mw.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                FileTypeChoices = new[] { Pk3File, Ek3File }
+            });
+            if (result is not null) {
                 try {
+                    string path = result.Path.LocalPath;
                     RangeObservableCollection<byte> src = dl.src == Source.Team ? teamData : data;
                     byte[] srcData;
-                    if (Path.GetExtension(result).ToLowerInvariant() == ".ek3") {
+                    if (Path.GetExtension(path).ToLowerInvariant() == ".ek3") {
                         srcData = Utils.ExtractCollectionRange(src, dl.offset, dl.size);
                     }
                     else {
                         Pokemon p = new Pokemon(src, dl);
                         srcData = Utils.ExtractCollectionRange(p.View.Pk3Data, 0, dl.size);
                     }
-                    File.WriteAllBytes(result, srcData);
+                    File.WriteAllBytes(path, srcData);
                 }
                 catch {
                     await MessageBoxManager.GetMessageBoxStandard("Error", "An error occured while exporting the file.").ShowWindowDialogAsync(mw);
@@ -366,14 +379,13 @@ namespace PokeGlitzer
         }
         public async void Open()
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filters.Add(new FileDialogFilter() { Name = "Save file", Extensions = { "sav" } });
-            dialog.Filters.Add(new FileDialogFilter() { Name = "All files", Extensions = { "*" } });
-            dialog.AllowMultiple = false;
-
-            string[] result = await dialog.ShowAsync(mw);
-            if (result != null && result.Length >= 1)
-                LoadSave(result[0]);
+            var result = await mw.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                FileTypeFilter = new[] { SaveFile, FilePickerFileTypes.All },
+                AllowMultiple = false
+            });
+            if (result != null && result.Count >= 1)
+                LoadSave(result[0].Path.LocalPath);
         }
         public async void Save()
         {
@@ -408,14 +420,13 @@ namespace PokeGlitzer
         {
             if (CurrentSave != null)
             {
-                SaveFileDialog dialog = new SaveFileDialog();
-                dialog.Filters.Add(new FileDialogFilter() { Name = "Save file", Extensions = { "sav" } });
-                dialog.Filters.Add(new FileDialogFilter() { Name = "All files", Extensions = { "*" } });
-
-                string result = await dialog.ShowAsync(mw);
-                if (result != null)
+                var result = await mw.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
                 {
-                    CurrentSave.SetSavePath(result);
+                    FileTypeChoices = new[] { SaveFile, FilePickerFileTypes.All }
+                });
+                if (result is not null)
+                {
+                    CurrentSave.SetSavePath(result.Path.LocalPath);
                     Save();
                 }
             }

@@ -116,7 +116,7 @@
           <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Experience</TextBlock>
           <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True" Margin="10,5">
             <TextBox Text="{Binding Level, Converter={StaticResource n2s}}" Width="45" MinWidth="45" DockPanel.Dock="Left" />
-            <TextBox Text="{Binding RemainingExperience, Converter={StaticResource n2s}}" Margin="5,0,0,0" />
+            <TextBox Text="{Binding Experience, Converter={StaticResource n2s}}" Margin="5,0,0,0" />
           </DockPanel>
           <TextBlock Grid.Row="1" Grid.Column="2" VerticalAlignment="Center">Friendship</TextBlock>
           <TextBox Grid.Row="1" Grid.Column="3" Margin="10,5" Text="{Binding Friendship, Converter={StaticResource n2s}}" />

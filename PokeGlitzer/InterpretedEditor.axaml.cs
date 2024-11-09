@@ -147,7 +147,7 @@ namespace PokeGlitzer
         public string Species
         {
             get => species;
-            set { species = value; UpdatePidFields(false); UpdateExperienceFields(); }
+            set { species = value; UpdatePidFields(false); UpdateLvlRemExpFields(); }
         }
         public ushort SpeciesU16()
         {
@@ -275,38 +275,45 @@ namespace PokeGlitzer
         public uint Experience
         {
             get => experience;
-            set { experience = value; UpdateExperienceFields(); }
+            set { experience = value; UpdateLvlRemExpFields(); }
         }
         uint remainingExperience;
         public uint RemainingExperience
         {
             get => remainingExperience;
-            set { remainingExperience = value; UpdateExpFromExpFields(); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RemainingExperience))); }
+            set { remainingExperience = value; UpdateExpFromLvlRemExpFields(); }
         }
         byte level;
         public byte Level
         {
             get => level;
-            set { level = value; UpdateExpFromExpFields(); PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Level))); }
+            set { level = value; UpdateExpFromLvlField(); }
         }
-        void UpdateExperienceFields()
+        void RefreshExpFields()
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Level)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RemainingExperience)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Experience)));
+        }
+        void UpdateLvlRemExpFields()
         {
             ushort species = SpeciesU16();
             uint exp = Experience;
             int s = SpeciesConverter.SetG3Species(species);
             if (s == 0)
             {
-                Level = 0; RemainingExperience = exp;
+                level = 0; remainingExperience = exp;
             }
             else
             {
                 byte growth = PersonalInfo.Table[s].EXPGrowth;
                 byte lvl = ExperienceConverter.GetLevel(exp, growth);
                 uint remExp = exp - ExperienceConverter.GetEXP(lvl, growth);
-                Level = lvl; RemainingExperience = remExp;
+                level = lvl; remainingExperience = remExp;
             }
+            RefreshExpFields();
         }
-        void UpdateExpFromExpFields()
+        void UpdateExpFromLvlRemExpFields()
         {
             ushort species = SpeciesU16();
             uint expRem = RemainingExperience; byte lvl = Level;
@@ -318,6 +325,21 @@ namespace PokeGlitzer
                 exp += ExperienceConverter.GetEXP(lvl, growth);
             }
             experience = exp;
+            RefreshExpFields();
+        }
+        void UpdateExpFromLvlField()
+        {
+            ushort species = SpeciesU16();
+            byte lvl = Level;
+            int s = SpeciesConverter.SetG3Species(species);
+            uint exp = 0;
+            if (s != 0)
+            {
+                byte growth = PersonalInfo.Table[s].EXPGrowth;
+                exp += ExperienceConverter.GetEXP(lvl, growth);
+            }
+            experience = exp;
+            RefreshExpFields();
         }
         byte friendship;
         public byte Friendship

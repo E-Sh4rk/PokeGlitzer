@@ -21,7 +21,6 @@ namespace PokeGlitzer
                 .LogToTrace()
                 .With(new Win32PlatformOptions
                 {
-                    AllowEglInitialization = false
                 });
     }
 }

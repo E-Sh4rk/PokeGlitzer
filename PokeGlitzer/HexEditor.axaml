@@ -7,6 +7,6 @@
         x:Class="PokeGlitzer.HexEditor"
         Title="Pokemon Data Editor">
 
-  <TextBox AcceptsReturn="True" TextWrapping="NoWrap" AcceptsTab="False" FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono"
+  <TextBox AcceptsReturn="True" TextWrapping="NoWrap" AcceptsTab="False" FontFamily="avares://PokeGlitzer/Assets/Fonts/CascadiaMono-Ext.ttf#Cascadia Mono"
            Text="{Binding Text}" FontSize="15" />
 </Window>

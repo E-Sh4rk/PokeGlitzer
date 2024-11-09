@@ -24,16 +24,8 @@ namespace PokeGlitzer
             InitializeComponent();
             pkmn = new Pokemon(data, dl);
             DataContext = new InterpretedEditorModel(pkmn, this);
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
         public DataLocation DataLocation => pkmn.DataLocation;
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
 
         protected override void OnClosed(EventArgs e)
         {
@@ -208,7 +200,7 @@ namespace PokeGlitzer
                     nickname = v;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Nickname)));
                 }
-                else throw new Avalonia.Data.DataValidationException(null);
+                else throw new Avalonia.Data.DataValidationException("Invalid nickname.");
             }
         }
         void SetNormalizedNickname(string v)
@@ -234,7 +226,7 @@ namespace PokeGlitzer
                     otName = v;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTName)));
                 }
-                else throw new Avalonia.Data.DataValidationException(null);
+                else throw new Avalonia.Data.DataValidationException("Invalid trainer name.");
             }
         }
         void SetNormalizedOTName(string v)
@@ -616,7 +608,7 @@ namespace PokeGlitzer
             if (pausePIDChanges) return;
             uint? npid = PidCalculator.GenerateNewPID(OTID, SpeciesU16(), PidShiny, PidGender, PidNature, PidAbility);
             if (npid.HasValue) { pid = npid.Value; UpdatePidFields(false); }
-            else { UpdatePidFields(true); throw new Avalonia.Data.DataValidationException(null); }
+            else { UpdatePidFields(true); throw new Avalonia.Data.DataValidationException("No suitable PID."); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

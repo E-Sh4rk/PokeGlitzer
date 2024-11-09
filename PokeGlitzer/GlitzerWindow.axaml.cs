@@ -1,18 +1,9 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
-using Avalonia.Threading;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-using MessageBox.Avalonia;
 
 namespace PokeGlitzer
 {
@@ -28,15 +19,6 @@ namespace PokeGlitzer
         {
             InitializeComponent();
             DataContext = new GlitzerWindowViewModel(mw, this, data, offset, type);
-
-#if DEBUG
-            this.AttachDevTools();
-#endif
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -149,7 +131,7 @@ namespace PokeGlitzer
             set
             {
                 /*if (value < 0 || value + SIZE > data.Count)
-                    throw new Avalonia.Data.DataValidationException(null);*/
+                    throw new Avalonia.Data.DataValidationException("Offset out of bounds.");*/
                 currentOffset = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentOffset)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentEndOffset)));
@@ -169,16 +151,19 @@ namespace PokeGlitzer
             set => CurrentEndOffset = GlitzerSimulation.EndOffset - value;
         }
 
-        public void OpenInterpretedEditor(DataLocation dl) { mw?.OpenInterpretedEditor(dl, parent); }
-        public void OpenDataEditor(DataLocation dl) { mw?.OpenDataEditor(dl, parent); }
-        public void OpenRawEditor(DataLocation dl) { mw?.OpenRawEditor(dl, parent); }
+        public void OpenInterpretedEditor(object dl) { mw?.OpenInterpretedEditor((DataLocation)dl, parent); }
+        public void OpenDataEditor(object dl) { mw?.OpenDataEditor((DataLocation)dl, parent); }
+        public void OpenRawEditor(object dl) { mw?.OpenRawEditor((DataLocation)dl, parent); }
 
-        public void SelectSlot(DataLocation dl) { mw?.SelectSlot(dl, parent); }
+        public void SelectSlot(object dl) { mw?.SelectSlot((DataLocation)dl, parent); }
 
-        public void Delete(DataLocation dl) { mw?.Delete(dl); }
-        public void Copy(DataLocation dl) { mw?.Copy(dl); }
-        public void Cut(DataLocation dl) { mw?.Cut(dl); }
-        public void Paste(DataLocation dl) { mw?.Paste(dl); }
+        public void Delete(object dl) { mw?.Delete(dl); }
+        public void Copy(object dl) { mw?.Copy(dl); }
+        public void Cut(object dl) { mw?.Cut(dl); }
+        public void Paste(object dl) { mw?.Paste(dl); }
+
+        //public void ImportPk3Ek3(object dlo) { mw?.ImportPk3Ek3(dlo); }
+        //public void ExportPk3Ek3(object dlo) { mw?.ExportPk3Ek3(dlo); }
 
         public void Prev() { try { CurrentOffset -= 4; } catch { } }
         public void Next() { try { CurrentOffset += 4; } catch { } }

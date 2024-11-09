@@ -15,20 +15,12 @@ namespace PokeGlitzer
         {
             InitializeComponent();
             DataContext = new LogWindowModel();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         public string Text
         {
             get => ((LogWindowModel)DataContext!).Text;
             set => ((LogWindowModel)DataContext!).Text = value;
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
     public class LogWindowModel : INotifyPropertyChanged

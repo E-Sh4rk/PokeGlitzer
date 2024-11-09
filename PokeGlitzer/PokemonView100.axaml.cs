@@ -24,17 +24,8 @@ namespace PokeGlitzer
             InitializeComponent();
             pkmn = new Pokemon(data, new DataLocation(offset, 100, src));
             DataContext = new PokemonViewModel(pkmn, mw);
-
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
         public DataLocation DataLocation => pkmn.DataLocation;
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
 
         protected override void OnClosed(EventArgs e)
         {

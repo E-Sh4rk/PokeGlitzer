@@ -2,9 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="PokeGlitzer.App"
              xmlns:local="clr-namespace:PokeGlitzer"
-             xmlns:convert="clr-namespace:PokeGlitzer.Converters">
+             xmlns:convert="clr-namespace:PokeGlitzer.Converters"
+             RequestedThemeVariant="Light">
     <Application.Styles>
-      <FluentTheme Mode="Light"/>
+      <FluentTheme />
 
       <Style Selector="TabItem">
         <Setter Property="FontSize" Value="15"/>
@@ -19,7 +20,7 @@
       <Style Selector="DataValidationErrors">
         <Style.Resources>
           <DataTemplate x:Key="InlineDataValidationErrorTemplate">
-            <ItemsControl Items="{Binding}" TextBlock.Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}">
+            <ItemsControl ItemsSource="{Binding}" TextBlock.Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}">
               <ItemsControl.Styles>
                 <Style Selector="TextBlock">
                   <Setter Property="TextWrapping" Value="Wrap" />
@@ -59,7 +60,7 @@
                 </Style>
               </Panel.Styles>
               <ToolTip.Tip>
-                <ItemsControl Items="{Binding}" />
+                <ItemsControl ItemsSource="{Binding}" />
               </ToolTip.Tip>
               <Path Width="14"
                     Height="14"
@@ -114,13 +115,7 @@
         <Canvas.ContextMenu>
           <ContextMenu>
             <MenuItem Header="_Open Interpreted Data Editor" Command="{Binding $parent[Window].DataContext.OpenInterpretedEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
-            <MenuItem Header="_Open Hex Data Editor (Assisted)" Command="{Binding $parent[Window].DataContext.OpenDataEditor}" CommandParameter="{Binding pkmn.DataLocation}" >
-              <!--
-              <MenuItem.Icon>
-                <Image Source="/WpfTutorialSamples;component/Images/cut.png" />
-              </MenuItem.Icon>
-              -->
-            </MenuItem>
+            <MenuItem Header="_Open Hex Data Editor (Assisted)" Command="{Binding $parent[Window].DataContext.OpenDataEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
             <MenuItem Header="_Open Hex Data Editor" Command="{Binding $parent[Window].DataContext.OpenRawEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
             <Separator/>
             <MenuItem Header="_Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding pkmn.DataLocation}" />

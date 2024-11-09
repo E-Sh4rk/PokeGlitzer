@@ -5,7 +5,7 @@
         mc:Ignorable="d" d:DesignWidth="425" d:DesignHeight="450"
         Width="425" Height="450"
         x:Class="PokeGlitzer.MainWindow"
-        Title="PokeGlitzer" Icon="/Resources/icon.ico">
+        Title="PokeGlitzer" Icon="/Assets/icon.ico">
 
   <DockPanel Width="408" LastChildFill="True">
     <Menu DockPanel.Dock="Top">
@@ -82,17 +82,17 @@
     </Menu>
 
     <StackPanel Orientation="Vertical">
-      <Separator Height="10" />
+      <Rectangle Height="10" />
       <DockPanel Width="408" LastChildFill="True">
-        <Button FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
-        <Button FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
+        <Button FontFamily="avares://PokeGlitzer/Assets/Fonts/CascadiaMono-Ext.ttf#Cascadia Mono" Content="🡸" Command="{Binding PrevBox}" DockPanel.Dock="Left"/>
+        <Button FontFamily="avares://PokeGlitzer/Assets/Fonts/CascadiaMono-Ext.ttf#Cascadia Mono" Content="🡺" Command="{Binding NextBox}" DockPanel.Dock="Right"/>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
           <TextBlock VerticalAlignment="Center" Text="{Binding CurrentBoxNumber, StringFormat={}{0} :}" />
-          <Separator Width="5" />
-          <TextBox FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" TextAlignment="Center" Width="150" Text="{Binding CurrentBoxName}" />
+          <Rectangle Width="5" />
+          <TextBox FontFamily="avares://PokeGlitzer/Assets/Fonts/CascadiaMono-Ext.ttf#Cascadia Mono" TextAlignment="Center" Width="150" Text="{Binding CurrentBoxName}" />
         </StackPanel>
       </DockPanel>
-      <Separator Height="10" />
+      <Rectangle Height="10" />
       <Grid ColumnDefinitions="68,68,68,68,68,68" RowDefinitions="56,56,56,56,56">
         <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding CurrentBox[0]}"/>
         <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding CurrentBox[1]}"/>
@@ -129,8 +129,8 @@
         <ContentControl Grid.Row="4" Grid.Column="4" Content="{Binding CurrentBox[28]}"/>
         <ContentControl Grid.Row="4" Grid.Column="5" Content="{Binding CurrentBox[29]}"/>
       </Grid>
-      
-      <Separator Height="23" />
+
+      <Rectangle Height="23" />
 
       <Grid ColumnDefinitions="68,68,68,68,68,68" RowDefinitions="56">
         <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding Team[0]}"/>

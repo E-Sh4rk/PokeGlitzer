@@ -12,9 +12,9 @@ using System.Linq;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using MessageBox.Avalonia;
 using System.Xml.Linq;
 using System.IO;
+using MsBox.Avalonia;
 
 namespace PokeGlitzer
 {
@@ -34,15 +34,6 @@ namespace PokeGlitzer
         {
             InitializeComponent();
             DataContext = new MainWindowViewModel(this, args);
-
-#if DEBUG
-            this.AttachDevTools();
-#endif
-        }
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
         }
     }
     public record PokemonExt(Pokemon pkmn, bool selected);
@@ -147,7 +138,7 @@ namespace PokeGlitzer
                 }
                 catch
                 {
-                    throw new Avalonia.Data.DataValidationException(null);
+                    throw new Avalonia.Data.DataValidationException("Invalid box name.");
                 }
             }
         }
@@ -203,12 +194,12 @@ namespace PokeGlitzer
         }
 
         List<IEditorWindow> openedEditors = new List<IEditorWindow>();
-        public void OpenInterpretedEditor(DataLocation dl) { OpenInterpretedEditor(dl, null); }
+        public void OpenInterpretedEditor(object dl) { OpenInterpretedEditor((DataLocation)dl, null); }
         public void OpenInterpretedEditor(DataLocation dl, Window? parent)
         {
             ShowWindow(new InterpretedEditor(dl.src == Source.Team ? teamData : data, dl), parent);
         }
-        public void OpenDataEditor(DataLocation dl) { OpenDataEditor(dl, null); }
+        public void OpenDataEditor(object dl) { OpenDataEditor((DataLocation)dl, null); }
         public void OpenDataEditor(DataLocation dl, Window? parent)
         {
             if (dl.size == Pokemon.TEAM_SIZE)
@@ -216,7 +207,7 @@ namespace PokeGlitzer
             else
                 ShowWindow(new PokemonViewWindow(dl.src == Source.Team ? teamData : data, dl.offset, dl.src, this), parent);
         }
-        public void OpenRawEditor(DataLocation dl) { OpenRawEditor(dl, null); }
+        public void OpenRawEditor(object dl) { OpenRawEditor((DataLocation)dl, null); }
         public void OpenRawEditor(DataLocation dl, Window? parent)
         {
             ShowWindow(new HexEditor(dl.src == Source.Team ? teamData : data, dl), parent);
@@ -255,7 +246,7 @@ namespace PokeGlitzer
                 timer.Start();
             }
         }
-        public void SelectSlot(DataLocation dl) { SelectSlot(dl, null); }
+        public void SelectSlot(object dl) { SelectSlot((DataLocation)dl, null); }
         public void SelectSlot(DataLocation dl, Window? parent)
         {
             bool openNew = true;
@@ -296,10 +287,11 @@ namespace PokeGlitzer
             gw.Show(mw);
         }
         public void OpenGP() { openGP(0, GlitzerWindowViewModel.OffsetType.ASLR); }
-        public void OpenGPBefore(DataLocation dl) { openGP(dl.offset + dl.size, GlitzerWindowViewModel.OffsetType.End); }
-        public void OpenGPAfter(DataLocation dl) { openGP(dl.offset, GlitzerWindowViewModel.OffsetType.Start); }
+        public void OpenGPBefore(object dl) { openGP(((DataLocation)dl).offset + ((DataLocation)dl).size, GlitzerWindowViewModel.OffsetType.End); }
+        public void OpenGPAfter(object dl) { openGP(((DataLocation)dl).offset, GlitzerWindowViewModel.OffsetType.Start); }
 
-        public async void ImportPk3Ek3(DataLocation dl) {
+        public async void ImportPk3Ek3(object dlo) {
+            DataLocation dl = (DataLocation)dlo;
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filters.Add(new FileDialogFilter() { Name = "Pk3 file", Extensions = { "pk3" } });
             dialog.Filters.Add(new FileDialogFilter() { Name = "Ek3 file", Extensions = { "ek3" } });
@@ -321,11 +313,12 @@ namespace PokeGlitzer
                     }
                 }
                 catch {
-                    MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while importing the file.").ShowDialog(mw);
+                    await MessageBoxManager.GetMessageBoxStandard("Error", "An error occured while importing the file.").ShowWindowDialogAsync(mw);
                 }
             }
         }
-        public async void ExportPk3Ek3(DataLocation dl) {
+        public async void ExportPk3Ek3(object dlo) {
+            DataLocation dl = (DataLocation)dlo;
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.Filters.Add(new FileDialogFilter() { Name = "Pk3 file", Extensions = { "pk3" } });
             dialog.Filters.Add(new FileDialogFilter() { Name = "Ek3 file", Extensions = { "ek3" } });
@@ -345,7 +338,7 @@ namespace PokeGlitzer
                     File.WriteAllBytes(result, srcData);
                 }
                 catch {
-                    MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while exporting the file.").ShowDialog(mw);
+                    await MessageBoxManager.GetMessageBoxStandard("Error", "An error occured while exporting the file.").ShowWindowDialogAsync(mw);
                 }
             }
         }
@@ -368,7 +361,7 @@ namespace PokeGlitzer
             }
             catch
             {
-                MessageBoxManager.GetMessageBoxStandardWindow("Error", "Unable to load this save.").ShowDialog(mw);
+                await MessageBoxManager.GetMessageBoxStandard("Error", "Unable to load this save.").ShowWindowDialogAsync(mw);
             }
         }
         public async void Open()
@@ -382,7 +375,7 @@ namespace PokeGlitzer
             if (result != null && result.Length >= 1)
                 LoadSave(result[0]);
         }
-        public void Save()
+        public async void Save()
         {
             if (CurrentSave != null)
             {
@@ -401,7 +394,7 @@ namespace PokeGlitzer
                     initialTeamData = tid.pokemonList;
                 }
                 catch {
-                    MessageBoxManager.GetMessageBoxStandardWindow("Error", "An error occured while saving.").ShowDialog(mw);
+                    await MessageBoxManager.GetMessageBoxStandard("Error", "An error occured while saving.").ShowWindowDialogAsync(mw);
                 }
             }
         }
@@ -475,8 +468,9 @@ namespace PokeGlitzer
             ArraySegment<byte> initial = new ArraySegment<byte>(dl.src == Source.Team ? initialTeamData : initialData, dl.offset, dl.size);
             Utils.UpdateCollectionRange(dl.src == Source.Team ? teamData : data, initial, dl.offset);
         }
-        public void Delete(DataLocation dl)
+        public void Delete(object dlo)
         {
+            DataLocation dl = (DataLocation)dlo;
             Utils.UpdateCollectionRange(dl.src == Source.Team ? teamData : data, new byte[dl.size], dl.offset);
         }
         public void ClearCurrentBox()
@@ -531,16 +525,18 @@ namespace PokeGlitzer
         {
             ChangeEggTypes(EggType.Egg, EggType.NotAnEgg);
         }
-        public void Copy(DataLocation dl)
+        public void Copy(object dlo)
         {
+            DataLocation dl = (DataLocation)dlo;
             CopiedData = Utils.ExtractCollectionRange(dl.src == Source.Team ? teamData : data, dl.offset, dl.size);
         }
-        public void Cut(DataLocation dl)
+        public void Cut(object dl)
         {
             Copy(dl); Delete(dl);
         }
-        public void Paste(DataLocation dl)
+        public void Paste(object dlo)
         {
+            DataLocation dl = (DataLocation)dlo;
             if (CopiedData != null)
                 Utils.UpdateCollectionRange(dl.src == Source.Team ? teamData : data,
                     new ArraySegment<byte>(CopiedData, 0, Math.Min(dl.size, CopiedData.Length)), dl.offset);
@@ -556,12 +552,12 @@ namespace PokeGlitzer
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public void StartSync()
+        public async void StartSync()
         {
             if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-                MessageBoxManager.GetMessageBoxStandardWindow("Error", "Synchronization with Bizhawk is only supported on Windows.").ShowDialog(mw);
+                await MessageBoxManager.GetMessageBoxStandard("Error", "Synchronization with Bizhawk is only supported on Windows.").ShowWindowDialogAsync(mw);
             else if (!sync.Start())
-                MessageBoxManager.GetMessageBoxStandardWindow("Error", "Please run the synchronization LUA script in Bizhawk first.").ShowDialog(mw);
+                await MessageBoxManager.GetMessageBoxStandard("Error", "Please run the synchronization LUA script in Bizhawk first.").ShowWindowDialogAsync(mw);
         }
         public void StopSync() { sync.Stop(); }
 

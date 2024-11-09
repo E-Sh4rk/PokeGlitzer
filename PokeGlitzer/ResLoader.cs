@@ -21,9 +21,8 @@ namespace PokeGlitzer
         {
             imgdir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
             imgdir = Path.Combine(imgdir, "Images");
-            var assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            none = new Bitmap(assets.Open(new Uri("avares://PokeGlitzer/Resources/b_none.png")));
-            none_item = new Bitmap(assets.Open(new Uri("avares://PokeGlitzer/Resources/bitem_none.png")));
+            none = new Bitmap(AssetLoader.Open(new Uri("avares://PokeGlitzer/Assets/b_none.png")));
+            none_item = new Bitmap(AssetLoader.Open(new Uri("avares://PokeGlitzer/Assets/bitem_none.png")));
             try { special[0] = new Bitmap(Path.Combine(imgdir, "b_unknown.png")); } catch { special[0] = none; }
             try { special[1] = new Bitmap(Path.Combine(imgdir, "b_unknown_alt.png")); } catch { special[1] = none; }
             try { special[2] = new Bitmap(Path.Combine(imgdir, "b_egg.png")); } catch { special[2] = none; }

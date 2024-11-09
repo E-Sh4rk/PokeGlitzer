@@ -26,7 +26,7 @@ namespace PokeGlitzer.Converters
         {
             if (!(value is string)) return new Avalonia.Data.BindingNotification(new NotImplementedException(), Avalonia.Data.BindingErrorType.Error);
             try { return Utils.ToNumber((string)value, targetType); }
-            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
+            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException("Invalid number."), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
     }
     public class BoolToInt : IValueConverter
@@ -54,9 +54,9 @@ namespace PokeGlitzer.Converters
 
             string v = (string)value;
             if (v.Length != 2 || !Utils.HasOnlyHexDigits(v))
-                return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError);
+                return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException("Invalid byte."), Avalonia.Data.BindingErrorType.DataValidationError);
             try { return byte.Parse(v, NumberStyles.HexNumber); }
-            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
+            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException("Invalid byte."), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
     }
     public class SubstructureToColor : IValueConverter
@@ -160,7 +160,7 @@ namespace PokeGlitzer.Converters
                 }
                 return Utils.ToNumber(v, targetType);
             }
-            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
+            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException("Invalid species."), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
     }
     public abstract class TextDataToStringConverter : IValueConverter
@@ -194,7 +194,7 @@ namespace PokeGlitzer.Converters
                 }
                 return Utils.ToNumber(v, targetType);
             }
-            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException(null), Avalonia.Data.BindingErrorType.DataValidationError); }
+            catch { return new Avalonia.Data.BindingNotification(new Avalonia.Data.DataValidationException("Invalid data."), Avalonia.Data.BindingErrorType.DataValidationError); }
         }
     }
     public class BallToStringConverter : TextDataToStringConverter

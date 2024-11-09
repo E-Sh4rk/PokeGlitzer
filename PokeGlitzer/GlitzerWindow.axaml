@@ -9,19 +9,19 @@
 
   <DockPanel Width="408" LastChildFill="True">
     <StackPanel Orientation="Vertical">
-      <Separator Height="10" />
+      <Rectangle Height="10" />
       <DockPanel Width="408" LastChildFill="True">
-        <Button FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Content="🡸" Command="{Binding Prev}" DockPanel.Dock="Left"/>
-        <Button FontFamily="resm:PokeGlitzer.Resources.Fonts.CascadiaMono-Ext.ttf?assembly=PokeGlitzer#Cascadia Mono" Content="🡺" Command="{Binding Next}" DockPanel.Dock="Right"/>
+        <Button FontFamily="avares://PokeGlitzer/Assets/Fonts/CascadiaMono-Ext.ttf#Cascadia Mono" Content="🡸" Command="{Binding Prev}" DockPanel.Dock="Left"/>
+        <Button FontFamily="avares://PokeGlitzer/Assets/Fonts/CascadiaMono-Ext.ttf#Cascadia Mono" Content="🡺" Command="{Binding Next}" DockPanel.Dock="Right"/>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
           <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentOffset, Converter={StaticResource n2s}, ConverterParameter=x}" />
-          <Separator Width="10" />
+          <Rectangle Width="10" />
           <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentASLR, Converter={StaticResource n2s}}" />
-          <Separator Width="10" />
+          <Rectangle Width="10" />
           <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding CurrentEndOffset, Converter={StaticResource n2s}, ConverterParameter=x}" />
         </StackPanel>
       </DockPanel>
-      <Separator Height="10" />
+      <Rectangle Height="10" />
 
       <Grid ColumnDefinitions="68,68,68,68,68,68" RowDefinitions="56,56">
         <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding Glitzer[0]}"/>
@@ -39,7 +39,7 @@
         <ContentControl Grid.Row="1" Grid.Column="5" Content="{Binding Glitzer[11]}"/>
       </Grid>
 
-      <Separator Height="10" />
+      <Rectangle Height="10" />
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
         <Button Content="Flag bad eggs" Command="{Binding FlagBadEggs}"/>
         <Button Content="Revert last" Command="{Binding Revert}" IsEnabled="{Binding PreviousData, Converter={x:Static ObjectConverters.IsNotNull}}"/>

@@ -26,9 +26,6 @@ namespace PokeGlitzer
             pkmn = new Pokemon(data, dl);
             dataLocation = dl;
             DataContext = new HexEditorModel(pkmn.View.Data, false);
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
         public HexEditor(RangeObservableCollection<byte> data, Source src)
         {
@@ -40,16 +37,8 @@ namespace PokeGlitzer
             if (src == Source.PC) lineSize = Pokemon.PC_SIZE;
             if (src == Source.BoxNames) lineSize = BoxNames.BOX_NAME_BYTE_SIZE;
             DataContext = new HexEditorModel(data, true, lineSize);
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
         public DataLocation DataLocation => dataLocation;
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
 
         protected override void OnClosed(EventArgs e)
         {
@@ -123,7 +112,7 @@ namespace PokeGlitzer
                     Utils.UpdateCollectionRange(data, res);
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Text)));
                 }
-                catch { throw new Avalonia.Data.DataValidationException(null); }
+                catch { throw new Avalonia.Data.DataValidationException("Invalid hexadecimal data."); }
             }
         }
 

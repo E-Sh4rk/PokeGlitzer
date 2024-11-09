@@ -9,11 +9,11 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.2.0" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.2.0" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="11.2.0" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.0" />
-    <PackageReference Include="MessageBox.Avalonia" Version="3.2.0" />
+    <PackageReference Include="Avalonia" Version="11.0.13" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.13" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.0.13" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.13" />
+    <PackageReference Include="MessageBox.Avalonia" Version="3.1.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="8.0.0" />
    </ItemGroup>
   <ItemGroup>

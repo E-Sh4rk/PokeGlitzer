@@ -19,6 +19,7 @@ using Avalonia.Platform.Storage;
 
 namespace PokeGlitzer
 {
+    // TODO: Update Avalonia when PropertyChanged events will invalidate controls even for unchanged content (related to https://github.com/AvaloniaUI/Avalonia/discussions/16686 ?)
     // TODO: Improve ribbons field.
     // TODO: Add item sprites for "unholdable" objects.
     // TODO: Nickname field: button to set to default (when available)

@@ -18,6 +18,7 @@ namespace PokeGlitzer
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
+                .WithInterFont()
                 .LogToTrace()
                 .With(new Win32PlatformOptions
                 {

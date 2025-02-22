@@ -2,11 +2,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="550" Width="500" Height="550"
+        mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="550" Width="550" Height="550"
         CanResize="True"
         x:Class="PokeGlitzer.LogWindow"
         Title="Log Window">
 
-  <TextBox AcceptsReturn="True" TextWrapping="NoWrap" AcceptsTab="False" FontFamily="Consolas, Monospace"
+  <TextBox AcceptsReturn="True" TextWrapping="NoWrap" AcceptsTab="False" FontFamily="avares://PokeGlitzer/Assets/Fonts/CascadiaMono-Ext.ttf#Cascadia Mono"
            Text="{Binding Text}" FontSize="15" IsReadOnly="True" />
 </Window>

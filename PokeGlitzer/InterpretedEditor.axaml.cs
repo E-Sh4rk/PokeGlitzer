@@ -68,7 +68,7 @@ namespace PokeGlitzer
             pid = d.PID;
             otid = d.OTID;
             species = (string)pts.Convert(d.species, typeof(String), "x", System.Globalization.CultureInfo.CurrentCulture);
-            UpdatePidFields(false);
+            UpdatePidFields();
             HasSpecies = d.hasSpecies;
             Egg = d.egg;
 
@@ -135,19 +135,19 @@ namespace PokeGlitzer
         public uint PID
         {
             get => pid;
-            set { pid = value; UpdatePidFields(false); }
+            set { pid = value; UpdatePidFields(); }
         }
         uint otid;
         public uint OTID
         {
             get => otid;
-            set { otid = value; UpdatePidFields(false); }
+            set { otid = value; UpdatePidFields(); }
         }
         string species;
         public string Species
         {
             get => species;
-            set { species = value; UpdatePidFields(false); UpdateLvlRemExpFields(); }
+            set { species = value; UpdatePidFields(); UpdateLvlRemExpFields(); }
         }
         public ushort SpeciesU16()
         {
@@ -576,8 +576,8 @@ namespace PokeGlitzer
             get => pidAbility;
             set { pidAbility = value; UpdatePidFromPidFields(); }
         }
-        PidCalculator.PkmnGender pidGender;
-        public PidCalculator.PkmnGender PidGender
+        byte pidGender;
+        public byte PidGender
         {
             get => pidGender;
             set { pidGender = value; UpdatePidFromPidFields(); }
@@ -593,15 +593,27 @@ namespace PokeGlitzer
             pausePIDChanges = true;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Abilities)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidShiny)));
+            // Ugly hack because SelectedIndex is only invalidated if the value changes...
+            byte pidAbility_ = pidAbility; byte pidGender_ = pidGender; byte pidNature_ = pidNature;
+            pidAbility = 0xFF; pidGender = 0xFF; pidNature = 0xFF;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidAbility)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidGender)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidNature)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PID)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OTID)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Species)));
-            pausePIDChanges = false;
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                pidAbility = pidAbility_;
+                pidGender = pidGender_;
+                pidNature = pidNature_;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidAbility)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidGender)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PidNature)));
+                pausePIDChanges = false;
+            });
         }
-        void UpdatePidFields(bool refreshLater)
+        void UpdatePidFields()
         {
             ushort species = SpeciesU16();
             uint otid = OTID; uint pid = PID;
@@ -618,19 +630,18 @@ namespace PokeGlitzer
             // Load values
             pidShiny = PidCalculator.ShinyOfPID(pid, otid);
             pidAbility = PidCalculator.AbilityOfPID(pid, species);
-            pidGender = PidCalculator.GenderOfPID(pid, species);
+            pidGender = (byte)PidCalculator.GenderOfPID(pid, species);
             pidNature = PidCalculator.NatureOfPID(pid);
-            if (refreshLater)
-                Dispatcher.UIThread.InvokeAsync(() => RefreshPidFields());
-            else
-                RefreshPidFields();
+            RefreshPidFields();
         }
         void UpdatePidFromPidFields()
         {
             if (pausePIDChanges) return;
-            uint? npid = PidCalculator.GenerateNewPID(OTID, SpeciesU16(), PidShiny, PidGender, PidNature, PidAbility);
-            if (npid.HasValue) { pid = npid.Value; UpdatePidFields(false); }
-            else { UpdatePidFields(true); throw new Avalonia.Data.DataValidationException("No suitable PID."); }
+            PidCalculator.PkmnGender g = PidCalculator.PkmnGender.Unknown;
+            try { g = (PidCalculator.PkmnGender)PidGender; } catch { }
+            uint? npid = PidCalculator.GenerateNewPID(OTID, SpeciesU16(), PidShiny, g, PidNature, PidAbility);
+            if (npid.HasValue) { pid = npid.Value; UpdatePidFields(); }
+            else { UpdatePidFields(); throw new Avalonia.Data.DataValidationException("No suitable PID."); }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

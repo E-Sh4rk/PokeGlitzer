@@ -320,6 +320,9 @@ namespace PokeGlitzer.Converters
                 InterpretedData data = (InterpretedData?)value!;
                 if (data.battle.item == 0) return ResLoader.NoneItem;
                 if (ItemConverter.IsItemTM(data.battle.item)) return ResLoader.TM;
+                if (ItemConverter.IsItemHM(data.battle.item)) return ResLoader.HM;
+                if (ItemConverter.IsItemMail(data.battle.item))
+                    return ResLoader.Mails(ItemConverter.GetMailID(data.battle.item));
                 int id = ItemConverter.GetItemFuture3(data.battle.item);
                 return ResLoader.Items(id);
             }

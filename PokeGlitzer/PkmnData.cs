@@ -31,7 +31,7 @@ namespace PokeGlitzer
             ' ',  ' ',  ' ',  ' ', ' ',  ' ',  ' ',  ' ',  ' ',  '⬆',  '⬇', '⬅', '⮕', '*',  '*',  '*', // 7
             '*',  '*',  '*',  '*', 'ᵉ',  '<',  '>',  ' ',  ' ',  ' ',  ' ', ' ',  ' ', ' ',  ' ',  ' ', // 8
             ' ',  ' ',  ' ',  ' ', ' ',  ' ',  ' ',  ' ',  ' ',  ' ',  ' ', ' ',  ' ', ' ',  ' ',  ' ', // 9
-            ' ',  '0',  '1',  '2', '3',  '4',  '5',  '6',  '7',  '8',  '9',  '!', '?',  '.',  '-', '・', // A
+            ' ',  '0',  '1',  '2', '3',  '4',  '5',  '6',  '7',  '8',  '9',  '!', '?',  '.',  '-', '·', // A
             '…',  '“',  '”',  '‘', '’',  '♂',  '♀',  '$',  ',',  '×',  '/',  'A', 'B',  'C',  'D',  'E', // B
             'F',  'G',  'H',  'I', 'J',  'K',  'L',  'M',  'N',  'O',  'P',  'Q', 'R',  'S',  'T',  'U', // C
             'V',  'W',  'X',  'Y', 'Z',  'a',  'b',  'c',  'd',  'e',  'f',  'g', 'h',  'i',  'j',  'k', // D
@@ -406,6 +406,14 @@ namespace PokeGlitzer
         /// <param name="item">Item ID</param>
         /// <returns>True if is an HM</returns>
         public static bool IsItemTM(ushort item) => item is (>= 289 and <= 338);
+
+        /// <summary>
+        /// Checks if an item ID is a mail
+        /// </summary>
+        /// <param name="item">Item ID</param>
+        /// <returns>True if is an mail</returns>
+        public static bool IsItemMail(ushort item) => item is (>= 121 and <= 132);
+        public static int GetMailID(ushort item) => IsItemMail(item) ? item - 121 : -1;
     }
 
     /// <summary>

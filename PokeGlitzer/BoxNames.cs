@@ -100,6 +100,8 @@ namespace PokeGlitzer
                 name = name.Replace("⋯", "‥");
                 name = name.Replace("…", "‥");
                 name = name.Replace(" ", "　");
+                name = name.Replace("·", "・");
+                name = name.Replace("･", "・");
                 char fw = FULLWIDTH_START;
                 for (char c = ASCII_START; c <= ASCII_END; c++)
                 {
@@ -112,6 +114,8 @@ namespace PokeGlitzer
                 name = name.Replace("⋯", "…");
                 name = name.Replace("‥", "…");
                 name = name.Replace("　", " ");
+                name = name.Replace("・", "·");
+                name = name.Replace("･", "·");
                 char a = ASCII_START;
                 for (char c = FULLWIDTH_START; c <= FULLWIDTH_END; c++)
                 {

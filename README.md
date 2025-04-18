@@ -56,3 +56,9 @@ If you want to build the app yourself, you should first clone this repo
 Then:
 - On Windows, just open `PokeGlitzer.sln` using Visual Studio 2022
 - On Linux/MacOS, you should be able to build it with the command `dotnet build PokeGlitzer.sln -c Release`
+
+## Credits
+
+Sprites are taken from https://github.com/msikma/pokesprite/tree/master
+
+Some pokemon data is taken from https://github.com/kwsch/PKHeX

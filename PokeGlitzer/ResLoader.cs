@@ -16,6 +16,7 @@ namespace PokeGlitzer
     {
         const int MAX_SPECIES = 386;
         const int MAX_ITEMS = 264;
+        const int MAX_MAILS = 11;
         static string? imgdir;
         public static void Initialize()
         {
@@ -29,6 +30,7 @@ namespace PokeGlitzer
             try { special[3] = new Bitmap(Path.Combine(imgdir, "b_bad_egg.png")); } catch { special[3] = none; }
             try { special[4] = new Bitmap(Path.Combine(imgdir, "bitem_tm.png")); } catch { special[4] = none_item; }
             try { special[5] = new Bitmap(Path.Combine(imgdir, "bitem_unk.png")); } catch { special[5] = none_item; }
+            try { special[6] = new Bitmap(Path.Combine(imgdir, "bitem_tr.png")); } catch { special[6] = none_item; }
         }
         static void InitializeSpecies(int i)
         {
@@ -63,13 +65,25 @@ namespace PokeGlitzer
                 items[i] = special[5];
             }
         }
+        static void InitializeMail(int i)
+        {
+            try
+            {
+                mails[i] = new Bitmap(Path.Combine(imgdir!, string.Format("mails/mail_{0}.png", i)));
+            }
+            catch
+            {
+                mails[i] = special[5];
+            }
+        }
 
         static Bitmap? none = null;
         static Bitmap? none_item = null;
-        static Bitmap?[] special = new Bitmap[6];
+        static Bitmap?[] special = new Bitmap[7];
         static Bitmap?[] species = new Bitmap[MAX_SPECIES + 1];
         static Bitmap?[] shiny_species = new Bitmap[MAX_SPECIES + 1];
         static Bitmap?[] items = new Bitmap[MAX_ITEMS + 1];
+        static Bitmap?[] mails = new Bitmap[MAX_MAILS + 1];
         public static Bitmap None { get => none!; }
         public static Bitmap NoneItem { get => none_item!; }
         public static Bitmap Species(int i) {
@@ -88,11 +102,18 @@ namespace PokeGlitzer
                 return UnknownItem;
             if (items[i] == null) InitializeItem(i); return items[i]!;
         }
+        public static Bitmap Mails(int i)
+        {
+            if (i > MAX_MAILS)
+                return UnknownItem;
+            if (mails[i] == null) InitializeMail(i); return mails[i]!;
+        }
         public static Bitmap Egg { get => special[2]!; }
         public static Bitmap BadEgg { get => special[3]!; }
         public static Bitmap Unknown { get => special[1]!; }
         public static Bitmap Error { get => special[0]!; }
         public static Bitmap TM { get => special[4]!; }
+        public static Bitmap HM { get => special[6]!; }
         public static Bitmap UnknownItem { get => special[5]!; }
     }
 }

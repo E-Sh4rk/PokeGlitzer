@@ -118,8 +118,8 @@
             <MenuItem Header="_Open Hex Data Editor (Assisted)" Command="{Binding $parent[Window].DataContext.OpenDataEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
             <MenuItem Header="_Open Hex Data Editor" Command="{Binding $parent[Window].DataContext.OpenRawEditor}" CommandParameter="{Binding pkmn.DataLocation}" />
             <Separator/>
-            <MenuItem Header="_Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding pkmn.DataLocation}" />
             <MenuItem Header="_Cut" Command="{Binding $parent[Window].DataContext.Cut}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <MenuItem Header="_Copy" Command="{Binding $parent[Window].DataContext.Copy}" CommandParameter="{Binding pkmn.DataLocation}" />
             <MenuItem Header="_Paste" Command="{Binding $parent[Window].DataContext.Paste}" CommandParameter="{Binding pkmn.DataLocation}"
                       IsEnabled="{Binding $parent[Window].DataContext.CopiedData, Converter={x:Static ObjectConverters.IsNotNull}}"/>
             <MenuItem Header="_Delete" Command="{Binding $parent[Window].DataContext.Delete}" CommandParameter="{Binding pkmn.DataLocation}" />
@@ -127,8 +127,8 @@
             <MenuItem Header="_Open GP window starting here" Command="{Binding $parent[Window].DataContext.OpenGPAfter}" CommandParameter="{Binding pkmn.DataLocation}" />
             <MenuItem Header="_Open GP window ending here" Command="{Binding $parent[Window].DataContext.OpenGPBefore}" CommandParameter="{Binding pkmn.DataLocation}" />
             <Separator/>
-            <MenuItem Header="_Import from .pk3/.ek3" Command="{Binding $parent[Window].DataContext.ImportPk3Ek3}" CommandParameter="{Binding pkmn.DataLocation}" />
             <MenuItem Header="_Export to .pk3/.ek3" Command="{Binding $parent[Window].DataContext.ExportPk3Ek3}" CommandParameter="{Binding pkmn.DataLocation}" />
+            <MenuItem Header="_Import from .pk3/.ek3" Command="{Binding $parent[Window].DataContext.ImportPk3Ek3}" CommandParameter="{Binding pkmn.DataLocation}" />
           </ContextMenu>
         </Canvas.ContextMenu>
         <Rectangle ZIndex="0" Canvas.Left="0" Canvas.Top="0" Width="67" Height="55" Opacity="150" Fill="{Binding selected, Converter={StaticResource s2c}}" Stroke="Black" StrokeThickness="1" Stretch="None" />

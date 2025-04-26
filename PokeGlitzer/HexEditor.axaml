@@ -8,5 +8,16 @@
         Title="Pokemon Data Editor">
 
   <TextBox AcceptsReturn="True" TextWrapping="NoWrap" AcceptsTab="False" FontFamily="avares://PokeGlitzer/Assets/Fonts/CascadiaMono-Ext.ttf#Cascadia Mono"
-           Text="{Binding Text}" FontSize="15" />
+           Text="{Binding Text}" FontSize="15">
+    <TextBox.ContextFlyout>
+      <MenuFlyout Placement="Bottom">
+        <MenuItem Header="Cut" Command="{Binding $parent[TextBox].Cut}" IsEnabled="{Binding $parent[TextBox].CanCut}" InputGesture="{x:Static TextBox.CutGesture}" />
+        <MenuItem Header="Copy" Command="{Binding $parent[TextBox].Copy}" IsEnabled="{Binding $parent[TextBox].CanCopy}" InputGesture="{x:Static TextBox.CopyGesture}" />
+        <MenuItem Header="Paste" Command="{Binding $parent[TextBox].Paste}" IsEnabled="{Binding $parent[TextBox].CanPaste}" InputGesture="{x:Static TextBox.PasteGesture}" />
+        <Separator/>
+        <MenuItem Header="Export" Command="{Binding Export}" />
+        <MenuItem Header="Import" Command="{Binding Import}" />
+      </MenuFlyout>
+    </TextBox.ContextFlyout>
+</TextBox>
 </Window>

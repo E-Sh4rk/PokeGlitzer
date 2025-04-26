@@ -1,10 +1,14 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
+using MsBox.Avalonia;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace PokeGlitzer
@@ -18,14 +22,14 @@ namespace PokeGlitzer
             InitializeComponent();
             pkmn = new Pokemon(Utils.CollectionOfSize<byte>(Pokemon.PC_SIZE), DataLocation.DefaultPC);
             dataLocation = pkmn.DataLocation;
-            DataContext = new HexEditorModel(pkmn.View.Data, false);
+            DataContext = new HexEditorModel(this, pkmn.View.Data, false);
         }
         public HexEditor(RangeObservableCollection<byte> data, DataLocation dl)
         {
             InitializeComponent();
             pkmn = new Pokemon(data, dl);
             dataLocation = dl;
-            DataContext = new HexEditorModel(pkmn.View.Data, false);
+            DataContext = new HexEditorModel(this, pkmn.View.Data, false);
         }
         public HexEditor(RangeObservableCollection<byte> data, Source src)
         {
@@ -36,7 +40,7 @@ namespace PokeGlitzer
             if (src == Source.Team) lineSize = Pokemon.TEAM_SIZE;
             if (src == Source.PC) lineSize = Pokemon.PC_SIZE;
             if (src == Source.BoxNames) lineSize = BoxNames.BOX_NAME_BYTE_SIZE;
-            DataContext = new HexEditorModel(data, true, lineSize);
+            DataContext = new HexEditorModel(this, data, true, lineSize);
         }
         public DataLocation DataLocation => dataLocation;
 
@@ -51,9 +55,11 @@ namespace PokeGlitzer
         RangeObservableCollection<byte> data;
         bool custom;
         int lineSize;
+        Window w;
 
-        public HexEditorModel(RangeObservableCollection<byte> data, bool custom, int lineSize = 0)
+        public HexEditorModel(Window w, RangeObservableCollection<byte> data, bool custom, int lineSize = 0)
         {
+            this.w = w;
             this.data = data;
             this.custom = custom;
             this.lineSize = lineSize;
@@ -117,5 +123,61 @@ namespace PokeGlitzer
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+
+        public static FilePickerFileType TxtFile { get; } = new("Text files")
+        {
+            Patterns = new[] { "*.txt" }
+        };
+        public static FilePickerFileType BinFile { get; } = new("Binary files")
+        {
+            Patterns = new[] { "*.bin" }
+        };
+
+        public async void Import()
+        {
+            var result = await w.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                FileTypeFilter = new[] { TxtFile, BinFile },
+                AllowMultiple = false
+            });
+            if (result != null && result.Count >= 1)
+            {
+                try
+                {
+                    string path = result[0].Path.LocalPath;
+                    if (Path.GetExtension(path).ToLowerInvariant() == ".bin")
+                        Utils.UpdateCollectionRange(data, File.ReadAllBytes(path));
+                    else
+                        Text = File.ReadAllText(path);
+                }
+                catch
+                {
+                    await MessageBoxManager.GetMessageBoxStandard("Error", "An error occured while importing the file.").ShowWindowDialogAsync(w);
+                }
+            }
+        }
+        public async void Export()
+        {
+            var result = await w.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                FileTypeChoices = new[] { TxtFile, BinFile }
+            });
+            if (result is not null)
+            {
+                try
+                {
+                    string path = result.Path.LocalPath;
+                    if (Path.GetExtension(path).ToLowerInvariant() == ".bin")
+                        File.WriteAllBytes(path, data.ToArray());
+                    else
+                        File.WriteAllText(path, Text);
+                }
+                catch
+                {
+                    await MessageBoxManager.GetMessageBoxStandard("Error", "An error occured while exporting the file.").ShowWindowDialogAsync(w);
+                }
+            }
+        }
     }
 }
